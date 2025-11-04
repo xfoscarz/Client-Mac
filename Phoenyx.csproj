@@ -5,6 +5,9 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Godot.NET.Sdk" Version="4.5.0" />
   </ItemGroup>
 </Project>

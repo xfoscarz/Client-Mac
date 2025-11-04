@@ -1,5 +1,7 @@
 # Vscode 
 .vscode/
+# Visual Studio
+.vs/
 
 # Git
 .git/
