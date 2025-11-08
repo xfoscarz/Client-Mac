@@ -1,4 +1,7 @@
-public struct Note : ITimelineObject
+using System.Collections.Generic;
+using Godot;
+
+public struct Note : ITimelineObject, ITweenableObject<NoteTween>
 {
     public int Id => (int)ObjectType.Note;
 
@@ -6,14 +9,19 @@ public struct Note : ITimelineObject
 
     public int Index;                  // note index within the map
 
-    public int Millisecond { get; }
+    public int Millisecond { get; set; }
 
+    public Tween CurrentTween { get; set; }
 
+    public List<NoteTween> TweenObjects { get; set; }
 
-    public float X;
-    public float Y;
-    public bool Hit = false;
-    public bool Hittable = false;
+    public float X { get; set; }
+
+    public float Y { get; set; }
+
+    public bool Hit { get; set; } = false;
+
+    public bool Hittable { get; set; } = false;
 
     public Note(int index, int millisecond, float x, float y)
     {
@@ -23,7 +31,7 @@ public struct Note : ITimelineObject
         Y = y;
     }
 
-    public readonly override string ToString() => $"({X}, {Y}) @{Millisecond}ms";
+    public override readonly string ToString() => $"({X}, {Y}) @{Millisecond}ms";
 
     public int CompareTo(ITimelineObject other)
     {

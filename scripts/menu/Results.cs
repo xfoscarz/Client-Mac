@@ -27,7 +27,7 @@ public partial class Results : Control
         Input.MouseMode = Input.MouseModeEnum.Hidden;
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Mailbox);
 
-        Cursor.Texture = PlayerSkin.CursorImage;
+        Cursor.Texture = SkinProfile.CursorImage;
         Cursor.Size = new Vector2(32 * (float)settings.CursorScale, 32 * (float)settings.CursorScale);
 
         Holder.GetNode<Label>("Title").Text = (LegacyRunner.CurrentAttempt.IsReplay ? "[REPLAY] " : "") + LegacyRunner.CurrentAttempt.Map.PrettyTitle;
@@ -102,10 +102,8 @@ public partial class Results : Control
             {
                 Replay replay = new(path);
                 SoundManager.Song.Stop();
+                LegacyRunner.Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.Modifiers, null, [replay]);
                 SceneManager.Load("res://scenes/game.tscn");
-
-                // TODO: Will be changed after player
-                ((LegacyRunner)SceneManager.Scene).Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.Modifiers, null, [replay]);
             }
         };
     }
@@ -159,10 +157,9 @@ public partial class Results : Control
         Map map = MapParser.Decode(LegacyRunner.CurrentAttempt.Map.FilePath);
         map.Ephemeral = LegacyRunner.CurrentAttempt.Map.Ephemeral;
         SoundManager.Song.Stop();
+        
         SceneManager.Load("res://scenes/game.tscn");
-
-        // TODO: Will be changed after player
-        ((LegacyRunner)SceneManager.Scene).Play(map, LegacyRunner.CurrentAttempt.Speed, LegacyRunner.CurrentAttempt.StartFrom, LegacyRunner.CurrentAttempt.Mods);
+        LegacyRunner.Play(map, LegacyRunner.CurrentAttempt.Speed, LegacyRunner.CurrentAttempt.StartFrom, LegacyRunner.CurrentAttempt.Mods);
     }
 
     public void Stop()

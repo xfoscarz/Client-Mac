@@ -15,12 +15,12 @@ public partial class Grid : UIComponent
 
     public override void Process(double delta, Attempt state)
     {
-        updateCursorPosition(state.CursorPosition.X, state.CursorPosition.Y);
+        updateCursorPosition(state.CursorPosition);
     }
 
-    private void updateCursorPosition(float x, float y)
+    private void updateCursorPosition(Vector2 position)
     {
-        Cursor.Position = new Vector3(x, y, 0);
+        Cursor.Position = new Vector3(position.X, position.Y, 0);
     }
 }
 

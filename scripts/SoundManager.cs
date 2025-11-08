@@ -106,8 +106,8 @@ public partial class SoundManager : Node
 
     public static void UpdateSounds()
     {
-        HitSound.Stream = Lib.Audio.LoadStream(PlayerSkin.HitSoundBuffer);
-        FailSound.Stream = Lib.Audio.LoadStream(PlayerSkin.FailSoundBuffer);
+        HitSound.Stream = Lib.Audio.LoadStream(SkinProfile.HitSoundBuffer);
+        FailSound.Stream = Lib.Audio.LoadStream(SkinProfile.FailSoundBuffer);
     }
 
     public static void UpdateVolume()

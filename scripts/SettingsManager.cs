@@ -93,14 +93,14 @@ public partial class SettingsManager : Control
         {
             HideMouse();
             Settings.Skin = skins.GetItemText((int)item);
-            PlayerSkin.Load();
+            SkinProfile.Load();
 
             if (SceneManager.Scene.Name == "SceneMenu")
             {
-                Menu.MainMenu.Cursor.Texture = PlayerSkin.CursorImage;
+                Menu.MainMenu.Cursor.Texture = SkinProfile.CursorImage;
             }
 
-            Holder.GetNode("Categories").GetNode("Visuals").GetNode("Container").GetNode("Colors").GetNode<LineEdit>("LineEdit").Text = PlayerSkin.RawColors;
+            Holder.GetNode("Categories").GetNode("Visuals").GetNode("Container").GetNode("Colors").GetNode<LineEdit>("LineEdit").Text = SkinProfile.RawColors;
         };
 
         spaces.Pressed += ShowMouse;
@@ -442,8 +442,8 @@ public partial class SettingsManager : Control
                                 raw = raw.TrimSuffix(",");
                                 lineEdit.Text = raw;
 
-                                PlayerSkin.Colors = colors;
-                                PlayerSkin.RawColors = raw;
+                                SkinProfile.Colors = colors;
+                                SkinProfile.RawColors = raw;
 
                                 break;
                         }
@@ -500,7 +500,7 @@ public partial class SettingsManager : Control
         }
 
         File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profile}.json", Json.Stringify(data, "\t"));
-        PlayerSkin.Save();
+        SkinProfile.Save();
         Logger.Log($"Saved settings {profile}");
     }
 
@@ -552,7 +552,7 @@ public partial class SettingsManager : Control
             ToastNotification.Notify($"Could not find skin {Settings.Skin}", 1);
         }
 
-        PlayerSkin.Load();
+        SkinProfile.Load();
 
         if (err != null)
         {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Godot;
 using System.Reflection;
 
-public class PlayerSkin
+public class SkinProfile
 {
     public static Color[] Colors { get; set; } = [Color.FromHtml("#00ffed"), Color.FromHtml("#ff8ff9")];
     public static string RawColors { get; set; } = "00ffed,ff8ff9";
@@ -60,7 +60,7 @@ public class PlayerSkin
 
         Colors = colors;
 
-        foreach (PropertyInfo property in typeof(PlayerSkin).GetProperties())
+        foreach (PropertyInfo property in typeof(SkinProfile).GetProperties())
         {
             if (!property.Name.Contains("Image"))
             {

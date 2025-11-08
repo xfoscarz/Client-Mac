@@ -10,7 +10,7 @@ public partial class ToastNotification : Node
     public static async void Notify(string message, int severity = 0)
     {
         ColorRect notification = template.Instantiate<ColorRect>();
-        SceneManager.Scene.AddChild(notification);
+        SceneManager.ActiveScene.AddChild(notification);
         Color color = new();
 
         switch (Math.Clamp(severity, 0, 2))

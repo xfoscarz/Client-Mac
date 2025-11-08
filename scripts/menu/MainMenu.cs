@@ -98,7 +98,7 @@ public partial class MainMenu : Control
 
         Control = this;
 
-        Util.Setup();
+        Phoenyx.Setup();
 
         Util.DiscordRPC.Call("Set", "details", "Main Menu");
         Util.DiscordRPC.Call("Set", "state", "");
@@ -121,10 +121,10 @@ public partial class MainMenu : Control
                 CurrentMap = map;
             };
 
-            Viewport viewport = GetViewport();
+            Viewport viewport = SceneManager.Node.GetViewport();
             viewport.SizeChanged += () =>
             {
-                if (SceneManager.Scene.Name != "SceneMenu")
+                if (SceneManager.ActiveScene.Name != "SceneMenu")
                 {
                     return;
                 }
@@ -179,12 +179,12 @@ public partial class MainMenu : Control
 
                             if (LegacyRunner.Playing)
                             {
-                                ((LegacyRunner)SceneManager.Scene).QueueStop(); // Will change
+                                LegacyRunner.QueueStop(); // Will change
                             }
 
                             SoundManager.Song.Stop();
+                            LegacyRunner.Play(MapParser.Decode(matching[0].MapFilePath), matching[0].Speed, matching[0].StartFrom, matching[0].Modifiers, null, [.. matching]); // Same here
                             SceneManager.Load("res://scenes/game.tscn");
-                            ((LegacyRunner)SceneManager.Scene).Play(MapParser.Decode(matching[0].MapFilePath), matching[0].Speed, matching[0].StartFrom, matching[0].Modifiers, null, [.. matching]); // Same here
                             break;
                     }
                 }
@@ -243,7 +243,7 @@ public partial class MainMenu : Control
         LoadedMaps = [];
         FavoritedMaps = [];
 
-        Cursor.Texture = PlayerSkin.CursorImage;
+        Cursor.Texture = SkinProfile.CursorImage;
         Cursor.Size = new Vector2(32 * (float)settings.CursorScale, 32 * (float)settings.CursorScale);
 
         Godot.Collections.Array<Node> jukeboxBars = JukeboxSpectrum.GetChildren();
@@ -534,7 +534,7 @@ public partial class MainMenu : Control
             }
             else
             {
-                favorite.Texture = PlayerSkin.FavoriteImage;
+                favorite.Texture = SkinProfile.FavoriteImage;
                 File.WriteAllText($"{Constants.USER_FOLDER}/favorites.txt", $"{favorites}{ContextMenuTarget}\n");
                 FavoritedMaps[mapButton] = true;
             }
@@ -887,9 +887,10 @@ public partial class MainMenu : Control
                         Map map = MapParser.Decode($"{Constants.USER_FOLDER}/maps/{SelectedMapID}.phxm");
 
                         SoundManager.Song.Stop();
+                        LegacyRunner.Play(map, Lobby.Speed, Lobby.StartFrom, Lobby.Mods);
                         SceneManager.Load("res://scenes/game.tscn");
                         // TODO: Fix this :/
-                        ((LegacyRunner)SceneManager.Scene).Play(map, Lobby.Speed, Lobby.StartFrom, Lobby.Mods);
+                        
                     }
                     break;
                 case Key.Mediaplay:
@@ -1104,9 +1105,8 @@ public partial class MainMenu : Control
                     Map map = MapParser.Decode($"{Constants.USER_FOLDER}/maps/{fileName}.phxm");
 
                     SoundManager.Song.Stop();
+                    LegacyRunner.Play(map, Lobby.Speed, Lobby.StartFrom, Lobby.Mods);
                     SceneManager.Load("res://scenes/game.tscn");
-                    // TODO
-                    ((LegacyRunner)SceneManager.Scene).Play(map, Lobby.Speed, Lobby.StartFrom, Lobby.Mods);
                 }
             }
 
@@ -1374,7 +1374,7 @@ public partial class MainMenu : Control
                 if (favorited)
                 {
                     TextureRect favorite = holder.GetNode<TextureRect>("Favorited");
-                    favorite.Texture = PlayerSkin.FavoriteImage;
+                    favorite.Texture = SkinProfile.FavoriteImage;
                     favorite.Visible = true;
                 }
 
@@ -1479,9 +1479,9 @@ public partial class MainMenu : Control
                 {
                     Replay replay = new($"{Constants.USER_FOLDER}/replays/{score.AttemptID}.phxr");
                     SoundManager.Song.Stop();
+                    
                     SceneManager.Load("res://scenes/game.tscn");
-                    // TODO
-                    ((LegacyRunner)SceneManager.Scene).Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.Modifiers, null, [replay]);
+                    LegacyRunner.Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.Modifiers, null, [replay]);
                 }
             };
 
@@ -1536,6 +1536,6 @@ public partial class MainMenu : Control
 
     public static void UpdateJukeboxButtons()
     {
-        Jukebox.GetNode<TextureButton>("Pause").TextureNormal = SoundManager.JukeboxPaused ? PlayerSkin.JukeboxPlayImage : PlayerSkin.JukeboxPauseImage;
+        Jukebox.GetNode<TextureButton>("Pause").TextureNormal = SoundManager.JukeboxPaused ? SkinProfile.JukeboxPlayImage : SkinProfile.JukeboxPauseImage;
     }
 }

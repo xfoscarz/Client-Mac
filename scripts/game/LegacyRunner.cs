@@ -7,7 +7,7 @@ using Godot;
 
 public partial class LegacyRunner : Node3D
 {
-    private SettingsProfile settings;
+    private static SettingsProfile settings;
 
 	private static Node3D Node3D;
 	private static readonly PackedScene PlayerScore = GD.Load<PackedScene>("res://prefabs/player_score.tscn");
@@ -72,7 +72,7 @@ public partial class LegacyRunner : Node3D
 	public static bool ReplayViewerShown = false;
 	public static int ToProcess = 0;
 	public static List<Note> ProcessNotes = [];
-	public static Attempt CurrentAttempt;
+	public static Attempt CurrentAttempt = new();
 	public static double MapLength;
 	public static Tween JesusTween;
 	public static MeshInstance3D[] Cursors;
@@ -105,7 +105,7 @@ public partial class LegacyRunner : Node3D
 		public bool Qualifies = true;
 		public uint Hits = 0;
 		public float[] HitsInfo = [];
-		public Color LastHitColour = PlayerSkin.Colors[^1];
+		public Color LastHitColour = SkinProfile.Colors[^1];
 		public uint Misses = 0;
 		public double DeathTime = -1;
 		public uint Sum = 0;
@@ -123,7 +123,7 @@ public partial class LegacyRunner : Node3D
 		public Vector2 RawCursorPosition = Vector2.Zero;
 		public double DistanceMM = 0;
 
-		public Attempt(LegacyRunner runner, Map map, double speed, double startFrom, Dictionary<string, bool> mods, string[] players = null, Replay[] replays = null)
+		public Attempt(Map map, double speed, double startFrom, Dictionary<string, bool> mods, string[] players = null, Replay[] replays = null)
 		{
             settings = SettingsManager.Settings;
 
@@ -234,7 +234,7 @@ public partial class LegacyRunner : Node3D
 			Combo++;
 			ComboMultiplierProgress++;
 
-			LastHitColour = PlayerSkin.Colors[index % PlayerSkin.Colors.Length];
+			LastHitColour = SkinProfile.Colors[index % SkinProfile.Colors.Length];
 
 			float lateness = IsReplay ? HitsInfo[index] : (float)(((int)Progress - Map.Notes[index].Millisecond) / Speed);
 			float factor = 1 - Math.Max(0, lateness - 25) / 150f;
@@ -355,7 +355,7 @@ public partial class LegacyRunner : Node3D
 
 				if (!Mods["NoFail"])
 				{
-					// QueueStop();
+					QueueStop();
 				}
 			}
 
@@ -382,7 +382,7 @@ public partial class LegacyRunner : Node3D
 			Sprite3D icon = MissFeedback.Instantiate<Sprite3D>();
 			Node3D.AddChild(icon);
 			icon.GlobalPosition = new Vector3(Map.Notes[index].X, -1.4f, 0);
-			icon.Texture = PlayerSkin.MissFeedbackImage;
+			icon.Texture = SkinProfile.MissFeedbackImage;
 
 			Tween tween = icon.CreateTween();
 			tween.TweenProperty(icon, "transparency", 1, 0.25f);
@@ -654,18 +654,18 @@ public partial class LegacyRunner : Node3D
 
 		try
 		{
-			(Cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = PlayerSkin.CursorImage;
-			(CursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = PlayerSkin.CursorImage;
-			(Grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = PlayerSkin.GridImage;
-			PanelLeft.GetNode<TextureRect>("Background").Texture = PlayerSkin.PanelLeftBackgroundImage;
-			PanelRight.GetNode<TextureRect>("Background").Texture = PlayerSkin.PanelRightBackgroundImage;
-			HealthTexture.Texture = PlayerSkin.HealthImage;
-			HealthTexture.GetParent().GetNode<TextureRect>("Background").Texture = PlayerSkin.HealthBackgroundImage;
-			ProgressBarTexture.Texture = PlayerSkin.ProgressImage;
-			ProgressBarTexture.GetParent().GetNode<TextureRect>("Background").Texture = PlayerSkin.ProgressBackgroundImage;
-			PanelRight.GetNode<TextureRect>("HitsIcon").Texture = PlayerSkin.HitsImage;
-			PanelRight.GetNode<TextureRect>("MissesIcon").Texture = PlayerSkin.MissesImage;
-			NotesMultimesh.Multimesh.Mesh = PlayerSkin.NoteMesh;
+			(Cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
+			(CursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
+			(Grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.GridImage;
+			PanelLeft.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelLeftBackgroundImage;
+			PanelRight.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelRightBackgroundImage;
+			HealthTexture.Texture = SkinProfile.HealthImage;
+			HealthTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.HealthBackgroundImage;
+			ProgressBarTexture.Texture = SkinProfile.ProgressImage;
+			ProgressBarTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.ProgressBackgroundImage;
+			PanelRight.GetNode<TextureRect>("HitsIcon").Texture = SkinProfile.HitsImage;
+			PanelRight.GetNode<TextureRect>("MissesIcon").Texture = SkinProfile.MissesImage;
+			NotesMultimesh.Multimesh.Mesh = SkinProfile.NoteMesh;
 		}
 		catch (Exception exception)
 		{
@@ -673,7 +673,7 @@ public partial class LegacyRunner : Node3D
 			throw Logger.Error($"Could not load skin; {exception.Message}");
 		}
 
-		string space = settings.Space == "skin" ? PlayerSkin.Space : settings.Space;
+		string space = settings.Space == "skin" ? SkinProfile.Space : settings.Space;
 
 		if (space != "void")
 		{
@@ -1131,9 +1131,9 @@ public partial class LegacyRunner : Node3D
 		}
 	}
 	
-	public void Play(Map map, double speed = 1, double startFrom = 0, Dictionary<string, bool> mods = null, string[] players = null, Replay[] replays = null)
+	public static void Play(Map map, double speed = 1, double startFrom = 0, Dictionary<string, bool> mods = null, string[] players = null, Replay[] replays = null)
 	{
-		CurrentAttempt = new(this, map, speed, startFrom, mods ?? [], players, replays);
+		CurrentAttempt = new(map, speed, startFrom, mods ?? [], players, replays);
 		Playing = true;
 		StopQueued = false;
 		Started = Time.GetTicksUsec();
@@ -1154,16 +1154,17 @@ public partial class LegacyRunner : Node3D
 		}
 	}
 	
-	public void Restart()
+	public static void Restart()
 	{
 		CurrentAttempt.Alive = false;
 		CurrentAttempt.Qualifies = false;
 		Stop(false);
-		Node3D.GetTree().ReloadCurrentScene();
+        // fml
+        SceneManager.ReloadCurrentScene();
 		Play(MapParser.Decode(CurrentAttempt.Map.FilePath), CurrentAttempt.Speed, CurrentAttempt.StartFrom, CurrentAttempt.Mods, CurrentAttempt.Players, CurrentAttempt.Replays);
 	}
 	
-	public void Skip()
+	public static void Skip()
 	{
 		if (CurrentAttempt.Skippable)
 		{
@@ -1193,7 +1194,7 @@ public partial class LegacyRunner : Node3D
 		}
 	}
 	
-	public void QueueStop()
+	public static void QueueStop()
 	{
 		if (!Playing)
 		{
@@ -1204,7 +1205,7 @@ public partial class LegacyRunner : Node3D
 		StopQueued = true;
 	}
 	
-	public void Stop(bool results = true)
+	public static void Stop(bool results = true)
 	{
 		if (CurrentAttempt.Stopped)
 		{
@@ -1258,7 +1259,7 @@ public partial class LegacyRunner : Node3D
 		}
 	}
 	
-	public void ShowMenu(bool show = true)
+	public static void ShowMenu(bool show = true)
 	{
 		MenuShown = show;
 		Playing = !MenuShown;
@@ -1279,12 +1280,12 @@ public partial class LegacyRunner : Node3D
 		tween.Play();
 	}
 	
-	public void HideMenu()
+	public static void HideMenu()
 	{
 		ShowMenu(false);
 	}
 	
-	public void ShowReplayViewer(bool show = true)
+	public static void ShowReplayViewer(bool show = true)
 	{
 		ReplayViewerShown = CurrentAttempt.IsReplay && show;
 		ReplayViewer.Visible = ReplayViewerShown;
@@ -1292,19 +1293,19 @@ public partial class LegacyRunner : Node3D
 		Input.MouseMode = ReplayViewerShown ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Hidden;
 	}
 	
-	public void HideReplayViewer()
+	public static void HideReplayViewer()
 	{
 		ShowReplayViewer(false);
 	}
 	
-	public void UpdateVolume()
+	public static void UpdateVolume()
 	{
 		SoundManager.Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
 		SoundManager.HitSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
 		SoundManager.FailSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
 	}
 	
-	public void UpdateCursor(Vector2 mouseDelta)
+	public static void UpdateCursor(Vector2 mouseDelta)
 	{
 		float sensitivity = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].Sensitivity : settings.Sensitivity);
 		sensitivity *= (float)settings.FoV / 70f;

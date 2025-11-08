@@ -49,7 +49,7 @@ public partial class LegacyRenderer : MultiMeshInstance3D
             }
             
             int j = LegacyRunner.ToProcess - i - 1;
-            Color color = PlayerSkin.Colors[note.Index % PlayerSkin.Colors.Length];
+            Color color = SkinProfile.Colors[note.Index % SkinProfile.Colors.Length];
             
             transform.Origin = new Vector3(note.X, note.Y, -depth);
             color.A = alpha;
