@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Godot;
 
 
@@ -53,7 +52,6 @@ public partial class NoteRenderer : Renderer
         }
         else
         {
-            // Saves rendering time by not clearing the buffer on the multimesh
             noteMesh.Multimesh.VisibleInstanceCount = notes.Count;
         }
 

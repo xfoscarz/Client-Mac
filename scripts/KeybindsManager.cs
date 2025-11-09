@@ -4,15 +4,15 @@ using Menu;
 
 public partial class KeybindsManager : Node
 {
-    private static bool PopupShown = false;
-    private static ulong LastVolumeChange = 0;
-    private static Node LastVolumeChangeScene;
+    private static bool popupShown = false;
+    private static ulong lastVolumeChange = 0;
+    private static Node lastVolumeChangeScene;
 
     public override void _Process(double delta)
     {
-        if (LastVolumeChangeScene == SceneManager.Scene && PopupShown && Time.GetTicksMsec() - LastVolumeChange >= 1000)
+        if (lastVolumeChangeScene == SceneManager.Scene && popupShown && Time.GetTicksMsec() - lastVolumeChange >= 1000)
         {
-            PopupShown = false;
+            popupShown = false;
 
             Panel volumePopup = SceneManager.Scene.GetNode<Panel>("Volume");
             Label label = volumePopup.GetNode<Label>("Label");
@@ -55,10 +55,10 @@ public partial class KeybindsManager : Node
                 switch (eventMouseButton.ButtonIndex)
                 {
                     case MouseButton.WheelUp:
-                        settings.VolumeMaster = Math.Min(100, settings.VolumeMaster + 5f);
+                        SettingsManager.Settings.VolumeMaster = Math.Min(100, settings.VolumeMaster + 5f);
                         break;
                     case MouseButton.WheelDown:
-                        settings.VolumeMaster = Math.Max(0, settings.VolumeMaster - 5f);
+                        SettingsManager.Settings.VolumeMaster = Math.Max(0, settings.VolumeMaster - 5f);
                         break;
                 }
 
@@ -71,11 +71,13 @@ public partial class KeybindsManager : Node
                 tween.Parallel().TweenProperty(label, "anchor_bottom", 0, 0.15).SetTrans(Tween.TransitionType.Quad);
                 tween.Play();
 
-                PopupShown = true;
-                LastVolumeChange = Time.GetTicksMsec();
-                LastVolumeChangeScene = SceneManager.Scene;
+                popupShown = true;
+                lastVolumeChange = Time.GetTicksMsec();
+                lastVolumeChangeScene = SceneManager.Scene;
 
                 SoundManager.UpdateSounds();
+                SoundManager.UpdateVolume();
+
             }
         }
     }

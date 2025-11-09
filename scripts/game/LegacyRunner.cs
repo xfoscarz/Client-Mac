@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Security.Cryptography;
 using Godot;
@@ -9,61 +8,61 @@ public partial class LegacyRunner : Node3D
 {
     private static SettingsProfile settings;
 
-	private static Node3D Node3D;
-	private static readonly PackedScene PlayerScore = GD.Load<PackedScene>("res://prefabs/player_score.tscn");
-	private static readonly PackedScene HitFeedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
-	private static readonly PackedScene MissFeedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
-	private static readonly PackedScene ModifierIcon = GD.Load<PackedScene>("res://prefabs/modifier.tscn");
+	private static Node3D node3D;
+	private static readonly PackedScene player_score = GD.Load<PackedScene>("res://prefabs/player_score.tscn");
+	private static readonly PackedScene hit_feedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
+	private static readonly PackedScene miss_feedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
+	private static readonly PackedScene modifier_icon = GD.Load<PackedScene>("res://prefabs/modifier.tscn");
 
-	private static Panel Menu;
-	private static Label FPSCounter;
-	private static Camera3D Camera;
-	private static Label3D TitleLabel;
-	private static Label3D ComboLabel;
-	private static Label3D SpeedLabel;
-	private static Label3D SkipLabel;
-	private static Label3D ProgressLabel;
-	private static TextureRect Jesus;
-	private static MeshInstance3D Cursor;
-	private static MeshInstance3D Grid;
-	private static MeshInstance3D VideoQuad;
-	private static MultiMeshInstance3D NotesMultimesh;
-	private static MultiMeshInstance3D CursorTrailMultimesh;
-	private static TextureRect HealthTexture;
-	private static TextureRect ProgressBarTexture;
-	private static SubViewport PanelLeft;
-	private static SubViewport PanelRight;
-	private static AudioStreamPlayer Bell;
-	private static Panel ReplayViewer;
-	private static TextureButton ReplayViewerPause;
-	private static Label ReplayViewerLabel;
-	private static HSlider ReplayViewerSeek;
-	private static Label AccuracyLabel;
-	private static Label HitsLabel;
-	private static Label MissesLabel;
-	private static Label SumLabel;
-	private static Label SimpleMissesLabel;
-	private static Label ScoreLabel;
-	private static Label MultiplierLabel;
-	private static Panel MultiplierProgressPanel;
-	private static ShaderMaterial MultiplierProgressMaterial;
-	private static float MultiplierProgress = 0;	// more efficient than spamming material.GetShaderParameter()
-	private static Color MultiplierColour = Color.Color8(255, 255, 255);
-	private static VideoStreamPlayer Video;
-	private static Tween HitTween;
-	private static Tween MissTween;
-	private static bool StopQueued = false;
-	private static int HitPopups = 0;
-	private static int MissPopups = 0;
-	private static bool ReplayViewerSeekHovered = false;
-	private static bool LeftMouseButtonDown = false;
+	private static Panel menu;
+	private static Label fpsCounter;
+	private static Camera3D camera;
+	private static Label3D titleLabel;
+	private static Label3D comboLabel;
+	private static Label3D speedLabel;
+	private static Label3D skipLabel;
+	private static Label3D progressLabel;
+	private static TextureRect jesus;
+	private static MeshInstance3D cursor;
+	private static MeshInstance3D grid;
+	private static MeshInstance3D videoQuad;
+	private static MultiMeshInstance3D notesMultimesh;
+	private static MultiMeshInstance3D cursorTrailMultimesh;
+	private static TextureRect healthTexture;
+	private static TextureRect progressBarTexture;
+	private static SubViewport panelLeft;
+	private static SubViewport panelRight;
+	private static AudioStreamPlayer bell;
+	private static Panel replayViewer;
+	private static TextureButton replayViewerPause;
+	private static Label replayViewerLabel;
+	private static HSlider replayViewerSeek;
+	private static Label accuracyLabel;
+	private static Label hitsLabel;
+	private static Label missesLabel;
+	private static Label sumLabel;
+	private static Label simpleMissesLabel;
+	private static Label scoreLabel;
+	private static Label multiplierLabel;
+	private static Panel multiplierProgressPanel;
+	private static ShaderMaterial multiplierProgressMaterial;
+	private static float multiplierProgress = 0;	// more efficient than spamming material.GetShaderParameter()
+	private static Color multiplierColour = Color.Color8(255, 255, 255);
+	private static VideoStreamPlayer video;
+	private static Tween hitTween;
+	private static Tween missTween;
+	private static bool stopQueued = false;
+	private static int hitPopups = 0;
+	private static int missPopups = 0;
+	private static bool replayViewerSeekHovered = false;
+	private static bool leftMouseButtonDown = false;
 
-	private double LastFrame = Time.GetTicksUsec(); 	// delta arg unreliable..
-	private double LastSecond = Time.GetTicksUsec();	// better framerate calculation
-	private List<Dictionary<string, object>> LastCursorPositions = [];	// trail
-	private int FrameCount = 0;
-	private float SkipLabelAlpha = 0;
-	private float TargetSkipLabelAlpha = 0;
+	private double lastFrame = Time.GetTicksUsec(); 	// delta arg unreliable..
+	private double lastSecond = Time.GetTicksUsec();	// better framerate calculation
+	private List<Dictionary<string, object>> lastCursorPositions = [];	// trail
+	private int frameCount = 0;
+	private float skipLabelAlpha = 0;
+	private float targetSkipLabelAlpha = 0;
 
 	public static bool Playing = false;
 	public static ulong Started = 0;
@@ -260,7 +259,7 @@ public partial class LegacyRunner : Node3D
 
 					if (ComboMultiplier == 8)
 					{
-						MultiplierColour = Color.Color8(255, 140, 0);
+						multiplierColour = Color.Color8(255, 140, 0);
 					}
 				}
 			}
@@ -272,33 +271,33 @@ public partial class LegacyRunner : Node3D
 			Health = Math.Min(100, Health + HealthStep / 1.75);
 			Map.Notes[index].Hit = true;
 
-			ScoreLabel.Text = Lib.String.PadMagnitude(Score.ToString());
-			MultiplierLabel.Text = $"{ComboMultiplier}x";
-			HitsLabel.Text = $"{Hits}";
-			HitsLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
-			SumLabel.Text = Lib.String.PadMagnitude(Sum.ToString());
-			AccuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString().PadDecimals(2))}%";
-			ComboLabel.Text = Combo.ToString();
+			scoreLabel.Text = Lib.String.PadMagnitude(Score.ToString());
+			multiplierLabel.Text = $"{ComboMultiplier}x";
+			hitsLabel.Text = $"{Hits}";
+			hitsLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
+			sumLabel.Text = Lib.String.PadMagnitude(Sum.ToString());
+			accuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString().PadDecimals(2))}%";
+			comboLabel.Text = Combo.ToString();
 
 			if (!settings.AlwaysPlayHitSound)
 			{
 				SoundManager.HitSound.Play();
 			}
 
-			HitTween?.Kill();
-			HitTween = HitsLabel.CreateTween();
-			HitTween.TweenProperty(HitsLabel.LabelSettings, "font_color", Color.Color8(255, 255, 255, 160), 1);
-			HitTween.Play();
+			hitTween?.Kill();
+			hitTween = hitsLabel.CreateTween();
+			hitTween.TweenProperty(hitsLabel.LabelSettings, "font_color", Color.Color8(255, 255, 255, 160), 1);
+			hitTween.Play();
 
-			if (!settings.HitPopups || HitPopups >= 64)
+			if (!settings.HitPopups || hitPopups >= 64)
 			{
 				return;
 			}
 
-			HitPopups++;
+			hitPopups++;
 
-			Label3D popup = HitFeedback.Instantiate<Label3D>();
-			Node3D.AddChild(popup);
+			Label3D popup = hit_feedback.Instantiate<Label3D>();
+			node3D.AddChild(popup);
 			popup.GlobalPosition = new Vector3(Map.Notes[index].X, -1.4f, 0);
 			popup.Text = hitScore.ToString();
 
@@ -306,7 +305,7 @@ public partial class LegacyRunner : Node3D
 			tween.TweenProperty(popup, "transparency", 1, 0.25f);
 			tween.Parallel().TweenProperty(popup, "position", popup.Position + Vector3.Up / 4f, 0.25f).SetTrans(Tween.TransitionType.Quint).SetEase(Tween.EaseType.Out);
 			tween.TweenCallback(Callable.From(() => {
-				HitPopups--;
+				hitPopups--;
 				popup.QueueFree();
 			}));
 			tween.Play();
@@ -349,8 +348,8 @@ public partial class LegacyRunner : Node3D
 					DeathTime = Progress;
 					SoundManager.FailSound.Play();
 
-					HealthTexture.Modulate = Color.Color8(255, 255, 255, 128);
-					HealthTexture.GetParent().GetNode<TextureRect>("Background").Modulate = HealthTexture.Modulate;
+					healthTexture.Modulate = Color.Color8(255, 255, 255, 128);
+					healthTexture.GetParent().GetNode<TextureRect>("Background").Modulate = healthTexture.Modulate;
 				}
 
 				if (!Mods["NoFail"])
@@ -359,28 +358,28 @@ public partial class LegacyRunner : Node3D
 				}
 			}
 
-			MultiplierLabel.Text = $"{ComboMultiplier}x";
-			MissesLabel.Text = $"{Misses}";
-			SimpleMissesLabel.Text = $"{Misses}";
-			MissesLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
-			SumLabel.Text = Lib.String.PadMagnitude(Sum.ToString());
-			AccuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString().PadDecimals(2))}%";
-			ComboLabel.Text = Combo.ToString();
+			multiplierLabel.Text = $"{ComboMultiplier}x";
+			missesLabel.Text = $"{Misses}";
+			simpleMissesLabel.Text = $"{Misses}";
+			missesLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
+			sumLabel.Text = Lib.String.PadMagnitude(Sum.ToString());
+			accuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString().PadDecimals(2))}%";
+			comboLabel.Text = Combo.ToString();
 
-			MissTween?.Kill();
-			MissTween = MissesLabel.CreateTween();
-			MissTween.TweenProperty(MissesLabel.LabelSettings, "font_color", Color.Color8(255, 255, 255, 160), 1);
-			MissTween.Play();
+			missTween?.Kill();
+			missTween = missesLabel.CreateTween();
+			missTween.TweenProperty(missesLabel.LabelSettings, "font_color", Color.Color8(255, 255, 255, 160), 1);
+			missTween.Play();
 
-			if (!settings.MissPopups || MissPopups >= 64)
+			if (!settings.MissPopups || missPopups >= 64)
 			{
 				return;
 			}
 
-			MissPopups++;
+			missPopups++;
 
-			Sprite3D icon = MissFeedback.Instantiate<Sprite3D>();
-			Node3D.AddChild(icon);
+			Sprite3D icon = miss_feedback.Instantiate<Sprite3D>();
+			node3D.AddChild(icon);
 			icon.GlobalPosition = new Vector3(Map.Notes[index].X, -1.4f, 0);
 			icon.Texture = SkinProfile.MissFeedbackImage;
 
@@ -388,7 +387,7 @@ public partial class LegacyRunner : Node3D
 			tween.TweenProperty(icon, "transparency", 1, 0.25f);
 			tween.Parallel().TweenProperty(icon, "position", icon.Position + Vector3.Up / 4f, 0.25f).SetTrans(Tween.TransitionType.Quint).SetEase(Tween.EaseType.Out);
 			tween.TweenCallback(Callable.From(() => {
-				MissPopups--;
+				missPopups--;
 				icon.QueueFree();
 			}));
 			tween.Play();
@@ -456,41 +455,41 @@ public partial class LegacyRunner : Node3D
 	{
         settings = SettingsManager.Settings;
 
-		Node3D = this;
+		node3D = this;
 
-		Menu = GetNode<Panel>("Menu");
-		FPSCounter = GetNode<Label>("FPSCounter");
-		Camera = GetNode<Camera3D>("Camera3D");
-		TitleLabel = GetNode<Label3D>("Title");
-		ComboLabel = GetNode<Label3D>("Combo");
-		SpeedLabel = GetNode<Label3D>("Speed");
-		SkipLabel = GetNode<Label3D>("Skip");
-		ProgressLabel = GetNode<Label3D>("Progress");
-		Jesus = GetNode<TextureRect>("Jesus");
-		Cursor = GetNode<MeshInstance3D>("Cursor");
-		Grid = GetNode<MeshInstance3D>("Grid");
-		VideoQuad = GetNode<MeshInstance3D>("Video");
-		NotesMultimesh = GetNode<MultiMeshInstance3D>("Notes");
-		CursorTrailMultimesh = GetNode<MultiMeshInstance3D>("CursorTrail");
-		HealthTexture = GetNode("HealthViewport").GetNode<TextureRect>("Main");
-		ProgressBarTexture = GetNode("ProgressBarViewport").GetNode<TextureRect>("Main");
-		PanelLeft = GetNode<SubViewport>("PanelLeftViewport");
-		PanelRight = GetNode<SubViewport>("PanelRightViewport");
-		Bell = GetNode<AudioStreamPlayer>("Bell");
-		ReplayViewer = GetNode<Panel>("ReplayViewer");
-		ReplayViewerPause = ReplayViewer.GetNode<TextureButton>("Pause");
-		ReplayViewerLabel = ReplayViewer.GetNode<Label>("Time");
-		ReplayViewerSeek = ReplayViewer.GetNode<HSlider>("Seek");
-		AccuracyLabel = PanelRight.GetNode<Label>("Accuracy");
-		HitsLabel = PanelRight.GetNode<Label>("Hits");
-		MissesLabel = PanelRight.GetNode<Label>("Misses");
-		SumLabel = PanelRight.GetNode<Label>("Sum");
-		SimpleMissesLabel = PanelRight.GetNode<Label>("SimpleMisses");
-		ScoreLabel = PanelLeft.GetNode<Label>("Score");
-		MultiplierLabel = PanelLeft.GetNode<Label>("Multiplier");
-		MultiplierProgressPanel = PanelLeft.GetNode<Panel>("MultiplierProgress");
-		MultiplierProgressMaterial = MultiplierProgressPanel.Material as ShaderMaterial;
-		Video = GetNode("VideoViewport").GetNode<VideoStreamPlayer>("VideoStreamPlayer");
+		menu = GetNode<Panel>("Menu");
+		fpsCounter = GetNode<Label>("FPSCounter");
+		camera = GetNode<Camera3D>("Camera3D");
+		titleLabel = GetNode<Label3D>("Title");
+		comboLabel = GetNode<Label3D>("Combo");
+		speedLabel = GetNode<Label3D>("Speed");
+		skipLabel = GetNode<Label3D>("Skip");
+		progressLabel = GetNode<Label3D>("Progress");
+		jesus = GetNode<TextureRect>("Jesus");
+		cursor = GetNode<MeshInstance3D>("Cursor");
+		grid = GetNode<MeshInstance3D>("Grid");
+		videoQuad = GetNode<MeshInstance3D>("Video");
+		notesMultimesh = GetNode<MultiMeshInstance3D>("Notes");
+		cursorTrailMultimesh = GetNode<MultiMeshInstance3D>("CursorTrail");
+		healthTexture = GetNode("HealthViewport").GetNode<TextureRect>("Main");
+		progressBarTexture = GetNode("ProgressBarViewport").GetNode<TextureRect>("Main");
+		panelLeft = GetNode<SubViewport>("PanelLeftViewport");
+		panelRight = GetNode<SubViewport>("PanelRightViewport");
+		bell = GetNode<AudioStreamPlayer>("Bell");
+		replayViewer = GetNode<Panel>("ReplayViewer");
+		replayViewerPause = replayViewer.GetNode<TextureButton>("Pause");
+		replayViewerLabel = replayViewer.GetNode<Label>("Time");
+		replayViewerSeek = replayViewer.GetNode<HSlider>("Seek");
+		accuracyLabel = panelRight.GetNode<Label>("Accuracy");
+		hitsLabel = panelRight.GetNode<Label>("Hits");
+		missesLabel = panelRight.GetNode<Label>("Misses");
+		sumLabel = panelRight.GetNode<Label>("Sum");
+		simpleMissesLabel = panelRight.GetNode<Label>("SimpleMisses");
+		scoreLabel = panelLeft.GetNode<Label>("Score");
+		multiplierLabel = panelLeft.GetNode<Label>("Multiplier");
+		multiplierProgressPanel = panelLeft.GetNode<Panel>("MultiplierProgress");
+		multiplierProgressMaterial = multiplierProgressPanel.Material as ShaderMaterial;
+		video = GetNode("VideoViewport").GetNode<VideoStreamPlayer>("VideoStreamPlayer");
 
 		List<string> activeMods = [];
 
@@ -504,7 +503,7 @@ public partial class LegacyRunner : Node3D
 
 		for (int i = 0; i < activeMods.Count; i++)
 		{
-			Sprite3D icon = ModifierIcon.Instantiate<Sprite3D>();
+			Sprite3D icon = modifier_icon.Instantiate<Sprite3D>();
 
 			AddChild(icon);
 
@@ -512,9 +511,9 @@ public partial class LegacyRunner : Node3D
 			icon.Texture = Util.GetModIcon(activeMods[i]);
 		}
 
-		Panel menuButtonsHolder = Menu.GetNode<Panel>("Holder");
+		Panel menuButtonsHolder = menu.GetNode<Panel>("Holder");
 
-		Menu.GetNode<Button>("Button").Pressed += HideMenu;
+		menu.GetNode<Button>("Button").Pressed += HideMenu;
 		menuButtonsHolder.GetNode<Button>("Resume").Pressed += HideMenu;
 		menuButtonsHolder.GetNode<Button>("Restart").Pressed += Restart;
 		menuButtonsHolder.GetNode<Button>("Settings").Pressed += () => {
@@ -537,16 +536,16 @@ public partial class LegacyRunner : Node3D
 			Stop();
 		};
 
-		ReplayViewerPause.Pressed += () => {
+		replayViewerPause.Pressed += () => {
 			Playing = !Playing;
 			SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;	// ooohh my goood
-			ReplayViewerPause.TextureNormal = GD.Load<Texture2D>(Playing ? "res://textures/pause.png" : "res://textures/play.png");
+			replayViewerPause.TextureNormal = GD.Load<Texture2D>(Playing ? "res://textures/pause.png" : "res://textures/play.png");
 		};
 
-		ReplayViewerSeek.ValueChanged += (double value) => {
-			ReplayViewerLabel.Text = $"{Lib.String.FormatTime(value * CurrentAttempt.LongestReplayLength / 1000)} / {Lib.String.FormatTime(CurrentAttempt.LongestReplayLength / 1000)}";
+		replayViewerSeek.ValueChanged += (double value) => {
+			replayViewerLabel.Text = $"{Lib.String.FormatTime(value * CurrentAttempt.LongestReplayLength / 1000)} / {Lib.String.FormatTime(CurrentAttempt.LongestReplayLength / 1000)}";
 		};
-		ReplayViewerSeek.DragEnded += (bool _) => {
+		replayViewerSeek.DragEnded += (bool _) => {
 			CurrentAttempt.Hits = 0;
 			CurrentAttempt.Misses = 0;
 			CurrentAttempt.Sum = 0;
@@ -559,23 +558,23 @@ public partial class LegacyRunner : Node3D
 			CurrentAttempt.Health = 100;
 			CurrentAttempt.HealthStep = 15;
 
-			HitsLabel.Text = "0";
-			MissesLabel.Text = "0";
-			SimpleMissesLabel.Text = "0";
-			SumLabel.Text = "0";
-			AccuracyLabel.Text = "100.00%";
-			ScoreLabel.Text = "0";
-			ComboLabel.Text = "0";
-			MultiplierLabel.Text = "1x";
-			MultiplierProgress = 0;
-			MultiplierColour = Color.Color8(255, 255, 255);
+			hitsLabel.Text = "0";
+			missesLabel.Text = "0";
+			simpleMissesLabel.Text = "0";
+			sumLabel.Text = "0";
+			accuracyLabel.Text = "100.00%";
+			scoreLabel.Text = "0";
+			comboLabel.Text = "0";
+			multiplierLabel.Text = "1x";
+			multiplierProgress = 0;
+			multiplierColour = Color.Color8(255, 255, 255);
 
 			for (int i = 0; i < CurrentAttempt.Map.Notes.Length; i++)
 			{
 				CurrentAttempt.Map.Notes[i].Hit = false;
 			}
 
-			CurrentAttempt.Progress = (float)ReplayViewerSeek.Value * CurrentAttempt.LongestReplayLength;
+			CurrentAttempt.Progress = (float)replayViewerSeek.Value * CurrentAttempt.LongestReplayLength;
 
 			for (int i = 0; i < CurrentAttempt.Replays.Length; i++)
 			{
@@ -599,73 +598,73 @@ public partial class LegacyRunner : Node3D
 
 			SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
 		};
-		ReplayViewerSeek.FocusEntered += () => {
-			ReplayViewerSeekHovered = true;
+		replayViewerSeek.FocusEntered += () => {
+			replayViewerSeekHovered = true;
 		};
-		ReplayViewerSeek.FocusExited += () => {
-			ReplayViewerSeekHovered = false;
+		replayViewerSeek.FocusExited += () => {
+			replayViewerSeekHovered = false;
 		};
 
 		if (settings.SimpleHUD)
 		{
-			Godot.Collections.Array<Node> widgets = PanelLeft.GetChildren();
-			widgets.AddRange(PanelRight.GetChildren());
+			Godot.Collections.Array<Node> widgets = panelLeft.GetChildren();
+			widgets.AddRange(panelRight.GetChildren());
 
 			foreach (Node widget in widgets)
 			{
 				(widget as CanvasItem).Visible = false;
 			}
 
-			SimpleMissesLabel.Visible = true;
+			simpleMissesLabel.Visible = true;
 		}
 
 		float fov = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].FoV : settings.FoV);
 
 		MenuShown = false;
-		Camera.Fov = fov;
-		VideoQuad.Transparency = 1;
-		TitleLabel.Text = CurrentAttempt.Map.PrettyTitle;
-		HitsLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 160);
-		MissesLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 160);
-		SpeedLabel.Text = $"{CurrentAttempt.Speed.ToString().PadDecimals(2)}x";
-		SpeedLabel.Modulate = Color.Color8(255, 255, 255, (byte)(CurrentAttempt.Speed == 1 ? 0 : 32));
+		camera.Fov = fov;
+		videoQuad.Transparency = 1;
+		titleLabel.Text = CurrentAttempt.Map.PrettyTitle;
+		hitsLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 160);
+		missesLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 160);
+		speedLabel.Text = $"{CurrentAttempt.Speed.ToString().PadDecimals(2)}x";
+		speedLabel.Modulate = Color.Color8(255, 255, 255, (byte)(CurrentAttempt.Speed == 1 ? 0 : 32));
 
 		float videoHeight = 2 * (float)Math.Sqrt(Math.Pow(103.75 / Math.Cos(Mathf.DegToRad(fov / 2)), 2) - Math.Pow(103.75, 2));
 
-		(VideoQuad.Mesh as QuadMesh).Size = new(videoHeight / 0.5625f, videoHeight);	// don't use 16:9? too bad lol
-		Video.GetParent<SubViewport>().Size = new((int)(1920 * settings.VideoRenderScale / 100), (int)(1080 * settings.VideoRenderScale / 100));
+		(videoQuad.Mesh as QuadMesh).Size = new(videoHeight / 0.5625f, videoHeight);	// don't use 16:9? too bad lol
+		video.GetParent<SubViewport>().Size = new((int)(1920 * settings.VideoRenderScale / 100), (int)(1080 * settings.VideoRenderScale / 100));
 
-		MultiplierProgress = 0;
-		MultiplierColour = Color.Color8(255, 255, 255);
+		multiplierProgress = 0;
+		multiplierColour = Color.Color8(255, 255, 255);
 
-		MultiplierProgressMaterial.SetShaderParameter("progress", 0);
-		MultiplierProgressMaterial.SetShaderParameter("colour", MultiplierColour);
-		MultiplierProgressMaterial.SetShaderParameter("sides", Math.Clamp(CurrentAttempt.ComboMultiplierIncrement, 3, 32));
+		multiplierProgressMaterial.SetShaderParameter("progress", 0);
+		multiplierProgressMaterial.SetShaderParameter("colour", multiplierColour);
+		multiplierProgressMaterial.SetShaderParameter("sides", Math.Clamp(CurrentAttempt.ComboMultiplierIncrement, 3, 32));
 
-		Util.DiscordRPC.Call("Set", "details", "Playing a Map");
-		Util.DiscordRPC.Call("Set", "state", CurrentAttempt.Map.PrettyTitle);
-		Util.DiscordRPC.Call("Set", "end_timestamp", Time.GetUnixTimeFromSystem() + CurrentAttempt.Map.Length / 1000 / CurrentAttempt.Speed);
+		Discord.Client.UpdateDetails("Playing a Map");
+		Discord.Client.UpdateState(CurrentAttempt.Map.PrettyTitle);
+		Discord.Client.UpdateEndTime(DateTime.UtcNow.AddSeconds((Time.GetUnixTimeFromSystem() + CurrentAttempt.Map.Length / 1000 / CurrentAttempt.Speed)));
 
 		Input.MouseMode = settings.AbsoluteInput || CurrentAttempt.IsReplay ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured;
 		Input.UseAccumulatedInput = false;
 		DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
 
-		(Cursor.Mesh as QuadMesh).Size = new Vector2((float)(Constants.CURSOR_SIZE * settings.CursorScale), (float)(Constants.CURSOR_SIZE * settings.CursorScale));
+		(cursor.Mesh as QuadMesh).Size = new Vector2((float)(Constants.CURSOR_SIZE * settings.CursorScale), (float)(Constants.CURSOR_SIZE * settings.CursorScale));
 
 		try
 		{
-			(Cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
-			(CursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
-			(Grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.GridImage;
-			PanelLeft.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelLeftBackgroundImage;
-			PanelRight.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelRightBackgroundImage;
-			HealthTexture.Texture = SkinProfile.HealthImage;
-			HealthTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.HealthBackgroundImage;
-			ProgressBarTexture.Texture = SkinProfile.ProgressImage;
-			ProgressBarTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.ProgressBackgroundImage;
-			PanelRight.GetNode<TextureRect>("HitsIcon").Texture = SkinProfile.HitsImage;
-			PanelRight.GetNode<TextureRect>("MissesIcon").Texture = SkinProfile.MissesImage;
-			NotesMultimesh.Multimesh.Mesh = SkinProfile.NoteMesh;
+			(cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
+			(cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
+			(grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.GridImage;
+			panelLeft.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelLeftBackgroundImage;
+			panelRight.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelRightBackgroundImage;
+			healthTexture.Texture = SkinProfile.HealthImage;
+			healthTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.HealthBackgroundImage;
+			progressBarTexture.Texture = SkinProfile.ProgressImage;
+			progressBarTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.ProgressBackgroundImage;
+			panelRight.GetNode<TextureRect>("HitsIcon").Texture = SkinProfile.HitsImage;
+			panelRight.GetNode<TextureRect>("MissesIcon").Texture = SkinProfile.MissesImage;
+			notesMultimesh.Multimesh.Mesh = SkinProfile.NoteMesh;
 		}
 		catch (Exception exception)
 		{
@@ -677,7 +676,7 @@ public partial class LegacyRunner : Node3D
 
 		if (space != "void")
 		{
-			Node3D.AddChild(GD.Load<PackedScene>($"res://prefabs/spaces/{space}.tscn").Instantiate<Node3D>());
+			node3D.AddChild(GD.Load<PackedScene>($"res://prefabs/spaces/{space}.tscn").Instantiate<Node3D>());
 		}
 
 		SoundManager.UpdateSounds();
@@ -704,7 +703,7 @@ public partial class LegacyRunner : Node3D
 			else
 			{
 				File.WriteAllBytes($"{Constants.USER_FOLDER}/cache/video.mp4", CurrentAttempt.Map.VideoBuffer);
-				Video.Stream.File = $"{Constants.USER_FOLDER}/cache/video.mp4";
+				video.Stream.File = $"{Constants.USER_FOLDER}/cache/video.mp4";
 			}
 		}
 		if (CurrentAttempt.Replays != null)
@@ -724,13 +723,13 @@ public partial class LegacyRunner : Node3D
 					CurrentAttempt.Mods["Spin"] = false;
 				}
 
-				MeshInstance3D cursor = Cursor.Duplicate() as MeshInstance3D;
-				cursor.Name = $"_cursor{i}";
-				Node3D.AddChild(cursor);
-				Cursors[i] = cursor;
+				MeshInstance3D _cursor = cursor.Duplicate() as MeshInstance3D;
+				_cursor.Name = $"_cursor{i}";
+				node3D.AddChild(_cursor);
+				Cursors[i] = _cursor;
 			}
 			
-			Cursor.Visible = false;
+			cursor.Visible = false;
 			ShowReplayViewer();
 		}
 
@@ -739,29 +738,29 @@ public partial class LegacyRunner : Node3D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		MultiplierProgress = Mathf.Lerp(MultiplierProgress, (float)CurrentAttempt.ComboMultiplierProgress / CurrentAttempt.ComboMultiplierIncrement, Math.Min(1, (float)delta * 16));
-		MultiplierColour = MultiplierColour.Lerp(Color.Color8(255, 255, 255), (float)delta * 2);
-		MultiplierProgressMaterial.SetShaderParameter("progress", MultiplierProgress);
+		multiplierProgress = Mathf.Lerp(multiplierProgress, (float)CurrentAttempt.ComboMultiplierProgress / CurrentAttempt.ComboMultiplierIncrement, Math.Min(1, (float)delta * 16));
+		multiplierColour = multiplierColour.Lerp(Color.Color8(255, 255, 255), (float)delta * 2);
+		multiplierProgressMaterial.SetShaderParameter("progress", multiplierProgress);
 	
-		if (MultiplierColour.B < 255)	// fuck
+		if (multiplierColour.B < 255)	// fuck
 		{
-			MultiplierProgressMaterial.SetShaderParameter("colour", MultiplierColour);	// this loves causing lag spikes, keep track
+			multiplierProgressMaterial.SetShaderParameter("colour", multiplierColour);	// this loves causing lag spikes, keep track
 		}
 	}
 
 	public override void _Process(double delta)
 	{
 		ulong now = Time.GetTicksUsec();
-		delta = (now - LastFrame) / 1000000;	// more reliable
-		LastFrame = now;
-		FrameCount++;
-		SkipLabelAlpha = Mathf.Lerp(SkipLabelAlpha, TargetSkipLabelAlpha, Math.Min(1, (float)delta * 20));
+		delta = (now - lastFrame) / 1000000;	// more reliable
+		lastFrame = now;
+		frameCount++;
+		skipLabelAlpha = Mathf.Lerp(skipLabelAlpha, targetSkipLabelAlpha, Math.Min(1, (float)delta * 20));
 
-		if (LastSecond + 1000000 <= now)
+		if (lastSecond + 1000000 <= now)
 		{
-			FPSCounter.Text = $"{FrameCount} FPS";
-			FrameCount = 0;
-			LastSecond += 1000000;
+			fpsCounter.Text = $"{frameCount} FPS";
+			frameCount = 0;
+			lastSecond += 1000000;
 		}
 
 		if (!Playing)
@@ -771,9 +770,9 @@ public partial class LegacyRunner : Node3D
 
 		if (CurrentAttempt.IsReplay)
 		{
-			if (!ReplayViewerSeekHovered || !LeftMouseButtonDown)
+			if (!replayViewerSeekHovered || !leftMouseButtonDown)
 			{
-				ReplayViewerSeek.Value = CurrentAttempt.Progress / CurrentAttempt.LongestReplayLength;
+				replayViewerSeek.Value = CurrentAttempt.Progress / CurrentAttempt.LongestReplayLength;
 			}
 
 			Vector2 positionSum = new();
@@ -881,12 +880,12 @@ public partial class LegacyRunner : Node3D
 
 		if (CurrentAttempt.Map.VideoBuffer != null)
 		{
-			if (settings.VideoDim < 100 && !Video.IsPlaying() && CurrentAttempt.Progress >= 0)
+			if (settings.VideoDim < 100 && !video.IsPlaying() && CurrentAttempt.Progress >= 0)
 			{
-				Video.Play();
+				video.Play();
 				
-				Tween videoInTween = VideoQuad.CreateTween();
-				videoInTween.TweenProperty(VideoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
+				Tween videoInTween = videoQuad.CreateTween();
+				videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
 				videoInTween.Play();
 			}
 		}
@@ -991,23 +990,23 @@ public partial class LegacyRunner : Node3D
 		
 		if (CurrentAttempt.Skippable)
 		{
-			TargetSkipLabelAlpha = 32f / 255f;
-			ProgressLabel.Modulate = Color.Color8(255, 255, 255, (byte)(96 + (int)(140 * (Math.Sin(Math.PI * now / 750000) / 2 + 0.5))));
+			targetSkipLabelAlpha = 32f / 255f;
+			progressLabel.Modulate = Color.Color8(255, 255, 255, (byte)(96 + (int)(140 * (Math.Sin(Math.PI * now / 750000) / 2 + 0.5))));
 		}
 		else
 		{
-			TargetSkipLabelAlpha = 0;
-			ProgressLabel.Modulate = Color.Color8(255, 255, 255, 96);
+			targetSkipLabelAlpha = 0;
+			progressLabel.Modulate = Color.Color8(255, 255, 255, 96);
 		}
 
-		ProgressLabel.Text = $"{Lib.String.FormatTime(Math.Max(0, CurrentAttempt.Progress) / 1000)} / {Lib.String.FormatTime(MapLength / 1000)}";
-		HealthTexture.Size = HealthTexture.Size.Lerp(new Vector2(32 + (float)CurrentAttempt.Health * 10.24f, 80), Math.Min(1, (float)delta * 64));
-		ProgressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
-		SkipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(SkipLabelAlpha * 255));
+		progressLabel.Text = $"{Lib.String.FormatTime(Math.Max(0, CurrentAttempt.Progress) / 1000)} / {Lib.String.FormatTime(MapLength / 1000)}";
+		healthTexture.Size = healthTexture.Size.Lerp(new Vector2(32 + (float)CurrentAttempt.Health * 10.24f, 80), Math.Min(1, (float)delta * 64));
+		progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
+		skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
 
-		if (StopQueued)
+		if (stopQueued)
 		{
-			StopQueued = false;
+			stopQueued = false;
 			Stop();
 			return;
 		}
@@ -1017,12 +1016,12 @@ public partial class LegacyRunner : Node3D
 		{
 			List<Dictionary<string, object>> culledList = [];
 
-			LastCursorPositions.Add(new(){
+			lastCursorPositions.Add(new(){
 				["Time"] = now,
 				["Position"] = CurrentAttempt.CursorPosition
 			});
 
-			foreach (Dictionary<string, object> entry in LastCursorPositions)
+			foreach (Dictionary<string, object> entry in lastCursorPositions)
 			{
 				if (now - (ulong)entry["Time"] >= (settings.TrailTime * 1000000))
 				{
@@ -1038,11 +1037,11 @@ public partial class LegacyRunner : Node3D
 			}
 			
 			int count = culledList.Count;
-			float size = ((Vector2)Cursor.Mesh.Get("size")).X;
+			float size = ((Vector2)cursor.Mesh.Get("size")).X;
 			Transform3D transform = new Transform3D(new Vector3(size, 0, 0), new Vector3(0, size, 0), new Vector3(0, 0, size), Vector3.Zero);
 			int j = 0;
 			
-			CursorTrailMultimesh.Multimesh.InstanceCount = count;
+			cursorTrailMultimesh.Multimesh.InstanceCount = count;
 			
 			foreach (Dictionary<string, object> entry in culledList)
 			{
@@ -1051,14 +1050,14 @@ public partial class LegacyRunner : Node3D
 				
 				transform.Origin = new Vector3(((Vector2)entry["Position"]).X, ((Vector2)entry["Position"]).Y, 0);
 				
-				CursorTrailMultimesh.Multimesh.SetInstanceTransform(j, transform);
-				CursorTrailMultimesh.Multimesh.SetInstanceColor(j, Color.FromHtml($"ffffff{255 - alpha:X2}"));
+				cursorTrailMultimesh.Multimesh.SetInstanceTransform(j, transform);
+				cursorTrailMultimesh.Multimesh.SetInstanceColor(j, Color.FromHtml($"ffffff{255 - alpha:X2}"));
 				j++;
 			}
 		}
 		else
 		{
-			CursorTrailMultimesh.Multimesh.InstanceCount = 0;
+			cursorTrailMultimesh.Multimesh.InstanceCount = 0;
 		}
 	}
 	
@@ -1100,7 +1099,7 @@ public partial class LegacyRunner : Node3D
 					{
 						Playing = !Playing;
 						SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;	// ooohh my goood
-						ReplayViewerPause.TextureNormal = GD.Load<Texture2D>(Playing ? "res://textures/pause.png" : "res://textures/play.png");
+						replayViewerPause.TextureNormal = GD.Load<Texture2D>(Playing ? "res://textures/pause.png" : "res://textures/play.png");
 					}
 					else
 					{
@@ -1125,7 +1124,7 @@ public partial class LegacyRunner : Node3D
 			switch (eventMouseButton.ButtonIndex)
 			{
 				case MouseButton.Left:
-					LeftMouseButtonDown = eventMouseButton.Pressed;
+					leftMouseButtonDown = eventMouseButton.Pressed;
 					break;
 			}
 		}
@@ -1135,7 +1134,7 @@ public partial class LegacyRunner : Node3D
 	{
 		CurrentAttempt = new(map, speed, startFrom, mods ?? [], players, replays);
 		Playing = true;
-		StopQueued = false;
+		stopQueued = false;
 		Started = Time.GetTicksUsec();
 		ProcessNotes = [];
 		
@@ -1143,13 +1142,13 @@ public partial class LegacyRunner : Node3D
 		{
 			Stats.Attempts++;
 			
-			if (!Stats.FavouriteMaps.ContainsKey(map.ID))
+			if (!Stats.FavoriteMaps.ContainsKey(map.ID))
 			{
-				Stats.FavouriteMaps[map.ID] = 1;
+				Stats.FavoriteMaps[map.ID] = 1;
 			}
 			else
 			{
-				Stats.FavouriteMaps[map.ID]++;
+				Stats.FavoriteMaps[map.ID]++;
 			}
 		}
 	}
@@ -1178,7 +1177,7 @@ public partial class LegacyRunner : Node3D
 			{
 				CurrentAttempt.Progress = CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond - settings.ApproachTime * 1500 * CurrentAttempt.Speed; // turn AT to ms and multiply by 1.5x
 				
-				Util.DiscordRPC.Call("Set", "end_timestamp", Time.GetUnixTimeFromSystem() + (CurrentAttempt.Map.Length - CurrentAttempt.Progress) / 1000 / CurrentAttempt.Speed);
+				Discord.Client.UpdateEndTime(DateTime.UtcNow.AddSeconds((Time.GetUnixTimeFromSystem() + (CurrentAttempt.Map.Length - CurrentAttempt.Progress) / 1000 / CurrentAttempt.Speed)));
 				
 				if (CurrentAttempt.Map.AudioBuffer != null)
 				{
@@ -1188,7 +1187,7 @@ public partial class LegacyRunner : Node3D
 					}
 					
 					SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
-					Video.StreamPosition = (float)CurrentAttempt.Progress / 1000;
+					video.StreamPosition = (float)CurrentAttempt.Progress / 1000;
 				}
 			}
 		}
@@ -1202,7 +1201,7 @@ public partial class LegacyRunner : Node3D
 		}
 		
 		Playing = false;
-		StopQueued = true;
+		stopQueued = true;
 	}
 	
 	public static void Stop(bool results = true)
@@ -1268,14 +1267,14 @@ public partial class LegacyRunner : Node3D
 		
 		if (MenuShown)
 		{
-			Menu.Visible = true;
-			Input.WarpMouse(Node3D.GetViewport().GetWindow().Size / 2);
+			menu.Visible = true;
+			Input.WarpMouse(node3D.GetViewport().GetWindow().Size / 2);
 		}
 		
-		Tween tween = Menu.CreateTween();
-		tween.TweenProperty(Menu, "modulate", Color.Color8(255, 255, 255, (byte)(MenuShown ? 255 : 0)), 0.25).SetTrans(Tween.TransitionType.Quad);
+		Tween tween = menu.CreateTween();
+		tween.TweenProperty(menu, "modulate", Color.Color8(255, 255, 255, (byte)(MenuShown ? 255 : 0)), 0.25).SetTrans(Tween.TransitionType.Quad);
 		tween.TweenCallback(Callable.From(() => {
-			Menu.Visible = MenuShown;
+			menu.Visible = MenuShown;
 		}));
 		tween.Play();
 	}
@@ -1288,7 +1287,7 @@ public partial class LegacyRunner : Node3D
 	public static void ShowReplayViewer(bool show = true)
 	{
 		ReplayViewerShown = CurrentAttempt.IsReplay && show;
-		ReplayViewer.Visible = ReplayViewerShown;
+		replayViewer.Visible = ReplayViewerShown;
 		
 		Input.MouseMode = ReplayViewerShown ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Hidden;
 	}
@@ -1322,28 +1321,28 @@ public partial class LegacyRunner : Node3D
 				CurrentAttempt.CursorPosition = CurrentAttempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
 			}
 			
-			Cursor.Position = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
-			Camera.Position = new Vector3(0, 0, 3.75f) + new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0) * (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].Parallax : settings.Parallax);
-			Camera.Rotation = Vector3.Zero;
+			cursor.Position = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
+			camera.Position = new Vector3(0, 0, 3.75f) + new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0) * (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].Parallax : settings.Parallax);
+			camera.Rotation = Vector3.Zero;
 			
-			VideoQuad.Position = new Vector3(Camera.Position.X, Camera.Position.Y, -100);
+			videoQuad.Position = new Vector3(camera.Position.X, camera.Position.Y, -100);
 		}
 		else
 		{
-			Camera.Rotation += new Vector3(-mouseDelta.Y / 120 * sensitivity / (float)Math.PI, -mouseDelta.X / 120 * sensitivity / (float)Math.PI, 0);
-			Camera.Rotation = new Vector3((float)Math.Clamp(Camera.Rotation.X, Mathf.DegToRad(-90), Mathf.DegToRad(90)), Camera.Rotation.Y, Camera.Rotation.Z);
-			Camera.Position = new Vector3(CurrentAttempt.CursorPosition.X * 0.25f, CurrentAttempt.CursorPosition.Y * 0.25f, 3.5f) + Camera.Basis.Z / 4;
+			camera.Rotation += new Vector3(-mouseDelta.Y / 120 * sensitivity / (float)Math.PI, -mouseDelta.X / 120 * sensitivity / (float)Math.PI, 0);
+			camera.Rotation = new Vector3((float)Math.Clamp(camera.Rotation.X, Mathf.DegToRad(-90), Mathf.DegToRad(90)), camera.Rotation.Y, camera.Rotation.Z);
+			camera.Position = new Vector3(CurrentAttempt.CursorPosition.X * 0.25f, CurrentAttempt.CursorPosition.Y * 0.25f, 3.5f) + camera.Basis.Z / 4;
 			
 			float wtf = 0.95f;
-			float hypotenuse = (wtf + Camera.Position.Z) / Camera.Basis.Z.Z;
-			float distance = (float)Math.Sqrt(Math.Pow(hypotenuse, 2) - Math.Pow(wtf + Camera.Position.Z, 2));
+			float hypotenuse = (wtf + camera.Position.Z) / camera.Basis.Z.Z;
+			float distance = (float)Math.Sqrt(Math.Pow(hypotenuse, 2) - Math.Pow(wtf + camera.Position.Z, 2));
 			
-			CurrentAttempt.RawCursorPosition = new Vector2(Camera.Basis.Z.X, Camera.Basis.Z.Y).Normalized() * -distance;
+			CurrentAttempt.RawCursorPosition = new Vector2(camera.Basis.Z.X, camera.Basis.Z.Y).Normalized() * -distance;
 			CurrentAttempt.CursorPosition = CurrentAttempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
-			Cursor.Position = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
+			cursor.Position = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
 			
-			VideoQuad.Position = Camera.Position - Camera.Basis.Z * 103.75f;
-			VideoQuad.Rotation = Camera.Rotation;
+			videoQuad.Position = camera.Position - camera.Basis.Z * 103.75f;
+			videoQuad.Rotation = camera.Rotation;
 		}
 	}
 	

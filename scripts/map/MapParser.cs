@@ -151,7 +151,7 @@ public partial class MapParser : Node
                 map = PHXM(path);
                 break;
             case "sspm":
-                map = SSPMV2(path);
+                map = SSPM(path);
                 break;
             case "txt":
                 map = SSMapV1(path, audio);
@@ -215,7 +215,7 @@ public partial class MapParser : Node
         return map;
     }
 
-    public static Map SSPMV2(string path)
+    public static Map SSPM(string path)
     {
         FileParser file = new(path);
         Map map;
@@ -227,11 +227,162 @@ public partial class MapParser : Node
                 throw new("Incorrect file signature");
             }
 
-            if (file.GetUInt16() != 2)
+            ushort version = file.GetUInt16(); // SSPM version
+
+            if (version == 1)
             {
-                throw new("Old SSPM format");
+                map = sspmV1(file, path);
+            }
+            else if (version == 2)
+            {
+                map = sspmV2(file, path);
+            }
+            else
+            {
+                throw new("Invalid SSPM version");
             }
 
+        }
+        catch (Exception exception)
+        {
+            ToastNotification.Notify($"SSPM file corrupted", 2);
+            throw Logger.Error($"SSPM file {path} corrupted; {exception.Message}");
+        }
+
+        return map;
+    }
+
+    public static Map SSPM(byte[] bytes)
+    {
+        var file = new FileParser(bytes);
+        Map map;
+
+        try
+        {
+            if (file.GetString(4) != "SS+m")
+            {
+                throw new("Incorrect file signature");
+            }
+
+            ushort version = file.GetUInt16(); // SSPM version
+
+            if (version == 1)
+            {
+                map = sspmV1(file);
+            }
+            else if (version == 2)
+            {
+                map = sspmV2(file);
+            }
+            else
+            {
+                throw new("Invalid SSPM version");
+            }
+        }
+        catch (Exception exception)
+        {
+            ToastNotification.Notify($"SSPM file corrupted", 2);
+            throw Logger.Error($"SSPM file corrupted; {exception.Message}");
+        }
+
+        return map;
+    }
+
+    private static Map sspmV1(FileParser file, string path = null)
+    {
+        Map map;
+
+        try
+        {
+            file.Skip(2); // reserved
+            string id = file.GetLine();
+
+            string[] mapName = file.GetLine().Split(" - ", 2);
+
+            string artist = null;
+            string song = null;
+
+            if (mapName.Length == 1)
+            {
+                song = mapName[0].StripEdges();
+            }
+            else
+            {
+                artist = mapName[0].StripEdges();
+                song = mapName[1].StripEdges();
+            }
+
+            string[] mappers = file.GetLine().Split(['&', ',']);
+
+            uint mapLength = file.GetUInt32();
+            uint noteCount = file.GetUInt32();
+
+            int difficulty = file.GetUInt8();
+
+            bool hasCover = file.GetUInt8() == 2;
+            byte[] coverBuffer = null;
+            if (hasCover)
+            {
+                int coverByteLength = (int)file.GetUInt64();
+                coverBuffer = file.Get(coverByteLength);
+            }
+
+            bool hasAudio = file.GetBool();
+            byte[] audioBuffer = null;
+            if (hasAudio)
+            {
+                int audioByteLength = (int)file.GetUInt64();
+                audioBuffer = file.Get(audioByteLength);
+            }
+
+            Note[] notes = new Note[noteCount];
+
+            for (int i = 0; i < noteCount; i++)
+            {
+                int millisecond = (int)file.GetUInt32();
+
+                bool isQuantum = file.GetBool();
+
+                float x;
+                float y;
+
+                if (isQuantum)
+                {
+                    x = file.GetFloat();
+                    y = file.GetFloat();
+                }
+                else
+                {
+                    x = file.GetUInt8();
+                    y = file.GetUInt8();
+                }
+
+                notes[i] = new Note(i, millisecond, x - 1, -y + 1);
+            }
+
+            Array.Sort(notes);
+
+            for (int i = 0; i < notes.Length; i++)
+            {
+                notes[i].Index = i;
+            }
+
+            map = new(path ?? $"{Constants.USER_FOLDER}/maps/{song}_temp.sspm", notes, id, artist, song, 0, mappers, difficulty, null, (int)mapLength, audioBuffer, coverBuffer);
+        }
+        catch (Exception exception)
+        {
+            ToastNotification.Notify($"SSPMV1 file corrupted", 2);
+            throw Logger.Error($"SSPMV1 file {path} corrupted; {exception.Message}");
+        }
+
+        return map;
+    }
+
+    private static Map sspmV2(FileParser file, string path = null)
+    {
+        Map map;
+        try
+        {
             file.Skip(4);   // reserved
             file.Skip(20);  // hash
 
@@ -361,7 +512,7 @@ public partial class MapParser : Node
                 notes[i] = new Note(0, millisecond, x - 1, -y + 1);
             }
 
-            Array.Sort(notes, new NoteComparer());
+            Array.Sort(notes);
 
             for (int i = 0; i < notes.Length; i++)
             {
@@ -473,13 +624,5 @@ public partial class MapParser : Node
         }
 
         return map;
-    }
-
-    public struct NoteComparer : IComparer<Note>
-    {
-        public int Compare(Note a, Note b)
-        {
-            return a.Millisecond.CompareTo(b.Millisecond);
-        }
     }
 }

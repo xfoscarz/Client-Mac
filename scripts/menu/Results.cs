@@ -7,10 +7,10 @@ public partial class Results : Control
 {
     private SettingsProfile settings;
 
-    private static TextureRect Cursor;
-    private static Panel Footer;
-    private static Panel Holder;
-    private static TextureRect Cover;
+    private static TextureRect cursor;
+    private static Panel footer;
+    private static Panel holder;
+    private static TextureRect cover;
 
     public static double LastFrame = 0;
     public static Vector2 MousePosition = Vector2.Zero;
@@ -19,27 +19,27 @@ public partial class Results : Control
     {
         settings = SettingsManager.Settings;
 
-        Cursor = GetNode<TextureRect>("Cursor");
-        Footer = GetNode<Panel>("Footer");
-        Holder = GetNode<Panel>("Holder");
-        Cover = GetNode<TextureRect>("Cover");
+        cursor = GetNode<TextureRect>("Cursor");
+        footer = GetNode<Panel>("Footer");
+        holder = GetNode<Panel>("Holder");
+        cover = GetNode<TextureRect>("Cover");
 
         Input.MouseMode = Input.MouseModeEnum.Hidden;
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Mailbox);
 
-        Cursor.Texture = SkinProfile.CursorImage;
-        Cursor.Size = new Vector2(32 * (float)settings.CursorScale, 32 * (float)settings.CursorScale);
+        cursor.Texture = SkinProfile.CursorImage;
+        cursor.Size = new Vector2(32 * (float)settings.CursorScale, 32 * (float)settings.CursorScale);
 
-        Holder.GetNode<Label>("Title").Text = (LegacyRunner.CurrentAttempt.IsReplay ? "[REPLAY] " : "") + LegacyRunner.CurrentAttempt.Map.PrettyTitle;
-        Holder.GetNode<Label>("Difficulty").Text = LegacyRunner.CurrentAttempt.Map.DifficultyName;
-        Holder.GetNode<Label>("Mappers").Text = $"by {LegacyRunner.CurrentAttempt.Map.PrettyMappers}";
-        Holder.GetNode<Label>("Accuracy").Text = $"{LegacyRunner.CurrentAttempt.Accuracy.ToString().PadDecimals(2)}%";
-        Holder.GetNode<Label>("Score").Text = $"{Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Score.ToString())}";
-        Holder.GetNode<Label>("Hits").Text = $"{Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Hits.ToString())} / {Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Sum.ToString())}";
-        Holder.GetNode<Label>("Status").Text = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].Status : LegacyRunner.CurrentAttempt.Alive ? (LegacyRunner.CurrentAttempt.Qualifies ? "PASSED" : "DISQUALIFIED") : "FAILED";
-        Holder.GetNode<Label>("Speed").Text = $"{LegacyRunner.CurrentAttempt.Speed.ToString().PadDecimals(2)}x";
+        holder.GetNode<Label>("Title").Text = (LegacyRunner.CurrentAttempt.IsReplay ? "[REPLAY] " : "") + LegacyRunner.CurrentAttempt.Map.PrettyTitle;
+        holder.GetNode<Label>("Difficulty").Text = LegacyRunner.CurrentAttempt.Map.DifficultyName;
+        holder.GetNode<Label>("Mappers").Text = $"by {LegacyRunner.CurrentAttempt.Map.PrettyMappers}";
+        holder.GetNode<Label>("Accuracy").Text = $"{LegacyRunner.CurrentAttempt.Accuracy.ToString().PadDecimals(2)}%";
+        holder.GetNode<Label>("Score").Text = $"{Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Score.ToString())}";
+        holder.GetNode<Label>("Hits").Text = $"{Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Hits.ToString())} / {Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Sum.ToString())}";
+        holder.GetNode<Label>("Status").Text = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].Status : LegacyRunner.CurrentAttempt.Alive ? (LegacyRunner.CurrentAttempt.Qualifies ? "PASSED" : "DISQUALIFIED") : "FAILED";
+        holder.GetNode<Label>("Speed").Text = $"{LegacyRunner.CurrentAttempt.Speed.ToString().PadDecimals(2)}x";
 
-        HBoxContainer modifiersContainer = Holder.GetNode("Modifiers").GetNode<HBoxContainer>("HBoxContainer");
+        HBoxContainer modifiersContainer = holder.GetNode("Modifiers").GetNode<HBoxContainer>("HBoxContainer");
         TextureRect modTemplate = modifiersContainer.GetNode<TextureRect>("ModifierTemplate");
 
         foreach (KeyValuePair<string, bool> mod in LegacyRunner.CurrentAttempt.Mods)
@@ -61,8 +61,8 @@ public partial class Results : Control
             file.StoreBuffer(LegacyRunner.CurrentAttempt.Map.CoverBuffer);
             file.Close();
 
-            Cover.Texture = ImageTexture.CreateFromImage(Image.LoadFromFile($"{Constants.USER_FOLDER}/cache/cover.png"));
-            GetNode<TextureRect>("CoverBackground").Texture = Cover.Texture;
+            cover.Texture = ImageTexture.CreateFromImage(Image.LoadFromFile($"{Constants.USER_FOLDER}/cache/cover.png"));
+            GetNode<TextureRect>("CoverBackground").Texture = cover.Texture;
         }
 
         if (LegacyRunner.CurrentAttempt.Map.AudioBuffer != null)
@@ -80,10 +80,10 @@ public partial class Results : Control
             SoundManager.JukeboxIndex = SoundManager.JukeboxQueueInverse[LegacyRunner.CurrentAttempt.Map.ID];
         }
 
-        Button replayButton = Footer.GetNode<Button>("Replay");
+        Button replayButton = footer.GetNode<Button>("Replay");
 
-        Footer.GetNode<Button>("Back").Pressed += Stop;
-        Footer.GetNode<Button>("Play").Pressed += Replay;
+        footer.GetNode<Button>("Back").Pressed += Stop;
+        footer.GetNode<Button>("Play").Pressed += Replay;
         replayButton.Visible = !LegacyRunner.CurrentAttempt.Map.Ephemeral;
         replayButton.Pressed += () =>
         {
@@ -115,8 +115,8 @@ public partial class Results : Control
         delta = (now - LastFrame) / 1000000;
         LastFrame = now;
 
-        Cursor.Position = MousePosition - new Vector2(Cursor.Size.X / 2, Cursor.Size.Y / 2);
-        Holder.Position = Holder.Position.Lerp((Size / 2 - MousePosition) * (8 / Size.Y), Math.Min(1, (float)delta * 16));
+        cursor.Position = MousePosition - new Vector2(cursor.Size.X / 2, cursor.Size.Y / 2);
+        holder.Position = holder.Position.Lerp((Size / 2 - MousePosition) * (8 / Size.Y), Math.Min(1, (float)delta * 16));
     }
 
     public override void _Input(InputEvent @event)

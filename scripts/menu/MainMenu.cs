@@ -100,9 +100,9 @@ public partial class MainMenu : Control
 
         Phoenyx.Setup();
 
-        Util.DiscordRPC.Call("Set", "details", "Main Menu");
-        Util.DiscordRPC.Call("Set", "state", "");
-        Util.DiscordRPC.Call("Set", "end_timestamp", 0);
+        Discord.Client.UpdateDetails("Main Menu");
+        Discord.Client.UpdateState("");
+        Discord.Client.UpdateStartTime();
 
         Input.MouseMode = Input.MouseModeEnum.Hidden;
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Mailbox);
@@ -124,7 +124,7 @@ public partial class MainMenu : Control
             Viewport viewport = SceneManager.Node.GetViewport();
             viewport.SizeChanged += () =>
             {
-                if (SceneManager.ActiveScene.Name != "SceneMenu")
+                if (SceneManager.Scene.Name != "SceneMenu")
                 {
                     return;
                 }
@@ -326,7 +326,7 @@ public partial class MainMenu : Control
                         string mostPlayedID = null;
                         ulong mostPlayedCount = 0;
 
-                        foreach (KeyValuePair<string, ulong> entry in Stats.FavouriteMaps)
+                        foreach (KeyValuePair<string, ulong> entry in Stats.FavoriteMaps)
                         {
                             if (entry.Value > mostPlayedCount)
                             {
@@ -800,7 +800,7 @@ public partial class MainMenu : Control
         if (SoundManager.Song.Stream != null)
         {
             JukeboxProgress.AnchorRight = (float)Math.Clamp(SoundManager.Song.GetPlaybackPosition() / SoundManager.Song.Stream.GetLength(), 0, 1);
-            SoundManager.Song.VolumeDb = Mathf.Lerp(SoundManager.Song.VolumeDb, Util.Quitting ? -80 : -80 + 70 * (float)Math.Pow(settings.VolumeMusic / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1), (float)Math.Clamp(delta * 2, 0, 1));
+            SoundManager.Song.VolumeDb = Mathf.Lerp(SoundManager.Song.VolumeDb, Phoenyx.Quitting ? -80 : -80 + 70 * (float)Math.Pow(settings.VolumeMusic / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1), (float)Math.Clamp(delta * 2, 0, 1));
         }
 
         float prevHz = 0;
@@ -848,7 +848,7 @@ public partial class MainMenu : Control
         Main.Position = Main.Position.Lerp((Size / 2 - MousePosition) * (4 / Size.Y), Math.Min(1, (float)delta * 16));
         Extras.Position = Main.Position;
 
-        if (Util.Quitting)
+        if (Phoenyx.Quitting)
         {
             MainBackgroundMaterial.SetShaderParameter("opaqueness", Mathf.Lerp((float)MainBackgroundMaterial.GetShaderParameter("opaqueness"), 0, delta * 8));
         }
@@ -1225,16 +1225,18 @@ public partial class MainMenu : Control
         LastMenu = CurrentMenu;
         CurrentMenu = menuName;
 
+        
+
         switch (CurrentMenu)
         {
             case "Main":
-                Util.DiscordRPC.Call("Set", "details", "Main Menu");
+                Discord.Client.UpdateDetails("Main Menu");
                 break;
             case "Play":
-                Util.DiscordRPC.Call("Set", "details", "Browsing Maps");
+                Discord.Client.UpdateDetails("Browsing Maps");
                 break;
             case "Extras":
-                Util.DiscordRPC.Call("Set", "details", "Extras");
+                Discord.Client.UpdateDetails("Extras");
                 break;
         }
 

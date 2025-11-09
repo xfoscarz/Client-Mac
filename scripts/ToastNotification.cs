@@ -5,12 +5,12 @@ public partial class ToastNotification : Node
 {
     private static readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/notification.tscn");
 
-    private static int ActiveNotifications = 0;
+    private static int activeNotifications = 0;
 
     public static async void Notify(string message, int severity = 0)
     {
         ColorRect notification = template.Instantiate<ColorRect>();
-        SceneManager.ActiveScene.AddChild(notification);
+        SceneManager.Scene.AddChild(notification);
         Color color = new();
 
         switch (Math.Clamp(severity, 0, 2))
@@ -29,13 +29,13 @@ public partial class ToastNotification : Node
         notification.GetNode<Label>("Label").Text = message;
         notification.GetNode<ColorRect>("Severity").Color = color;
         notification.Visible = true;
-        notification.Position += Vector2.Up * ActiveNotifications * (notification.Size.Y + 8);
+        notification.Position += Vector2.Up * activeNotifications * (notification.Size.Y + 8);
 
         Tween inTween = notification.CreateTween();
         inTween.TweenProperty(notification, "position", notification.Position + Vector2.Left * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
         inTween.Play();
 
-        ActiveNotifications++;
+        activeNotifications++;
 
         await notification.ToSignal(notification.GetTree().CreateTimer(4), "timeout");
 
@@ -43,7 +43,7 @@ public partial class ToastNotification : Node
         outTween.TweenProperty(notification, "position", notification.Position + Vector2.Right * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
         outTween.TweenCallback(Callable.From(() =>
         {
-            ActiveNotifications--;
+            activeNotifications--;
             notification.QueueFree();
         }));
         outTween.Play();

@@ -5,11 +5,11 @@ namespace Menu;
 
 public partial class Loading : Control
 {
-    public static Control Control;
+    public Control Control;
 
-    public static ColorRect Background;
-    public static TextureRect Splash;
-    public static TextureRect SplashShift;
+    public ColorRect Background;
+    public TextureRect Splash;
+    public TextureRect SplashShift;
 
     public override void _Ready()
     {
@@ -29,7 +29,7 @@ public partial class Loading : Control
         inTween.Play();
     }
 
-    public static async void LoadMenu()
+    public async void LoadMenu()
     {
         await Task.Delay(2500);
 

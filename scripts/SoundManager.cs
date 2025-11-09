@@ -90,7 +90,7 @@ public partial class SoundManager : Node
 
         if (setRichPresence)
         {
-            Util.DiscordRPC.Call("Set", "state", $"Listening to {Map.PrettyTitle}");
+            Discord.Client.UpdateState($"Listening to {Map.PrettyTitle}");
         }
     }
 

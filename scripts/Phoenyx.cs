@@ -7,9 +7,9 @@ public partial class Phoenyx : Node
 {
     private static bool initialized = false;
     private static bool loaded = false;
-    private static bool quitting = false;
 
-    // TODO: Initializing the game should all be done here
+    public static bool Quitting { get; private set; } = false;
+
     public static void Setup()
     {
         if (initialized)
@@ -18,9 +18,6 @@ public partial class Phoenyx : Node
         }
 
         initialized = true;
-
-        Util.DiscordRPC.Call("Set", "app_id", 1272588732834254878);
-        Util.DiscordRPC.Call("Set", "large_image", "short");
 
         if (!File.Exists($"{Constants.USER_FOLDER}/favorites.txt"))
         {
@@ -144,7 +141,7 @@ public partial class Phoenyx : Node
             Stats.TotalScore = 0;
             Stats.RageQuits = 0;
             Stats.PassAccuracies = [];
-            Stats.FavouriteMaps = [];
+            Stats.FavoriteMaps = [];
 
             Stats.Save();
         }
@@ -171,12 +168,12 @@ public partial class Phoenyx : Node
     {
         var settings = SettingsManager.Settings;
 
-        if (quitting)
+        if (Quitting)
         {
             return;
         }
 
-        quitting = true;
+        Quitting = true;
 
         if (!LegacyRunner.CurrentAttempt.IsReplay)
         {
@@ -196,8 +193,7 @@ public partial class Phoenyx : Node
             File.Delete($"{Constants.USER_FOLDER}/maps/NA_tempmap.phxm");
         }
 
-        Util.DiscordRPC.Call("Set", "end_timestamp", 0);
-        Util.DiscordRPC.Call("Clear");
+        Discord.Client.Dispose();
 
         if (SceneManager.Scene.Name == "SceneMenu")
         {
@@ -211,7 +207,7 @@ public partial class Phoenyx : Node
         }
         else
         {
-            SceneManager.ActiveScene.GetTree().Quit();
+            SceneManager.Scene.GetTree().Quit();
         }
     }
 

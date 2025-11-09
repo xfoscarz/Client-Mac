@@ -23,7 +23,6 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 Keybinds="*res://scripts/KeybindsManager.cs"
 ToastNotification="*res://scripts/ToastNotification.cs"
 SoundManager="*res://scripts/SoundManager.cs"
@@ -45,7 +44,7 @@ project/assembly_name="Phoenyx"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg")
+enabled=PackedStringArray()
 
 [physics]
 

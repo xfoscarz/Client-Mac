@@ -27,13 +27,13 @@ public partial class LegacyRenderer : MultiMeshInstance3D
         bool pushback = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].Pushback : settings.Pushback;
         float noteSize = (float)(LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].NoteSize : settings.NoteSize);
         Transform3D transform = new(new Vector3(noteSize / 2, 0, 0), new Vector3(0, noteSize / 2, 0), new Vector3(0, 0, noteSize / 2), Vector3.Zero);
-        
+
         for (int i = 0; i < LegacyRunner.ToProcess; i++)
         {
             Note note = LegacyRunner.ProcessNotes[i];
             float depth = (note.Millisecond - (float)LegacyRunner.CurrentAttempt.Progress) / (1000 * at) * ad / (float)LegacyRunner.CurrentAttempt.Speed;
             float alpha = Math.Clamp((1 - (float)depth / ad) / (fadeIn / 100), 0, 1);
-            
+
             if (LegacyRunner.CurrentAttempt.Mods["Ghost"])
             {
                 alpha -= Math.Min(1, (ad - depth) / (ad / 2));
@@ -47,10 +47,10 @@ public partial class LegacyRenderer : MultiMeshInstance3D
             {
                 alpha = 0;
             }
-            
+
             int j = LegacyRunner.ToProcess - i - 1;
             Color color = SkinProfile.Colors[note.Index % SkinProfile.Colors.Length];
-            
+
             transform.Origin = new Vector3(note.X, note.Y, -depth);
             color.A = alpha;
             Multimesh.SetInstanceTransform(j, transform);

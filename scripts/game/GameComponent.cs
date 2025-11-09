@@ -1,7 +1,5 @@
 using Godot;
 using Godot.Collections;
-using System;
-using System.Collections.Generic;
 
 [GlobalClass]
 public partial class GameComponent : Node3D

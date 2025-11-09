@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
-public struct Note : ITimelineObject, ITweenableObject<NoteTween>
+public struct Note : ITimelineObject, ITweenableObject<NoteTween>, IComparable<Note>
 {
     public int Id => (int)ObjectType.Note;
 
@@ -33,8 +34,13 @@ public struct Note : ITimelineObject, ITweenableObject<NoteTween>
 
     public override readonly string ToString() => $"({X}, {Y}) @{Millisecond}ms";
 
-    public int CompareTo(ITimelineObject other)
+    public int CompareTo(Note other)
     {
-        throw new System.NotImplementedException();
+        return Millisecond.CompareTo(other.Millisecond);
+    }
+
+    int IComparable<ITimelineObject>.CompareTo(ITimelineObject other)
+    {
+        return Millisecond.CompareTo(other.Millisecond);
     }
 }
