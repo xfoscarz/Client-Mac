@@ -9,8 +9,6 @@ func _ready() -> void:
 	camera.rotation = Vector3.ZERO
 	camera.fov = 90
 	
-	await get_tree().create_timer(6).timeout
-	
 	var echoTween := create_tween().set_trans(Tween.TRANS_LINEAR)
 	echoTween.tween_method(func(echo: float): water.mesh.material.set_shader_parameter("echo", echo), 0.0, 0.5, 12)
 	

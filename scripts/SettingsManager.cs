@@ -217,10 +217,10 @@ public partial class SettingsManager : Control
             case "CursorScale":
                 Settings.CursorScale = (double)value;
 
-                if (SceneManager.Scene.Name == "SceneMenu" && Menu.MainMenu.Cursor != null)
-                {
-                    Menu.MainMenu.Cursor.Size = new Vector2(32 * (float)Settings.CursorScale, 32 * (float)Settings.CursorScale);
-                }
+                //if (SceneManager.Scene.Name == "SceneMenu" && Menu.MainMenu.Cursor != null)
+                //{
+                //    Menu.MainMenu.Cursor.Size = new Vector2(32 * (float)Settings.CursorScale, 32 * (float)Settings.CursorScale);
+                //}
 
                 break;
             case "FadeOut":

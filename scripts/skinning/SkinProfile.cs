@@ -31,15 +31,17 @@ public class SkinProfile
 	public static byte[] HitSoundBuffer { get; set; } = [];
 	public static byte[] FailSoundBuffer { get; set; } = [];
 	public static ArrayMesh NoteMesh { get; set; } = new();
-	public static string MenuSpace { get; set; } = "waves";
-	public static string GameSpace { get; set; } = "grid";
+    public static string MenuSpaceName = "waves";
+    public static string GameSpaceName = "grid";
+    public static Node3D MenuSpace { get; set; }
+	public static Node3D GameSpace { get; set; }
 
 	public static void Save()
 	{
 		var settings = SettingsManager.Settings;
 
 		File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin}/colors.txt", RawColors);
-		File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin}/space.txt", GameSpace);
+		File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin}/space.txt", GameSpaceName);
 		Logger.Log($"Saved skin {settings.Skin}");
 	}
 
@@ -71,9 +73,15 @@ public class SkinProfile
 			property.SetValue(null, ImageTexture.CreateFromImage(Image.LoadFromFile($"{Constants.USER_FOLDER}/skins/{settings.Skin}/{property.Name.TrimSuffix("Image").ToSnakeCase()}.png")));
 		}
 
-		GameSpace = File.ReadAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin}/space.txt");
+		GameSpaceName = File.ReadAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin}/space.txt");
+        bool exists = Godot.FileAccess.FileExists($"res://prefabs/spaces/{GameSpaceName}.tscn");
+        GameSpace = GD.Load<PackedScene>($"res://prefabs/spaces/{(exists ? GameSpaceName : "void")}.tscn").Instantiate<Node3D>();
 
-		if (File.Exists($"{Constants.USER_FOLDER}/skins/{settings.Skin}/note.obj"))
+        MenuSpaceName = "waves";
+		exists = Godot.FileAccess.FileExists($"res://prefabs/spaces/{MenuSpaceName}.tscn");
+		MenuSpace = GD.Load<PackedScene>($"res://prefabs/spaces/{(exists ? MenuSpaceName : "void")}.tscn").Instantiate<Node3D>();
+
+        if (File.Exists($"{Constants.USER_FOLDER}/skins/{settings.Skin}/note.obj"))
 		{
 			NoteMesh = (ArrayMesh)Util.OBJParser.Call("load_obj", $"{Constants.USER_FOLDER}/skins/{settings.Skin}/note.obj");
 		}

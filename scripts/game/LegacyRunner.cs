@@ -672,12 +672,12 @@ public partial class LegacyRunner : Node3D
 			throw Logger.Error($"Could not load skin; {exception.Message}");
 		}
 
-		string space = settings.Space == "skin" ? SkinProfile.GameSpace : settings.Space;
-
-		if (space != "void")
-		{
-			node3D.AddChild(GD.Load<PackedScene>($"res://prefabs/spaces/{space}.tscn").Instantiate<Node3D>());
-		}
+		//string space = settings.Space == "skin" ? SkinProfile.GameSpace : settings.Space;
+		//
+		//if (space != "void")
+		//{
+		//	node3D.AddChild(GD.Load<PackedScene>($"res://prefabs/spaces/{space}.tscn").Instantiate<Node3D>());
+		//}
 
 		SoundManager.UpdateSounds();
 

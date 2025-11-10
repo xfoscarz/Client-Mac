@@ -1,9 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://cyrs54b4ot1p8"]
+[gd_scene load_steps=2 format=3 uid="uid://cyrs54b4ot1p8"]
 
 [ext_resource type="Script" uid="uid://cyk7jcwxrgjm6" path="res://scripts/SceneManager.cs" id="1_o5qli"]
-[ext_resource type="PackedScene" uid="uid://t8stmueifd3q" path="res://prefabs/spaces/waves.tscn" id="2_0wfyh"]
-
-[sub_resource type="World3D" id="World3D_0wfyh"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_o5qli")
@@ -17,10 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 stretch = true
 
-[node name="Waves" parent="Background" instance=ExtResource("2_0wfyh")]
-
 [node name="SubViewport" type="SubViewport" parent="Background"]
-world_3d = SubResource("World3D_0wfyh")
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(1152, 648)

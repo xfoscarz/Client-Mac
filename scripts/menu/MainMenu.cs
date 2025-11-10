@@ -98,8 +98,6 @@ public partial class MainMenu : Control
 
 		Control = this;
 
-		Phoenyx.Setup();
-
 		Discord.Client.UpdateDetails("Main Menu");
 		Discord.Client.UpdateState("");
 		Discord.Client.UpdateStartTime();

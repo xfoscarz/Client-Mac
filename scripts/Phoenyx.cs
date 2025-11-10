@@ -10,6 +10,11 @@ public partial class Phoenyx : Node
 
     public static bool Quitting { get; private set; } = false;
 
+    public override void _Ready()
+    {
+        Setup();
+    }
+
     public static void Setup()
     {
         if (initialized)

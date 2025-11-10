@@ -29,8 +29,6 @@ public partial class SceneManager : Node
 
         backgroundViewport = backgroundContainer.GetNode<SubViewport>("SubViewport");
 
-        space = backgroundContainer.GetNode<Node3D>("Waves");
-
         Load("res://scenes/loading.tscn", true);
 
         Node.GetTree().Connect("node_added", Callable.From((System.Action<Node>)((Node child) =>
@@ -82,24 +80,32 @@ public partial class SceneManager : Node
 
     private static void swapScene(string path)
     {
+        var node = ResourceLoader.Load<PackedScene>(path).Instantiate();
+        
         if (Scene != null && Scene.GetParent() != null)
         {
             Node.RemoveChild(Scene);
-        }
-
-        var node = ResourceLoader.Load<PackedScene>(path).Instantiate();
-
-        // temporary background space fix
-        if (Scene != null)
-        {
-            if (Scene.Name == "SceneMenu")
+            
+            if (space != null && space.GetParent() != null)
             {
-                backgroundContainer.RemoveChild(space);
-            } else if (space.GetParent() != backgroundContainer) {
-                backgroundContainer.AddChild(space);
+                backgroundViewport.RemoveChild(space);
             }
+            
+            switch (node.Name)
+            {
+                case "SceneMenu":
+                    space = SkinProfile.MenuSpace;
+                    break;
+                case "SceneGame":
+                    space = SkinProfile.GameSpace;
+                    break;
+            }
+
+            // temp solution until the game scene is non-static
+            backgroundViewport.TransparentBg = node.Name != "SceneMenu";
+
+            backgroundViewport.AddChild(space);
         }
-        //
 
         activeScenePath = path;
         Scene = node;
