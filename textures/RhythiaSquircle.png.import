@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5x15g842jg1l"
-path="res://.godot/imported/short_transparent_pad.png-4d4360a996c75061e2eed5e2c178a6c7.ctex"
+uid="uid://baivqqkfll133"
+path="res://.godot/imported/RhythiaSquircle.png-e7ded38c293210304c1c51a7437c5e35.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/short_transparent_pad.png"
-dest_files=["res://.godot/imported/short_transparent_pad.png-4d4360a996c75061e2eed5e2c178a6c7.ctex"]
+source_file="res://textures/RhythiaSquircle.png"
+dest_files=["res://.godot/imported/RhythiaSquircle.png-e7ded38c293210304c1c51a7437c5e35.ctex"]
 
 [params]
 
