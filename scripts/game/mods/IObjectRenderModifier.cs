@@ -10,5 +10,5 @@ public interface IObjectRenderModifier<T> : IMod
     /// <summary>
     /// Modifies the rendering of <see cref="ITimelineObject"/> for the <see cref="IObjectRenderModifier{T}"/>
     /// </summary>
-    void ApplyRenderObject(T obj, Color color, float depth, Attempt attempt);
+    void ModifyRenderObject(T obj, float depth, Attempt attempt);
 }

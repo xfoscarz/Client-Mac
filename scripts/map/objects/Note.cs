@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public class Note : IHitObject, ITweenableObject<NoteTween>, IComparable<Note>
+public class Note : IHitObject, IAnimatableObject<NoteAnimation>, IComparable<Note>
 {
     public int Id => (int)ObjectType.Note;
 
@@ -14,11 +14,13 @@ public class Note : IHitObject, ITweenableObject<NoteTween>, IComparable<Note>
 
     public Tween CurrentTween { get; set; }
 
-    public List<NoteTween> TweenObjects { get; set; }
+    public List<NoteAnimation> AnimationObjects { get; set; }
 
     public float X { get; set; }
 
     public float Y { get; set; }
+
+    public float Transparency { get; set; } = 1;
 
     public bool Hit { get; set; } = false;
 

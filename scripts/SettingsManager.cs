@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Godot;
 using Godot.Collections;
 
+[GlobalClass]
 public partial class SettingsManager : Control
 {
     public static Control Control;
@@ -14,11 +15,14 @@ public partial class SettingsManager : Control
     public static bool Shown = false;
     public static LineEdit FocusedLineEdit = null;
 
-    public static SettingsProfile Settings { get; private set; } = new SettingsProfile();
+    public static SettingsManager Instance { get; private set; }
+
+    public SettingsProfile Settings { get; private set; } = new SettingsProfile();
 
     public override void _Ready()
     {
         Control = this;
+        Instance = this;
 
         SettingsNode = GD.Load<PackedScene>("res://prefabs//settings.tscn").Instantiate<ColorRect>();
         Holder = SettingsNode.GetNode<Panel>("Holder");
@@ -92,27 +96,27 @@ public partial class SettingsManager : Control
         skins.ItemSelected += (long item) =>
         {
             HideMouse();
-            Settings.Skin = skins.GetItemText((int)item);
-            SkinProfile.Load();
+            Instance.Settings.Skin = skins.GetItemText((int)item);
+            SkinManager.Load();
 
             if (SceneManager.Scene.Name == "SceneMenu")
             {
-                Menu.MainMenu.Cursor.Texture = SkinProfile.CursorImage;
+                Menu.MainMenu.Cursor.Texture = SkinManager.Instance.Skin.CursorImage;
             }
 
-            Holder.GetNode("Categories").GetNode("Visuals").GetNode("Container").GetNode("Colors").GetNode<LineEdit>("LineEdit").Text = SkinProfile.RawColors;
+            Holder.GetNode("Categories").GetNode("Visuals").GetNode("Container").GetNode("Colors").GetNode<LineEdit>("LineEdit").Text = SkinManager.Instance.Skin.RawColors;
         };
 
         spaces.Pressed += ShowMouse;
         spaces.ItemSelected += (long item) =>
         {
             HideMouse();
-            Settings.Space = spaces.GetItemText((int)item);
+            Instance.Settings.Space = spaces.GetItemText((int)item);
         };
 
         Holder.GetNode("Categories").GetNode("Visuals").GetNode("Container").GetNode("Skin").GetNode<Button>("SkinFolder").Pressed += () =>
         {
-            OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{Settings.Skin}");
+            OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{Instance.Settings.Skin}");
         };
         Holder.GetNode("Categories").GetNode("Other").GetNode("Container").GetNode("RhythiaImport").GetNode<Button>("Button").Pressed += () =>
         {
@@ -125,22 +129,22 @@ public partial class SettingsManager : Control
             Godot.FileAccess file = Godot.FileAccess.Open($"{OS.GetDataDir()}/SoundSpacePlus/settings.json", Godot.FileAccess.ModeFlags.Read);
             Godot.Collections.Dictionary data = (Godot.Collections.Dictionary)Json.ParseString(file.GetAsText());
 
-            Settings.ApproachRate = (float)data["approach_rate"];
-            Settings.ApproachDistance = (float)data["spawn_distance"];
-            Settings.FoV = (float)data["fov"];
-            Settings.Sensitivity = (float)data["sensitivity"] * 2;
-            Settings.Parallax = (float)data["parallax"] / 50;
-            Settings.FadeIn = (float)data["fade_length"] * 100;
-            Settings.FadeOut = (bool)data["half_ghost"];
-            Settings.Pushback = (bool)data["do_note_pushback"];
-            Settings.NoteSize = (float)data["note_size"] * 0.875f;
-            Settings.CursorScale = (float)data["cursor_scale"];
-            Settings.CursorTrail = (bool)data["cursor_trail"];
-            Settings.TrailTime = (float)data["trail_time"];
-            Settings.SimpleHUD = (bool)data["simple_hud"];
-            Settings.AbsoluteInput = (bool)data["absolute_mode"];
-            Settings.FPS = (double)data["fps"];
-            Settings.UnlockFPS = (bool)data["unlock_fps"];
+            Instance.Settings.ApproachRate = (float)data["approach_rate"];
+            Instance.Settings.ApproachDistance = (float)data["spawn_distance"];
+            Instance.Settings.FoV = (float)data["fov"];
+            Instance.Settings.Sensitivity = (float)data["sensitivity"] * 2;
+            Instance.Settings.Parallax = (float)data["parallax"] / 50;
+            Instance.Settings.FadeIn = (float)data["fade_length"] * 100;
+            Instance.Settings.FadeOut = (bool)data["half_ghost"];
+            Instance.Settings.Pushback = (bool)data["do_note_pushback"];
+            Instance.Settings.NoteSize = (float)data["note_size"] * 0.875f;
+            Instance.Settings.CursorScale = (float)data["cursor_scale"];
+            Instance.Settings.CursorTrail = (bool)data["cursor_trail"];
+            Instance.Settings.TrailTime = (float)data["trail_time"];
+            Instance.Settings.SimpleHUD = (bool)data["simple_hud"];
+            Instance.Settings.AbsoluteInput = (bool)data["absolute_mode"];
+            Instance.Settings.FPS = (double)data["fps"];
+            Instance.Settings.UnlockFPS = (bool)data["unlock_fps"];
 
             UpdateSettings();
 
@@ -182,40 +186,40 @@ public partial class SettingsManager : Control
         switch (setting)
         {
             case "Sensitivity":
-                Settings.Sensitivity = (double)value;
+                Instance.Settings.Sensitivity = (double)value;
                 break;
             case "ApproachRate":
-                Settings.ApproachRate = (double)value;
+                Instance.Settings.ApproachRate = (double)value;
                 break;
             case "ApproachDistance":
-                Settings.ApproachDistance = (double)value;
+                Instance.Settings.ApproachDistance = (double)value;
                 break;
             case "FadeIn":
-                Settings.FadeIn = (double)value;
+                Instance.Settings.FadeIn = (double)value;
                 break;
             case "Parallax":
-                Settings.Parallax = (double)value;
+                Instance.Settings.Parallax = (double)value;
                 break;
             case "FoV":
-                Settings.FoV = (double)value;
+                Instance.Settings.FoV = (double)value;
                 break;
             case "VolumeMaster":
-                Settings.VolumeMaster = (double)value;
+                Instance.Settings.VolumeMaster = (double)value;
                 break;
             case "VolumeMusic":
-                Settings.VolumeMusic = (double)value;
+                Instance.Settings.VolumeMusic = (double)value;
                 break;
             case "VolumeSFX":
-                Settings.VolumeSFX = (double)value;
+                Instance.Settings.VolumeSFX = (double)value;
                 break;
             case "AlwaysPlayHitSound":
-                Settings.AlwaysPlayHitSound = (bool)value;
+                Instance.Settings.AlwaysPlayHitSound = (bool)value;
                 break;
             case "NoteSize":
-                Settings.NoteSize = (double)value;
+                Instance.Settings.NoteSize = (double)value;
                 break;
             case "CursorScale":
-                Settings.CursorScale = (double)value;
+                Instance.Settings.CursorScale = (double)value;
 
                 //if (SceneManager.Scene.Name == "SceneMenu" && Menu.MainMenu.Cursor != null)
                 //{
@@ -224,58 +228,58 @@ public partial class SettingsManager : Control
 
                 break;
             case "FadeOut":
-                Settings.FadeOut = (bool)value;
+                Instance.Settings.FadeOut = (bool)value;
                 break;
             case "Pushback":
-                Settings.Pushback = (bool)value;
+                Instance.Settings.Pushback = (bool)value;
                 break;
             case "Fullscreen":
-                Settings.Fullscreen = (bool)value;
+                Instance.Settings.Fullscreen = (bool)value;
                 DisplayServer.WindowSetMode((bool)value ? DisplayServer.WindowMode.ExclusiveFullscreen : DisplayServer.WindowMode.Windowed);
                 break;
             case "CursorTrail":
-                Settings.CursorTrail = (bool)value;
+                Instance.Settings.CursorTrail = (bool)value;
                 break;
             case "TrailTime":
-                Settings.TrailTime = (double)value;
+                Instance.Settings.TrailTime = (double)value;
                 break;
             case "TrailDetail":
-                Settings.TrailDetail = (double)value;
+                Instance.Settings.TrailDetail = (double)value;
                 break;
             case "CursorDrift":
-                Settings.CursorDrift = (bool)value;
+                Instance.Settings.CursorDrift = (bool)value;
                 break;
             case "VideoDim":
-                Settings.VideoDim = (double)value;
+                Instance.Settings.VideoDim = (double)value;
                 break;
             case "VideoRenderScale":
-                Settings.VideoRenderScale = (double)value;
+                Instance.Settings.VideoRenderScale = (double)value;
                 break;
             case "SimpleHUD":
-                Settings.SimpleHUD = (bool)value;
+                Instance.Settings.SimpleHUD = (bool)value;
                 break;
             case "AutoplayJukebox":
-                Settings.AutoplayJukebox = (bool)value;
+                Instance.Settings.AutoplayJukebox = (bool)value;
                 break;
             case "AbsoluteInput":
-                Settings.AbsoluteInput = (bool)value;
+                Instance.Settings.AbsoluteInput = (bool)value;
                 break;
             case "RecordReplays":
-                Settings.RecordReplays = (bool)value;
+                Instance.Settings.RecordReplays = (bool)value;
                 break;
             case "HitPopups":
-                Settings.HitPopups = (bool)value;
+                Instance.Settings.HitPopups = (bool)value;
                 break;
             case "MissPopups":
-                Settings.MissPopups = (bool)value;
+                Instance.Settings.MissPopups = (bool)value;
                 break;
             case "FPS":
-                Settings.FPS = (double)value;
-                Engine.MaxFps = Settings.UnlockFPS ? 0 : Convert.ToInt32(value);
+                Instance.Settings.FPS = (double)value;
+                Engine.MaxFps = Instance.Settings.UnlockFPS ? 0 : Convert.ToInt32(value);
                 break;
             case "UnlockFPS":
-                Settings.UnlockFPS = (bool)value;
-                Engine.MaxFps = Settings.UnlockFPS ? 0 : Convert.ToInt32(Settings.FPS);
+                Instance.Settings.UnlockFPS = (bool)value;
+                Engine.MaxFps = Instance.Settings.UnlockFPS ? 0 : Convert.ToInt32(Instance.Settings.FPS);
                 break;
         }
 
@@ -294,7 +298,7 @@ public partial class SettingsManager : Control
 
         for (int i = 0; i < spaces.ItemCount; i++)
         {
-            if (spaces.GetItemText(i) == Settings.Space)
+            if (spaces.GetItemText(i) == Instance.Settings.Space)
             {
                 spaces.Selected = i;
                 break;
@@ -309,7 +313,7 @@ public partial class SettingsManager : Control
 
             skins.AddItem(name, j);
 
-            if (Settings.Skin == name)
+            if (Instance.Settings.Skin == name)
             {
                 skins.Selected = j;
             }
@@ -337,14 +341,14 @@ public partial class SettingsManager : Control
         {
             foreach (Panel option in category.GetNode("Container").GetChildren())
             {
-                var property = Settings.GetType().GetProperty(option.Name);
+                var property = Instance.Settings.GetType().GetProperty(option.Name);
 
                 if (option.FindChild("HSlider") != null)
                 {
                     HSlider slider = option.GetNode<HSlider>("HSlider");
                     LineEdit lineEdit = option.GetNode<LineEdit>("LineEdit");
 
-                    slider.Value = (double)property.GetValue(Settings);
+                    slider.Value = (double)property.GetValue(Instance.Settings);
                     lineEdit.Text = (Math.Floor(slider.Value * 1000) / 1000).ToString();
 
                     if (connections)
@@ -396,7 +400,7 @@ public partial class SettingsManager : Control
                 {
                     CheckButton checkButton = option.GetNode<CheckButton>("CheckButton");
 
-                    checkButton.ButtonPressed = (bool)property.GetValue(Settings);
+                    checkButton.ButtonPressed = (bool)property.GetValue(Instance.Settings);
 
                     if (connections)
                     {
@@ -442,8 +446,8 @@ public partial class SettingsManager : Control
                                 raw = raw.TrimSuffix(",");
                                 lineEdit.Text = raw;
 
-                                SkinProfile.Colors = colors;
-                                SkinProfile.RawColors = raw;
+                                SkinManager.Instance.Skin.Colors = colors;
+                                SkinManager.Instance.Skin.RawColors = raw;
 
                                 break;
                         }
@@ -496,11 +500,16 @@ public partial class SettingsManager : Control
 
         foreach (PropertyInfo property in typeof(SettingsProfile).GetProperties())
         {
-            data[property.Name] = (Variant)typeof(Variant).GetMethod("From").MakeGenericMethod(property.GetValue(Settings).GetType()).Invoke(Settings, [property.GetValue(Settings)]);
+            if (property.DeclaringType != typeof(SettingsProfile))
+            {
+                continue;
+            }
+
+            data[property.Name] = (Variant)typeof(Variant).GetMethod("From").MakeGenericMethod(property.GetValue(Instance.Settings).GetType()).Invoke(Instance.Settings, [property.GetValue(Instance.Settings)]);
         }
 
         File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profile}.json", Json.Stringify(data, "\t"));
-        SkinProfile.Save();
+        SkinManager.Save();
         Logger.Log($"Saved settings {profile}");
     }
 
@@ -526,7 +535,7 @@ public partial class SettingsManager : Control
 
                 if (data.ContainsKey(property.Name))
                 {
-                    property.SetValue(Settings, data[property.Name]
+                    property.SetValue(Instance.Settings, data[property.Name]
                         .GetType()
                         .GetMethod("As", BindingFlags.Public | BindingFlags.Instance)
                         .MakeGenericMethod(property.PropertyType)
@@ -534,7 +543,7 @@ public partial class SettingsManager : Control
                 }
             }
 
-            if (Settings.Fullscreen)
+            if (Instance.Settings.Fullscreen)
             {
                 DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
             }
@@ -546,13 +555,13 @@ public partial class SettingsManager : Control
             err = exception;
         }
 
-        if (!Directory.Exists($"{Constants.USER_FOLDER}/skins/{Settings.Skin}"))
+        if (!Directory.Exists($"{Constants.USER_FOLDER}/skins/{Instance.Settings.Skin}"))
         {
-            Settings.Skin = "default";
-            ToastNotification.Notify($"Could not find skin {Settings.Skin}", 1);
+            Instance.Settings.Skin = "default";
+            ToastNotification.Notify($"Could not find skin {Instance.Settings.Skin}", 1);
         }
 
-        SkinProfile.Load();
+        SkinManager.Load();
 
         if (err != null)
         {

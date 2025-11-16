@@ -7,7 +7,7 @@ public partial class LegacyRenderer : MultiMeshInstance3D
 
     public override void _Ready()
     {
-        settings = SettingsManager.Settings;
+        settings = SettingsManager.Instance.Settings;
     }
 
     public override void _Process(double delta)
@@ -49,7 +49,7 @@ public partial class LegacyRenderer : MultiMeshInstance3D
             }
 
             int j = LegacyRunner.ToProcess - i - 1;
-            Color color = SkinProfile.Colors[note.Index % SkinProfile.Colors.Length];
+            Color color = SkinManager.Instance.Skin.Colors[note.Index % SkinManager.Instance.Skin.Colors.Length];
 
             transform.Origin = new Vector3(note.X, note.Y, -depth);
             color.A = alpha;

@@ -22,22 +22,22 @@ public class Util
         switch (mod)
         {
             case "NoFail":
-                tex = SkinProfile.ModNofailImage;
+                tex = SkinManager.Instance.Skin.ModNofailImage;
                 break;
             case "Spin":
-                tex = SkinProfile.ModSpinImage;
+                tex = SkinManager.Instance.Skin.ModSpinImage;
                 break;
             case "Ghost":
-                tex = SkinProfile.ModGhostImage;
+                tex = SkinManager.Instance.Skin.ModGhostImage;
                 break;
             case "Chaos":
-                tex = SkinProfile.ModChaosImage;
+                tex = SkinManager.Instance.Skin.ModChaosImage;
                 break;
             case "Flashlight":
-                tex = SkinProfile.ModFlashlightImage;
+                tex = SkinManager.Instance.Skin.ModFlashlightImage;
                 break;
             case "HardRock":
-                tex = SkinProfile.ModHardrockImage;
+                tex = SkinManager.Instance.Skin.ModHardrockImage;
                 break;
         }
 

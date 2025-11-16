@@ -25,7 +25,7 @@ public partial class KeybindsManager : Node
 
     public override void _Input(InputEvent @event)
     {
-        var settings = SettingsManager.Settings;
+        var settings = SettingsManager.Instance.Settings;
         if (@event is InputEventKey eventKey && eventKey.Pressed)
         {
             if (eventKey.Keycode == Key.F11 || (eventKey.AltPressed && (eventKey.Keycode == Key.Enter || eventKey.Keycode == Key.KpEnter)))
@@ -46,7 +46,7 @@ public partial class KeybindsManager : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        var settings = SettingsManager.Settings;
+        var settings = SettingsManager.Instance.Settings;
 
         if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.Pressed)
         {
@@ -55,10 +55,10 @@ public partial class KeybindsManager : Node
                 switch (eventMouseButton.ButtonIndex)
                 {
                     case MouseButton.WheelUp:
-                        SettingsManager.Settings.VolumeMaster = Math.Min(100, settings.VolumeMaster + 5f);
+                        SettingsManager.Instance.Settings.VolumeMaster = Math.Min(100, settings.VolumeMaster + 5f);
                         break;
                     case MouseButton.WheelDown:
-                        SettingsManager.Settings.VolumeMaster = Math.Max(0, settings.VolumeMaster - 5f);
+                        SettingsManager.Instance.Settings.VolumeMaster = Math.Max(0, settings.VolumeMaster - 5f);
                         break;
                 }
 

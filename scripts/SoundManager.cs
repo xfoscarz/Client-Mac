@@ -106,13 +106,13 @@ public partial class SoundManager : Node
 
     public static void UpdateSounds()
     {
-        HitSound.Stream = Lib.Audio.LoadStream(SkinProfile.HitSoundBuffer);
-        FailSound.Stream = Lib.Audio.LoadStream(SkinProfile.FailSoundBuffer);
+        HitSound.Stream = Lib.Audio.LoadStream(SkinManager.Instance.Skin.HitSoundBuffer);
+        FailSound.Stream = Lib.Audio.LoadStream(SkinManager.Instance.Skin.FailSoundBuffer);
     }
 
     public static void UpdateVolume()
     {
-        var settings = SettingsManager.Settings;
+        var settings = SettingsManager.Instance.Settings;
 
         Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
         HitSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);

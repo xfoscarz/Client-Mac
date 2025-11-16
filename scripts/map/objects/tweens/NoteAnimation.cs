@@ -1,7 +1,7 @@
 
 using Godot;
 
-public class NoteTween : TweenObject
+public class NoteAnimation : AnimationObject
 {
     public int Rotation { get; set; }
 

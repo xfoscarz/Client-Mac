@@ -171,7 +171,7 @@ public partial class Phoenyx : Node
 
     public static void Quit()
     {
-        var settings = SettingsManager.Settings;
+        var settings = SettingsManager.Instance.Settings;
 
         if (Quitting)
         {

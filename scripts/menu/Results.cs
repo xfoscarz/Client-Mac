@@ -17,7 +17,7 @@ public partial class Results : Control
 
 	public override void _Ready()
 	{
-		settings = SettingsManager.Settings;
+		settings = SettingsManager.Instance.Settings;
 
 		cursor = GetNode<TextureRect>("Cursor");
 		footer = GetNode<Panel>("Footer");
@@ -27,7 +27,7 @@ public partial class Results : Control
 		Input.MouseMode = Input.MouseModeEnum.Hidden;
 		DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Mailbox);
 
-		cursor.Texture = SkinProfile.CursorImage;
+		cursor.Texture = SkinManager.Instance.Skin.CursorImage;
 		cursor.Size = new Vector2(32 * (float)settings.CursorScale, 32 * (float)settings.CursorScale);
 
 		holder.GetNode<Label>("Title").Text = (LegacyRunner.CurrentAttempt.IsReplay ? "[REPLAY] " : "") + LegacyRunner.CurrentAttempt.Map.PrettyTitle;

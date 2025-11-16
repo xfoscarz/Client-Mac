@@ -94,10 +94,10 @@ public partial class SceneManager : Node
             switch (node.Name)
             {
                 case "SceneMenu":
-                    space = SkinProfile.MenuSpace;
+                    space = SkinManager.Instance.Skin.MenuSpace;
                     break;
                 case "SceneGame":
-                    space = SkinProfile.GameSpace;
+                    space = SkinManager.Instance.Skin.GameSpace;
                     break;
             }
 

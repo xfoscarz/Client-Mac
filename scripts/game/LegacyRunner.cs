@@ -104,7 +104,7 @@ public partial class LegacyRunner : Node3D
 		public bool Qualifies = true;
 		public uint Hits = 0;
 		public float[] HitsInfo = [];
-		public Color LastHitColour = SkinProfile.Colors[^1];
+		public Color LastHitColour = SkinManager.Instance.Skin.Colors[^1];
 		public uint Misses = 0;
 		public double DeathTime = -1;
 		public uint Sum = 0;
@@ -124,7 +124,7 @@ public partial class LegacyRunner : Node3D
 
 		public Attempt(Map map, double speed, double startFrom, Dictionary<string, bool> mods, string[] players = null, Replay[] replays = null)
 		{
-            settings = SettingsManager.Settings;
+            settings = SettingsManager.Instance.Settings;
 
 			ID = $"{map.ID}_{OS.GetUniqueId()}_{Time.GetDatetimeStringFromUnixTime((long)Time.GetUnixTimeFromSystem())}".Replace(":", "_");
 			Replays = replays;
@@ -233,7 +233,7 @@ public partial class LegacyRunner : Node3D
 			Combo++;
 			ComboMultiplierProgress++;
 
-			LastHitColour = SkinProfile.Colors[index % SkinProfile.Colors.Length];
+			LastHitColour = SkinManager.Instance.Skin.Colors[index % SkinManager.Instance.Skin.Colors.Length];
 
             float lateness = IsReplay ? HitsInfo[index] : (float)(((int)Progress - Map.Notes[index].Millisecond) / Speed);
 			float factor = 1 - Math.Max(0, lateness - 25) / 150f;
@@ -381,7 +381,7 @@ public partial class LegacyRunner : Node3D
 			Sprite3D icon = miss_feedback.Instantiate<Sprite3D>();
 			node3D.AddChild(icon);
 			icon.GlobalPosition = new Vector3(Map.Notes[index].X, -1.4f, 0);
-			icon.Texture = SkinProfile.MissFeedbackImage;
+			icon.Texture = SkinManager.Instance.Skin.MissFeedbackImage;
 
 			Tween tween = icon.CreateTween();
 			tween.TweenProperty(icon, "transparency", 1, 0.25f);
@@ -453,7 +453,7 @@ public partial class LegacyRunner : Node3D
 	
 	public override void _Ready()
 	{
-        settings = SettingsManager.Settings;
+        settings = SettingsManager.Instance.Settings;
 
 		node3D = this;
 
@@ -653,18 +653,18 @@ public partial class LegacyRunner : Node3D
 
 		try
 		{
-			(cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
-			(cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinProfile.CursorImage;
-			(grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinProfile.GridImage;
-			panelLeft.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelLeftBackgroundImage;
-			panelRight.GetNode<TextureRect>("Background").Texture = SkinProfile.PanelRightBackgroundImage;
-			healthTexture.Texture = SkinProfile.HealthImage;
-			healthTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.HealthBackgroundImage;
-			progressBarTexture.Texture = SkinProfile.ProgressImage;
-			progressBarTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinProfile.ProgressBackgroundImage;
-			panelRight.GetNode<TextureRect>("HitsIcon").Texture = SkinProfile.HitsImage;
-			panelRight.GetNode<TextureRect>("MissesIcon").Texture = SkinProfile.MissesImage;
-			notesMultimesh.Multimesh.Mesh = SkinProfile.NoteMesh;
+			(cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
+			(cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
+			(grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
+			panelLeft.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
+			panelRight.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelRightBackgroundImage;
+			healthTexture.Texture = SkinManager.Instance.Skin.HealthImage;
+			healthTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.HealthBackgroundImage;
+			progressBarTexture.Texture = SkinManager.Instance.Skin.ProgressImage;
+			progressBarTexture.GetParent().GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.ProgressBackgroundImage;
+			panelRight.GetNode<TextureRect>("HitsIcon").Texture = SkinManager.Instance.Skin.HitsImage;
+			panelRight.GetNode<TextureRect>("MissesIcon").Texture = SkinManager.Instance.Skin.MissesImage;
+			notesMultimesh.Multimesh.Mesh = SkinManager.Instance.Skin.NoteMesh;
 		}
 		catch (Exception exception)
 		{

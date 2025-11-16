@@ -19,6 +19,9 @@ public partial class GameComponent : Node3D
     [Export]
     public Array<Renderer> Renderers { get; set; }
 
+    [Signal]
+    public delegate void AttemptProcessEventHandler(Attempt attempt);
+
     public HealthJudgement HealthProcessor { get; } = new HealthJudgement();
 
     public HitJudgement HitJudgement { get; } = new HitJudgement();
@@ -45,11 +48,13 @@ public partial class GameComponent : Node3D
         if (Standalone)
         {
             // Play(MapManager.QueuedAttempt()]) -- MapManager will hold a Queue of attempts to play
+            Play(CurrentAttempt);
         }
     }
 
     public override void _Process(double delta)
     {
+
         //  Psuedocode logic for the attempt
         //  
         //  bool[] hitResults = HitJudgment.ProcessHitJudgements(CurrentAttempt);
@@ -75,6 +80,8 @@ public partial class GameComponent : Node3D
         {
             component.Process(delta, CurrentAttempt);
         }
+
+        EmitSignalAttemptProcess(CurrentAttempt);
 
     }
 

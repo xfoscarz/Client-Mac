@@ -3,7 +3,7 @@ using Godot;
 /// <summary>
 /// Base class for tween objects
 /// </summary>
-public abstract class TweenObject : ITimelineObject
+public abstract class AnimationObject : ITimelineObject
 {
     int ITimelineObject.Id => (int)ObjectType.Tween;
 

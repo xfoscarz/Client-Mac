@@ -94,7 +94,7 @@ public partial class MainMenu : Control
 
 	public override void _Ready()
 	{
-		settings = SettingsManager.Settings;
+		settings = SettingsManager.Instance.Settings;
 
 		Control = this;
 
@@ -241,7 +241,7 @@ public partial class MainMenu : Control
 		LoadedMaps = [];
 		FavoritedMaps = [];
 
-		Cursor.Texture = SkinProfile.CursorImage;
+		Cursor.Texture = SkinManager.Instance.Skin.CursorImage;
 		Cursor.Size = new Vector2(32 * (float)settings.CursorScale, 32 * (float)settings.CursorScale);
 
 		Godot.Collections.Array<Node> jukeboxBars = JukeboxSpectrum.GetChildren();
@@ -532,7 +532,7 @@ public partial class MainMenu : Control
 			}
 			else
 			{
-				favorite.Texture = SkinProfile.FavoriteImage;
+				favorite.Texture = SkinManager.Instance.Skin.FavoriteImage;
 				File.WriteAllText($"{Constants.USER_FOLDER}/favorites.txt", $"{favorites}{ContextMenuTarget}\n");
 				FavoritedMaps[mapButton] = true;
 			}
@@ -1277,7 +1277,7 @@ public partial class MainMenu : Control
 
 	public static void UpdateVolume()
 	{
-		var settings = SettingsManager.Settings;
+		var settings = SettingsManager.Instance.Settings;
 
 		SettingsManager.Holder.GetNode("Categories").GetNode("Audio").GetNode("Container").GetNode("VolumeMaster").GetNode<HSlider>("HSlider").Value = settings.VolumeMaster;
 	}
@@ -1375,7 +1375,7 @@ public partial class MainMenu : Control
 				if (favorited)
 				{
 					TextureRect favorite = holder.GetNode<TextureRect>("Favorited");
-					favorite.Texture = SkinProfile.FavoriteImage;
+					favorite.Texture = SkinManager.Instance.Skin.FavoriteImage;
 					favorite.Visible = true;
 				}
 
@@ -1537,6 +1537,6 @@ public partial class MainMenu : Control
 
 	public static void UpdateJukeboxButtons()
 	{
-		Jukebox.GetNode<TextureButton>("Pause").TextureNormal = SoundManager.JukeboxPaused ? SkinProfile.JukeboxPlayImage : SkinProfile.JukeboxPauseImage;
+		Jukebox.GetNode<TextureButton>("Pause").TextureNormal = SoundManager.JukeboxPaused ? SkinManager.Instance.Skin.JukeboxPlayImage : SkinManager.Instance.Skin.JukeboxPauseImage;
 	}
 }
