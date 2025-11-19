@@ -28,6 +28,7 @@ ToastNotification="*res://scripts/ToastNotification.cs"
 SoundManager="*res://scripts/SoundManager.cs"
 SettingsManager="*res://scripts/SettingsManager.cs"
 SceneManager="*res://scripts/SceneManager.cs"
+Stats="*res://scripts/database/Stats.cs"
 Phoenyx="*res://scripts/Phoenyx.cs"
 
 [debug]

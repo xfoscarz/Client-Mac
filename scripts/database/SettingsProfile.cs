@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class SettingsProfile : GodotObject
+public partial class SettingsProfile : RefCounted
 {
     [Signal]
     public delegate void FieldUpdatedEventHandler(string name, Variant value);

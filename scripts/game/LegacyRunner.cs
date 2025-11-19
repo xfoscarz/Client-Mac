@@ -1235,7 +1235,7 @@ public partial class LegacyRunner : Node3D
 				if (CurrentAttempt.Qualifies)
 				{
 					Stats.Passes++;
-					Stats.TotalScore += CurrentAttempt.Score;
+					Stats.Total_Score += CurrentAttempt.Score;
 					
 					if (CurrentAttempt.Accuracy == 100)
 					{

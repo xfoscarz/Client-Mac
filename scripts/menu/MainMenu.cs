@@ -87,7 +87,7 @@ public partial class MainMenu : Control
 	private static string SearchTitle = "";
 	private static string SearchAuthor = "";
 	private static string ContextMenuTarget;
-	private static Map CurrentMap;
+    private static Map CurrentMap = new();
 	private static int PassedNotes = 0;
 	private static int PeruSequenceIndex = 0;
 	private static readonly string[] PeruSequence = ["P", "E", "R", "U"];
@@ -305,7 +305,7 @@ public partial class MainMenu : Control
 						value = Lib.String.PadMagnitude(Stats.HighestScore.ToString());
 						break;
 					case "TotalScore":
-						value = Lib.String.PadMagnitude(Stats.TotalScore.ToString());
+						value = Lib.String.PadMagnitude(Stats.Total_Score.ToString());
 						break;
 					case "AverageAccuracy":
 						double sum = 0;

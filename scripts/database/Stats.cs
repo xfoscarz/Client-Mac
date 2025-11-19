@@ -4,8 +4,31 @@ using System.Security.Cryptography;
 using Godot;
 using Godot.Collections;
 
-public class Stats
+[GlobalClass]
+public partial class Stats : Node
 {
+    public static Stats Instance { get; private set; }
+
+    public override void _Ready()
+    {
+        
+        Instance = this;
+        var db = DatabaseService.Instance.DB;
+
+        var collection = db.GetCollection<Stats>();
+        var stats = collection.FindById("_STATS");
+
+        
+
+        if (stats == null)
+        {
+            stats = new Stats();
+            collection.Insert("_STATS", stats);
+        }
+    }
+
+    public ulong TotalScore { get; set; }
+
     public static ulong GamePlaytime = 0;
     public static ulong TotalPlaytime = 0;
     public static ulong GamesOpened = 0;
@@ -17,7 +40,7 @@ public class Stats
     public static ulong Passes = 0;
     public static ulong FullCombos = 0;
     public static ulong HighestScore = 0;
-    public static ulong TotalScore = 0;
+    public static ulong Total_Score = 0;
     public static ulong RageQuits = 0;
     public static Array<double> PassAccuracies = [];
     public static Godot.Collections.Dictionary<string, ulong> FavoriteMaps = [];
@@ -41,7 +64,7 @@ public class Stats
         file.Store64(Passes);
         file.Store64(FullCombos);
         file.Store64(HighestScore);
-        file.Store64(TotalScore);
+        file.Store64(Total_Score);
         file.Store64(RageQuits);
         file.Store32((uint)accuraciesJson.Length);
         file.StoreString(accuraciesJson);
@@ -90,7 +113,7 @@ public class Stats
                     Passes = file.GetUInt64();
                     FullCombos = file.GetUInt64();
                     HighestScore = file.GetUInt64();
-                    TotalScore = file.GetUInt64();
+                    Total_Score = file.GetUInt64();
                     RageQuits = file.GetUInt64();
                     PassAccuracies = (Array<double>)Json.ParseString(file.GetString((int)file.GetUInt32()));
                     FavoriteMaps = (Godot.Collections.Dictionary<string, ulong>)Json.ParseString(file.GetString((int)file.GetUInt32()));
