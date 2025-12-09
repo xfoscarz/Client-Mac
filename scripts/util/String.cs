@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace Lib;
+namespace Util;
 
 public class String
 {

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 public partial class MapList : Panel
@@ -32,11 +33,11 @@ public partial class MapList : Panel
     private TextureRect selectionCursor;
 
     private readonly PackedScene mapButtonTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/map_button.tscn");
-    private List<string> maps = [];	// (queried) map IDs, get this from db
+    private List<Map> maps = [];	// (queried) map IDs, get this from db in the future
     private Dictionary<string, MapButton> mapButtons = [];
     private Stack<MapButton> mapButtonCache = [];
     private MapButton hoveredButton;
-    private string selectedMap = "";
+    private string selectedMapID;
 
     public override void _Ready()
     {
@@ -45,10 +46,12 @@ public partial class MapList : Panel
         selectionCursor = GetNode<TextureRect>("SelectionCursor");
 
         MouseExited += () => { toggleSelectionCursor(false); };
-
-        for (int i = 0; i < 20; i++)
+		
+        // temporary until db is implemented
+        // also a memory leak every time you reload the menu
+        foreach (string path in Directory.GetFiles($"{Constants.USER_FOLDER}/maps"))
 		{
-            maps.Add($"map {i}");
+            maps.Add(MapParser.Decode(path, null, false));
         }
     }
 
@@ -85,7 +88,7 @@ public partial class MapList : Panel
         float downOffset = 0;
         int mapCount = -1;
 
-        foreach (string id in maps)
+        foreach (Map map in maps)
 		{
 			mapCount++;
 
@@ -93,14 +96,14 @@ public partial class MapList : Panel
             float top = offset - (float)Scroll;
             float bottom = top + ButtonSize;
             bool display = top < Size.Y && bottom > 0;
-            MapButton button = mapButtons.TryGetValue(id, out MapButton value) ? value : null;
+            MapButton button = mapButtons.TryGetValue(map.ID, out MapButton value) ? value : null;
 			
             // Cache/ignore if outside map list
             if (!display)
 			{
 				if (button != null)
 				{
-                    mapButtons.Remove(id);
+                    mapButtons.Remove(map.ID);
                     mapButtonCache.Push(button);
                     mask.RemoveChild(button);
 
@@ -124,11 +127,11 @@ public partial class MapList : Panel
 				button = mapButtonCache.Count > 0 ? mapButtonCache.Pop() : setupButton(mapButtonTemplate.Instantiate<MapButton>());
 
                 button.ListIndex = mapCount;
-                mapButtons[id] = button;
+                mapButtons[map.ID] = button;
                 mask.AddChild(button);
-                button.UpdateInfo(id);
+                button.UpdateInfo(map);
 
-				if (id == selectedMap)
+				if (map.ID == selectedMapID)
 				{
                     button.Select();
                     button.UpdateOutline(1f, 0f);
@@ -197,25 +200,25 @@ public partial class MapList : Panel
 
             toggleSelectionCursor(true);
 
-			if (button.Map != selectedMap)
+			if (button.Map.ID != selectedMapID)
 			{
                 button.UpdateOutline(0.5f);
             }
         };
         button.MouseExited += () => {
-            if (button.Map != selectedMap)
+            if (button.Map.ID != selectedMapID)
             {
                 button.UpdateOutline(0f);
             }
         };
         button.OnPressed += () => {
-			if (selectedMap != null && selectedMap != button.Map && mapButtons.TryGetValue(selectedMap, out MapButton value))
+			if (selectedMapID != null && selectedMapID != button.Map.ID && mapButtons.TryGetValue(selectedMapID, out MapButton value))
 			{
                 value.Deselect();
                 value.UpdateOutline(0f);
             }
 
-            selectedMap = button.Map;
+            selectedMapID = button.Map.ID;
 
             button.UpdateOutline(1.0f);
         };

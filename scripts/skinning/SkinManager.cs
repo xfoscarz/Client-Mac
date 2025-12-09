@@ -72,7 +72,7 @@ public partial class SkinManager : Node
 
         if (File.Exists($"{Constants.USER_FOLDER}/skins/{settings.Skin}/note.obj"))
 		{
-			skin.NoteMesh = (ArrayMesh)Util.OBJParser.Call("load_obj", $"{Constants.USER_FOLDER}/skins/{settings.Skin}/note.obj");
+			skin.NoteMesh = (ArrayMesh)Util.Misc.OBJParser.Call("load_obj", $"{Constants.USER_FOLDER}/skins/{settings.Skin}/note.obj");
 		}
 		else
 		{

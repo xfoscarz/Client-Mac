@@ -85,7 +85,7 @@ public partial class SoundManager : Node
             LegacyMainMenu.Control.GetNode("Jukebox").GetNode<Label>("Title").Text = Map.PrettyTitle;
         }
 
-        Song.Stream = Lib.Audio.LoadStream(Map.AudioBuffer);
+        Song.Stream = Util.Audio.LoadStream(Map.AudioBuffer);
         Song.Play();
 
         if (setRichPresence)
@@ -106,8 +106,8 @@ public partial class SoundManager : Node
 
     public static void UpdateSounds()
     {
-        HitSound.Stream = Lib.Audio.LoadStream(SkinManager.Instance.Skin.HitSoundBuffer);
-        FailSound.Stream = Lib.Audio.LoadStream(SkinManager.Instance.Skin.FailSoundBuffer);
+        HitSound.Stream = Util.Audio.LoadStream(SkinManager.Instance.Skin.HitSoundBuffer);
+        FailSound.Stream = Util.Audio.LoadStream(SkinManager.Instance.Skin.FailSoundBuffer);
     }
 
     public static void UpdateVolume()

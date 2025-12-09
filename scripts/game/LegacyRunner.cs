@@ -271,11 +271,11 @@ public partial class LegacyRunner : Node3D
 			Health = Math.Min(100, Health + HealthStep / 1.75);
 			Map.Notes[index].Hit = true;
 
-			scoreLabel.Text = Lib.String.PadMagnitude(Score.ToString());
+			scoreLabel.Text = Util.String.PadMagnitude(Score.ToString());
 			multiplierLabel.Text = $"{ComboMultiplier}x";
 			hitsLabel.Text = $"{Hits}";
 			hitsLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
-			sumLabel.Text = Lib.String.PadMagnitude(Sum.ToString());
+			sumLabel.Text = Util.String.PadMagnitude(Sum.ToString());
 			accuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString().PadDecimals(2))}%";
 			comboLabel.Text = Combo.ToString();
 
@@ -362,7 +362,7 @@ public partial class LegacyRunner : Node3D
 			missesLabel.Text = $"{Misses}";
 			simpleMissesLabel.Text = $"{Misses}";
 			missesLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
-			sumLabel.Text = Lib.String.PadMagnitude(Sum.ToString());
+			sumLabel.Text = Util.String.PadMagnitude(Sum.ToString());
 			accuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString().PadDecimals(2))}%";
 			comboLabel.Text = Combo.ToString();
 
@@ -508,7 +508,7 @@ public partial class LegacyRunner : Node3D
 			AddChild(icon);
 
 			icon.Position = new(i * 1.5f - activeMods.Count / 1.5f, -8.5f, -10f);
-			icon.Texture = Util.GetModIcon(activeMods[i]);
+			icon.Texture = Util.Misc.GetModIcon(activeMods[i]);
 		}
 
 		Panel menuButtonsHolder = menu.GetNode<Panel>("Holder");
@@ -543,7 +543,7 @@ public partial class LegacyRunner : Node3D
 		};
 
 		replayViewerSeek.ValueChanged += (double value) => {
-			replayViewerLabel.Text = $"{Lib.String.FormatTime(value * CurrentAttempt.LongestReplayLength / 1000)} / {Lib.String.FormatTime(CurrentAttempt.LongestReplayLength / 1000)}";
+			replayViewerLabel.Text = $"{Util.String.FormatTime(value * CurrentAttempt.LongestReplayLength / 1000)} / {Util.String.FormatTime(CurrentAttempt.LongestReplayLength / 1000)}";
 		};
 		replayViewerSeek.DragEnded += (bool _) => {
 			CurrentAttempt.Hits = 0;
@@ -683,7 +683,7 @@ public partial class LegacyRunner : Node3D
 
 		if (CurrentAttempt.Map.AudioBuffer != null)
 		{
-			SoundManager.Song.Stream = Lib.Audio.LoadStream(CurrentAttempt.Map.AudioBuffer);
+			SoundManager.Song.Stream = Util.Audio.LoadStream(CurrentAttempt.Map.AudioBuffer);
 			SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
 			MapLength = (float)SoundManager.Song.Stream.GetLength() * 1000;
 		}
@@ -999,7 +999,7 @@ public partial class LegacyRunner : Node3D
 			progressLabel.Modulate = Color.Color8(255, 255, 255, 96);
 		}
 
-		progressLabel.Text = $"{Lib.String.FormatTime(Math.Max(0, CurrentAttempt.Progress) / 1000)} / {Lib.String.FormatTime(MapLength / 1000)}";
+		progressLabel.Text = $"{Util.String.FormatTime(Math.Max(0, CurrentAttempt.Progress) / 1000)} / {Util.String.FormatTime(MapLength / 1000)}";
 		healthTexture.Size = healthTexture.Size.Lerp(new Vector2(32 + (float)CurrentAttempt.Health * 10.24f, 80), Math.Min(1, (float)delta * 64));
 		progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
 		skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));

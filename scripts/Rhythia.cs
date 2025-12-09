@@ -46,9 +46,9 @@ public partial class Rhythia : Node
             File.Delete(cacheFile);
         }
 
-        for (int i = 0; i < Util.UserDirectories.Length; i++)
+        for (int i = 0; i < Util.Misc.UserDirectories.Length; i++)
         {
-            string Folder = Util.UserDirectories[i];
+            string Folder = Util.Misc.UserDirectories[i];
 
             if (!Directory.Exists($"{Constants.USER_FOLDER}/{Folder}"))
             {
@@ -61,7 +61,7 @@ public partial class Rhythia : Node
             Directory.CreateDirectory($"{Constants.USER_FOLDER}/skins/default");
         }
 
-        foreach (string skinFile in Util.SkinFiles)
+        foreach (string skinFile in Util.Misc.SkinFiles)
         {
             try
             {

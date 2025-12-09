@@ -4,9 +4,9 @@ using System;
 public partial class MapButton : Panel
 {
 	/// <summary>
-	/// Parsed map ID
+	/// Parsed map reference
 	/// </summary>
-    public string Map = "";
+    public Map Map;
 
 	/// <summary>
 	/// Index within the full map list
@@ -102,7 +102,8 @@ public partial class MapButton : Panel
 	{
 		if (Selected && select)
 		{
-            GD.Print($"play map {Map}");
+            SceneManager.Load("res://scenes/game.tscn");
+            LegacyRunner.Play(Map, Lobby.Speed, Lobby.StartFrom, Lobby.Mods);
         }
 
         Selected = select;
@@ -116,10 +117,12 @@ public partial class MapButton : Panel
         Select(false);
     }
 
-	public void UpdateInfo(string map)
+	public void UpdateInfo(Map map)
 	{
         Map = map;
-        Name = Map;
+        Name = Map.ID;
+        title.Text = Map.PrettyTitle;
+        extra.Text = $"[outline_size=2][outline_color=000000][color=808080]{Util.String.FormatTime(Map.Length / 1000)} — [color={Constants.DIFFICULTY_COLORS[Map.Difficulty].ToHtml()}]{Map.DifficultyName} [color=808080]by [color=b0b0b0]{Map.PrettyMappers}";
     }
 
 	public void UpdateOutline(float targetFill, float fill = -1)

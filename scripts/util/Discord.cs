@@ -1,6 +1,4 @@
-﻿
-
-using DiscordRPC;
+﻿using DiscordRPC;
 
 public class Discord
 {

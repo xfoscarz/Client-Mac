@@ -3,7 +3,9 @@ using System.IO;
 using Godot;
 using System.Collections.Generic;
 
-public class Util
+namespace Util;
+
+public class Misc
 {
     public static string[] UserDirectories = ["maps", "profiles", "skins", "replays", "pbs"];
     public static string[] SkinFiles = ["cursor.png", "grid.png", "health.png", "hits.png", "misses.png", "miss_feedback.png", "health_background.png", "progress.png", "progress_background.png", "panel_left_background.png", "panel_right_background.png", "jukebox_play.png", "jukebox_pause.png", "jukebox_skip.png", "favorite.png", "mod_nofail.png", "mod_spin.png", "mod_ghost.png", "mod_chaos.png", "mod_flashlight.png", "mod_hardrock.png", "hit.mp3", "fail.mp3", "colors.txt"];

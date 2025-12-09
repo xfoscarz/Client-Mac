@@ -34,8 +34,8 @@ public partial class Results : Control
 		holder.GetNode<Label>("Difficulty").Text = LegacyRunner.CurrentAttempt.Map.DifficultyName;
 		holder.GetNode<Label>("Mappers").Text = $"by {LegacyRunner.CurrentAttempt.Map.PrettyMappers}";
 		holder.GetNode<Label>("Accuracy").Text = $"{LegacyRunner.CurrentAttempt.Accuracy.ToString().PadDecimals(2)}%";
-		holder.GetNode<Label>("Score").Text = $"{Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Score.ToString())}";
-		holder.GetNode<Label>("Hits").Text = $"{Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Hits.ToString())} / {Lib.String.PadMagnitude(LegacyRunner.CurrentAttempt.Sum.ToString())}";
+		holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Score.ToString())}";
+		holder.GetNode<Label>("Hits").Text = $"{Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Hits.ToString())} / {Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Sum.ToString())}";
 		holder.GetNode<Label>("Status").Text = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].Status : LegacyRunner.CurrentAttempt.Alive ? (LegacyRunner.CurrentAttempt.Qualifies ? "PASSED" : "DISQUALIFIED") : "FAILED";
 		holder.GetNode<Label>("Speed").Text = $"{LegacyRunner.CurrentAttempt.Speed.ToString().PadDecimals(2)}x";
 
@@ -49,7 +49,7 @@ public partial class Results : Control
 				TextureRect icon = modTemplate.Duplicate() as TextureRect;
 
 				icon.Visible = true;
-				icon.Texture = Util.GetModIcon(mod.Key);
+				icon.Texture = Util.Misc.GetModIcon(mod.Key);
 
 				modifiersContainer.AddChild(icon);
 			}
@@ -77,7 +77,7 @@ public partial class Results : Control
 
 		if (!LegacyRunner.CurrentAttempt.Map.Ephemeral)
 		{
-			SoundManager.JukeboxIndex = SoundManager.JukeboxQueueInverse[LegacyRunner.CurrentAttempt.Map.ID];
+			// SoundManager.JukeboxIndex = SoundManager.JukeboxQueueInverse[LegacyRunner.CurrentAttempt.Map.ID];
 		}
 
 		Button replayButton = footer.GetNode<Button>("Replay");

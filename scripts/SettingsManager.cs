@@ -441,7 +441,7 @@ public partial class SettingsManager : Node
 
     public static void Save(string profile = null)
     {
-        profile ??= Util.GetProfile();
+        profile ??= Util.Misc.GetProfile();
 
         Dictionary data = new()
         {
@@ -465,7 +465,7 @@ public partial class SettingsManager : Node
 
     public static void Load(string profile = null)
     {
-        profile ??= Util.GetProfile();
+        profile ??= Util.Misc.GetProfile();
 
         Exception err = null;
 

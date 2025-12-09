@@ -278,34 +278,34 @@ public partial class LegacyMainMenu : Control
 						value = $"{Math.Floor((double)Stats.TotalPlaytime / 36) / 100} h";
 						break;
 					case "GamesOpened":
-						value = Lib.String.PadMagnitude(Stats.GamesOpened.ToString());
+						value = Util.String.PadMagnitude(Stats.GamesOpened.ToString());
 						break;
 					case "TotalDistance":
-						value = $"{Lib.String.PadMagnitude(((double)Stats.TotalDistance / 1000).ToString())} m";
+						value = $"{Util.String.PadMagnitude(((double)Stats.TotalDistance / 1000).ToString())} m";
 						break;
 					case "NotesHit":
-						value = Lib.String.PadMagnitude(Stats.NotesHit.ToString());
+						value = Util.String.PadMagnitude(Stats.NotesHit.ToString());
 						break;
 					case "NotesMissed":
-						value = Lib.String.PadMagnitude(Stats.NotesMissed.ToString());
+						value = Util.String.PadMagnitude(Stats.NotesMissed.ToString());
 						break;
 					case "HighestCombo":
-						value = Lib.String.PadMagnitude(Stats.HighestCombo.ToString());
+						value = Util.String.PadMagnitude(Stats.HighestCombo.ToString());
 						break;
 					case "Attempts":
-						value = Lib.String.PadMagnitude(Stats.Attempts.ToString());
+						value = Util.String.PadMagnitude(Stats.Attempts.ToString());
 						break;
 					case "Passes":
-						value = Lib.String.PadMagnitude(Stats.Passes.ToString());
+						value = Util.String.PadMagnitude(Stats.Passes.ToString());
 						break;
 					case "FullCombos":
-						value = Lib.String.PadMagnitude(Stats.FullCombos.ToString());
+						value = Util.String.PadMagnitude(Stats.FullCombos.ToString());
 						break;
 					case "HighestScore":
-						value = Lib.String.PadMagnitude(Stats.HighestScore.ToString());
+						value = Util.String.PadMagnitude(Stats.HighestScore.ToString());
 						break;
 					case "TotalScore":
-						value = Lib.String.PadMagnitude(Stats.TotalScore.ToString());
+						value = Util.String.PadMagnitude(Stats.TotalScore.ToString());
 						break;
 					case "AverageAccuracy":
 						double sum = 0;
@@ -318,7 +318,7 @@ public partial class LegacyMainMenu : Control
 						value = $"{(Stats.PassAccuracies.Count == 0 ? 0 : Math.Floor(sum / Stats.PassAccuracies.Count * 100) / 100).ToString().PadDecimals(2)}%";
 						break;
 					case "RageQuits":
-						value = Lib.String.PadMagnitude(Stats.RageQuits.ToString());
+						value = Util.String.PadMagnitude(Stats.RageQuits.ToString());
 						break;
 					case "FavouriteMap":
 						string mostPlayedID = null;
@@ -653,7 +653,7 @@ public partial class LegacyMainMenu : Control
 		{
 			value *= SelectedMap.Length;
 
-			StartFromEdit.Text = $"{Lib.String.FormatTime(value / 1000)}";
+			StartFromEdit.Text = $"{Util.String.FormatTime(value / 1000)}";
 			Lobby.StartFrom = Math.Floor(value);
 		};
 		StartFromSlider.DragEnded += (bool _) =>
@@ -1460,11 +1460,11 @@ public partial class LegacyMainMenu : Control
 			scorePanel.GetNode<ColorRect>("Bright").Visible = (count + 1) % 2 == 0;
 			scorePanel.GetNode<Label>("Accuracy").Text = $"{score.Accuracy.ToString().PadDecimals(2)}%";
 			scorePanel.GetNode<Label>("Speed").Text = $"{score.Speed.ToString().PadDecimals(2)}x";
-			scorePanel.GetNode<Label>("Time").Text = Lib.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
+			scorePanel.GetNode<Label>("Time").Text = Util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
 
 			if (score.Qualifies)
 			{
-				scoreLabel.Text = Lib.String.PadMagnitude(score.Value.ToString());
+				scoreLabel.Text = Util.String.PadMagnitude(score.Value.ToString());
 			}
 			else
 			{
@@ -1472,7 +1472,7 @@ public partial class LegacyMainMenu : Control
 				playerLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 64);
 				scoreLabel.LabelSettings = scoreLabel.LabelSettings.Duplicate() as LabelSettings;
 				scoreLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 64);
-				scoreLabel.Text = $"{Lib.String.FormatTime(score.Progress / 1000)} / {Lib.String.FormatTime(score.MapLength / 1000)}";
+				scoreLabel.Text = $"{Util.String.FormatTime(score.Progress / 1000)} / {Util.String.FormatTime(score.MapLength / 1000)}";
 			}
 
 			scorePanel.GetNode<Button>("Button").Pressed += () =>
@@ -1495,7 +1495,7 @@ public partial class LegacyMainMenu : Control
 				if (entry.Value)
 				{
 					TextureRect mod = modifierTemplate.Duplicate() as TextureRect;
-					mod.Texture = Util.GetModIcon(entry.Key);
+					mod.Texture = Util.Misc.GetModIcon(entry.Key);
 					mod.Visible = true;
 					modifiersContainer.AddChild(mod);
 				}

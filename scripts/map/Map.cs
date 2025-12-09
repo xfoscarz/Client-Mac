@@ -71,5 +71,5 @@ public struct Map
         }, "\t");
     }
 
-    public readonly override string ToString() => $"{PrettyTitle} by {PrettyMappers}";
+    public override readonly string ToString() => $"{PrettyTitle} by {PrettyMappers}";
 }
