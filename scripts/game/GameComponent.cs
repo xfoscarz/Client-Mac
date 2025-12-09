@@ -22,9 +22,9 @@ public partial class GameComponent : Node3D
     [Signal]
     public delegate void AttemptProcessEventHandler(Attempt attempt);
 
-    public HealthJudgement HealthProcessor { get; } = new HealthJudgement();
+    public HealthJudgment HealthProcessor { get; } = new HealthJudgment();
 
-    public HitJudgement HitJudgement { get; } = new HitJudgement();
+    public HitJudgment HitJudgement { get; } = new HitJudgment();
 
     public bool Playing { get; private set; } = true;
 
@@ -32,7 +32,7 @@ public partial class GameComponent : Node3D
 
     public void Play(Attempt attempt)
     {
-        Input.MouseMode = CurrentAttempt.Settings.AbsoluteInput ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured;
+        Input.MouseMode = CurrentAttempt.Settings.AbsoluteInput.Value ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured;
         Input.UseAccumulatedInput = false;
 
         HealthProcessor.ApplyAttempt(attempt);
@@ -108,7 +108,7 @@ public partial class GameComponent : Node3D
         {
             CurrentAttempt.CameraMode.Process(CurrentAttempt, Camera, eventMouseMotion.Relative);
 
-            CurrentAttempt.DistanceMM += eventMouseMotion.Relative.Length() / CurrentAttempt.Settings.Sensitivity / 57.5;
+            CurrentAttempt.DistanceMM += eventMouseMotion.Relative.Length() / CurrentAttempt.Settings.Sensitivity.Value / 57.5;
         }
     }
 }

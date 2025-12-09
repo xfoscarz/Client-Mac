@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Godot;
+using LiteDB;
 
 public partial class Rhythia : Node
 {
     private static bool initialized = false;
     private static bool loaded = false;
+
+    private DatabaseService databaseService = DatabaseService.Instance;
 
     public static bool Quitting { get; private set; } = false;
 
@@ -145,7 +148,7 @@ public partial class Rhythia : Node
             Stats.Passes = 0;
             Stats.FullCombos = 0;
             Stats.HighestScore = 0;
-            Stats.TotalScore = 0;
+            Stats.Total_Score = 0;
             Stats.RageQuits = 0;
             Stats.PassAccuracies = [];
             Stats.FavoriteMaps = [];
@@ -201,6 +204,7 @@ public partial class Rhythia : Node
         }
 
         Discord.Client.Dispose();
+        DatabaseService.Instance.Dispose();
 
         if (SceneManager.Scene.Name == "SceneMenu")
         {

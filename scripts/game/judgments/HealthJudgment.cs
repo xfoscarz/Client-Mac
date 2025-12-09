@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class HealthJudgement
+public class HealthJudgment
 {
     public bool IsFailed { get; private set; }
 

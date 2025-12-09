@@ -1,6 +1,7 @@
 using System.IO;
 using Godot;
 
+[GlobalClass]
 public partial class Constants : Node
 {
     public static readonly ulong STARTED = Time.GetTicksUsec();

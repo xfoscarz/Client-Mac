@@ -28,7 +28,7 @@ public partial class Results : Control
 		DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Mailbox);
 
 		cursor.Texture = SkinManager.Instance.Skin.CursorImage;
-		cursor.Size = new Vector2(32 * (float)settings.CursorScale, 32 * (float)settings.CursorScale);
+		cursor.Size = new Vector2(32 * (float)settings.CursorScale.Value, 32 * (float)settings.CursorScale.Value);
 
 		holder.GetNode<Label>("Title").Text = (LegacyRunner.CurrentAttempt.IsReplay ? "[REPLAY] " : "") + LegacyRunner.CurrentAttempt.Map.PrettyTitle;
 		holder.GetNode<Label>("Difficulty").Text = LegacyRunner.CurrentAttempt.Map.DifficultyName;
@@ -150,7 +150,7 @@ public partial class Results : Control
 
 	public void UpdateVolume()
 	{
-		SoundManager.Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
+		SoundManager.Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
 	}
 
 	public void Replay()

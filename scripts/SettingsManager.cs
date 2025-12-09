@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Godot;
 using Godot.Collections;
@@ -13,7 +14,7 @@ public partial class SettingsManager : Node
 
     public static SettingsManager Instance { get; private set; }
 
-    public SettingsProfile Settings { get; private set; } = new SettingsProfile();
+    public SettingsProfile Settings = new SettingsProfile();
 
     [Signal]
     public delegate void OnShownEventHandler(bool shown);
@@ -144,94 +145,91 @@ public partial class SettingsManager : Node
         switch (setting)
         {
             case "Sensitivity":
-                Instance.Settings.Sensitivity = (double)value;
+                Instance.Settings.Sensitivity.Value = (float)value;
                 break;
             case "ApproachRate":
-                Instance.Settings.ApproachRate = (double)value;
+                Instance.Settings.ApproachRate.Value = (float)value;
                 break;
             case "ApproachDistance":
-                Instance.Settings.ApproachDistance = (double)value;
+                Instance.Settings.ApproachDistance.Value = (float)value;
                 break;
             case "FadeIn":
-                Instance.Settings.FadeIn = (double)value;
+                Instance.Settings.FadeIn.Value = (float)value;
                 break;
             case "Parallax":
-                Instance.Settings.Parallax = (double)value;
+                Instance.Settings.Parallax.Value = (float)value;
                 break;
             case "FoV":
-                Instance.Settings.FoV = (double)value;
+                Instance.Settings.FoV.Value = (float)value;
                 break;
             case "VolumeMaster":
-                Instance.Settings.VolumeMaster = (double)value;
+                Instance.Settings.VolumeMaster.Value = (float)value;
                 break;
             case "VolumeMusic":
-                Instance.Settings.VolumeMusic = (double)value;
+                Instance.Settings.VolumeMusic.Value = (float)value;
                 break;
             case "VolumeSFX":
-                Instance.Settings.VolumeSFX = (double)value;
+                Instance.Settings.VolumeSFX.Value = (float)value;
                 break;
             case "AlwaysPlayHitSound":
-                Instance.Settings.AlwaysPlayHitSound = (bool)value;
+                Instance.Settings.AlwaysPlayHitSound.Value = (bool)value;
                 break;
             case "NoteSize":
-                Instance.Settings.NoteSize = (double)value;
+                Instance.Settings.NoteSize.Value = (float)value;
                 break;
             case "CursorScale":
-                Instance.Settings.CursorScale = (double)value;
+                Instance.Settings.CursorScale.Value = (float)value;
                 break;
             case "FadeOut":
-                Instance.Settings.FadeOut = (bool)value;
+                Instance.Settings.FadeOut.Value = (bool)value;
                 break;
             case "Pushback":
-                Instance.Settings.Pushback = (bool)value;
+                Instance.Settings.Pushback.Value = (bool)value;
                 break;
             case "Fullscreen":
-                Instance.Settings.Fullscreen = (bool)value;
-                DisplayServer.WindowSetMode((bool)value ? DisplayServer.WindowMode.ExclusiveFullscreen : DisplayServer.WindowMode.Windowed);
+                Instance.Settings.Fullscreen.Value = (bool)value;
                 break;
             case "CursorTrail":
-                Instance.Settings.CursorTrail = (bool)value;
+                Instance.Settings.CursorTrail.Value = (bool)value;
                 break;
             case "TrailTime":
-                Instance.Settings.TrailTime = (double)value;
+                Instance.Settings.TrailTime.Value = (float)value;
                 break;
             case "TrailDetail":
-                Instance.Settings.TrailDetail = (double)value;
+                Instance.Settings.TrailDetail.Value = (float)value;
                 break;
             case "CursorDrift":
-                Instance.Settings.CursorDrift = (bool)value;
+                Instance.Settings.CursorDrift.Value = (bool)value;
                 break;
             case "VideoDim":
-                Instance.Settings.VideoDim = (double)value;
+                Instance.Settings.VideoDim.Value = (float)value;
                 break;
             case "VideoRenderScale":
-                Instance.Settings.VideoRenderScale = (double)value;
+                Instance.Settings.VideoRenderScale.Value = (float)value;
                 break;
             case "SimpleHUD":
-                Instance.Settings.SimpleHUD = (bool)value;
+                Instance.Settings.SimpleHUD.Value = (bool)value;
                 break;
             case "AutoplayJukebox":
-                Instance.Settings.AutoplayJukebox = (bool)value;
+                Instance.Settings.AutoplayJukebox.Value = (bool)value;
                 break;
             case "AbsoluteInput":
-                Instance.Settings.AbsoluteInput = (bool)value;
+                Instance.Settings.AbsoluteInput.Value = (bool)value;
                 break;
             case "RecordReplays":
-                Instance.Settings.RecordReplays = (bool)value;
+                Instance.Settings.RecordReplays.Value = (bool)value;
                 break;
             case "HitPopups":
-                Instance.Settings.HitPopups = (bool)value;
+                Instance.Settings.HitPopups.Value = (bool)value;
                 break;
             case "MissPopups":
-                Instance.Settings.MissPopups = (bool)value;
+                Instance.Settings.MissPopups.Value = (bool)value;
                 break;
             case "FPS":
-                Instance.Settings.FPS = (double)value;
-                Engine.MaxFps = Instance.Settings.UnlockFPS ? 0 : Convert.ToInt32(value);
+                Instance.Settings.FPS.Value = (int)value;
                 break;
             case "UnlockFPS":
-                Instance.Settings.UnlockFPS = (bool)value;
-                Engine.MaxFps = Instance.Settings.UnlockFPS ? 0 : Convert.ToInt32(Instance.Settings.FPS);
+                Instance.Settings.UnlockFPS.Value = (bool)value;
                 break;
         }
     }
@@ -443,23 +441,11 @@ public partial class SettingsManager : Node
     {
         profile ??= Util.Misc.GetProfile();
 
-        Dictionary data = new()
-        {
-            ["_Version"] = 1
-        };
+        string data = SettingsProfileConverter.Serialize(Instance.Settings);
 
-        foreach (PropertyInfo property in typeof(SettingsProfile).GetProperties())
-        {
-            if (property.DeclaringType != typeof(SettingsProfile))
-            {
-                continue;
-            }
-
-            data[property.Name] = (Variant)typeof(Variant).GetMethod("From").MakeGenericMethod(property.GetValue(Instance.Settings).GetType()).Invoke(Instance.Settings, [property.GetValue(Instance.Settings)]);
-        }
-
-        File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profile}.json", Json.Stringify(data, "\t"));
+        File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profile}.json", data);
         SkinManager.Save();
+
         Logger.Log($"Saved settings {profile}");
     }
 
@@ -471,32 +457,7 @@ public partial class SettingsManager : Node
 
         try
         {
-            Godot.FileAccess file = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/profiles/{profile}.json", Godot.FileAccess.ModeFlags.Read);
-            Dictionary data = (Dictionary)Json.ParseString(file.GetAsText());
-
-            file.Close();
-
-            foreach (PropertyInfo property in typeof(SettingsProfile).GetProperties())
-            {
-                if (!property.CanWrite)
-                {
-                    continue;
-                }
-
-                if (data.ContainsKey(property.Name))
-                {
-                    property.SetValue(Instance.Settings, data[property.Name]
-                        .GetType()
-                        .GetMethod("As", BindingFlags.Public | BindingFlags.Instance)
-                        .MakeGenericMethod(property.PropertyType)
-                        .Invoke(data[property.Name], null));
-                }
-            }
-
-            if (Instance.Settings.Fullscreen)
-            {
-                DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
-            }
+            SettingsProfileConverter.Deserialize($"{Constants.USER_FOLDER}/profiles/{profile}.json", Instance.Settings);
 
             ToastNotification.Notify($"Loaded profile [{profile}]");
         }
@@ -505,10 +466,10 @@ public partial class SettingsManager : Node
             err = exception;
         }
 
-        if (!Directory.Exists($"{Constants.USER_FOLDER}/skins/{Instance.Settings.Skin}"))
+        if (!Directory.Exists($"{Constants.USER_FOLDER}/skins/{Instance.Settings.Skin.Value}"))
         {
-            Instance.Settings.Skin = "default";
-            ToastNotification.Notify($"Could not find skin {Instance.Settings.Skin}", 1);
+            Instance.Settings.Skin.Value = new("default");
+            ToastNotification.Notify($"Could not find skin {Instance.Settings.Skin.Value}", 1);
         }
 
         SkinManager.Load();

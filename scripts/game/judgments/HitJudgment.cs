@@ -1,8 +1,8 @@
 ﻿using System;
 
-public class HitJudgement
+public class HitJudgment
 {
-    public bool[] ProcessHitJudgements(Attempt attempt)
+    public bool[] ProcessHitJudgments(Attempt attempt)
     {
         // TODO: This should loop through all hittable hit objects and detect if any where missed passed their hitwindow
         // Should return an array of all the results from the hitobjects that were either Hit or Missed in the frame

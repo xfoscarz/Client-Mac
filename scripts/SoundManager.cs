@@ -114,8 +114,8 @@ public partial class SoundManager : Node
     {
         var settings = SettingsManager.Instance.Settings;
 
-        Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
-        HitSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
-        FailSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
+        Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
+        HitSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
+        FailSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
     }
 }

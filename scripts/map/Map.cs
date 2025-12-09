@@ -3,25 +3,43 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Godot;
 
-public struct Map
+public partial class Map : RefCounted
 {
-    public string ID;
-    public string FilePath;
-    public bool Ephemeral;
-    public string Artist;
-    public string Title;
-    public string PrettyTitle;
-    public float Rating;
-    public string[] Mappers;
-    public string PrettyMappers;
-    public string DifficultyName;
-    public int Difficulty;
-    public int Length;
-    public byte[] AudioBuffer;
-    public string AudioExt;
-    public byte[] CoverBuffer;
-    public byte[] VideoBuffer;
-    public Note[] Notes;
+    public string ID { get; set; } = string.Empty;
+
+    public string FilePath { get; set; } = string.Empty;
+
+    public bool Ephemeral { get; set; } = false;
+
+    public string Artist { get; set; } = string.Empty;
+
+    public string Title { get; set; } = string.Empty;
+
+    public string PrettyTitle { get; set; } = string.Empty;
+
+    public float Rating { get; set; } = 0;
+
+    public string[] Mappers { get; set; } = [];
+
+    public string PrettyMappers { get; set; } = string.Empty;
+
+    public string DifficultyName { get; set; } = string.Empty;
+
+    public int Difficulty { get; set; } = 0;
+
+    public int Length { get; set; } = 0;
+
+    public byte[] AudioBuffer { get; set; } = [];
+
+    public string AudioExt { get; set; } = string.Empty;
+
+    public byte[] CoverBuffer { get; set; } = [];
+
+    public byte[] VideoBuffer { get; set; } = [];
+
+    public Note[] Notes { get; set; } = [];
+
+    public Map() { }
 
     public Map(string filePath, Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false)
     {
@@ -70,6 +88,4 @@ public struct Map
             ["AudioExt"] = AudioExt
         }, "\t");
     }
-
-    public override readonly string ToString() => $"{PrettyTitle} by {PrettyMappers}";
 }

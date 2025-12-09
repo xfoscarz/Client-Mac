@@ -172,7 +172,7 @@ public partial class LegacyRunner : Node3D
 				ReplayFile.Store8((byte)(settings.FadeOut ? 1 : 0));
 				ReplayFile.Store8((byte)(settings.Pushback ? 1 : 0));
 				ReplayFile.StoreDouble(settings.Parallax);
-				ReplayFile.StoreDouble(settings.FoV);
+				ReplayFile.StoreDouble(settings.FoV.Value);
 				ReplayFile.StoreDouble(settings.NoteSize);
 				ReplayFile.StoreDouble(settings.Sensitivity);
 
@@ -279,7 +279,7 @@ public partial class LegacyRunner : Node3D
 			accuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString().PadDecimals(2))}%";
 			comboLabel.Text = Combo.ToString();
 
-			if (!settings.AlwaysPlayHitSound)
+			if (!settings.AlwaysPlayHitSound.Value)
 			{
 				SoundManager.HitSound.Play();
 			}
@@ -605,7 +605,7 @@ public partial class LegacyRunner : Node3D
 			replayViewerSeekHovered = false;
 		};
 
-		if (settings.SimpleHUD)
+		if (settings.SimpleHUD.Value)
 		{
 			Godot.Collections.Array<Node> widgets = panelLeft.GetChildren();
 			widgets.AddRange(panelRight.GetChildren());
@@ -618,7 +618,7 @@ public partial class LegacyRunner : Node3D
 			simpleMissesLabel.Visible = true;
 		}
 
-		float fov = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].FoV : settings.FoV);
+		float fov = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].FoV : settings.FoV.Value);
 
 		MenuShown = false;
 		camera.Fov = fov;
@@ -632,7 +632,7 @@ public partial class LegacyRunner : Node3D
 		float videoHeight = 2 * (float)Math.Sqrt(Math.Pow(103.75 / Math.Cos(Mathf.DegToRad(fov / 2)), 2) - Math.Pow(103.75, 2));
 
 		(videoQuad.Mesh as QuadMesh).Size = new(videoHeight / 0.5625f, videoHeight);	// don't use 16:9? too bad lol
-		video.GetParent<SubViewport>().Size = new((int)(1920 * settings.VideoRenderScale / 100), (int)(1080 * settings.VideoRenderScale / 100));
+		video.GetParent<SubViewport>().Size = new((int)(1920 * settings.VideoRenderScale.Value / 100), (int)(1080 * settings.VideoRenderScale.Value / 100));
 
 		multiplierProgress = 0;
 		multiplierColour = Color.Color8(255, 255, 255);
@@ -645,11 +645,11 @@ public partial class LegacyRunner : Node3D
 		Discord.Client.UpdateState(CurrentAttempt.Map.PrettyTitle);
 		Discord.Client.UpdateEndTime(DateTime.UtcNow.AddSeconds((Time.GetUnixTimeFromSystem() + CurrentAttempt.Map.Length / 1000 / CurrentAttempt.Speed)));
 
-		Input.MouseMode = settings.AbsoluteInput || CurrentAttempt.IsReplay ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured;
+		Input.MouseMode = settings.AbsoluteInput.Value || CurrentAttempt.IsReplay ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured;
 		Input.UseAccumulatedInput = false;
 		DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
 
-		(cursor.Mesh as QuadMesh).Size = new Vector2((float)(Constants.CURSOR_SIZE * settings.CursorScale), (float)(Constants.CURSOR_SIZE * settings.CursorScale));
+		(cursor.Mesh as QuadMesh).Size = new Vector2((float)(Constants.CURSOR_SIZE * settings.CursorScale.Value), (float)(Constants.CURSOR_SIZE * settings.CursorScale.Value));
 
 		try
 		{
@@ -733,7 +733,7 @@ public partial class LegacyRunner : Node3D
 			ShowReplayViewer();
 		}
 
-		UpdateVolume();
+		SoundManager.UpdateVolume();
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -1112,10 +1112,10 @@ public partial class LegacyRunner : Node3D
 					}
 					break;
 				case Key.F:
-					settings.FadeOut = !settings.FadeOut;
+					settings.FadeOut.Value = !settings.FadeOut;
 					break;
 				case Key.P:
-					settings.Pushback = !settings.Pushback;
+					settings.Pushback.Value = !settings.Pushback;
 					break;
 			}
 		}
@@ -1235,7 +1235,7 @@ public partial class LegacyRunner : Node3D
 				if (CurrentAttempt.Qualifies)
 				{
 					Stats.Passes++;
-					Stats.TotalScore += CurrentAttempt.Score;
+					Stats.Total_Score += CurrentAttempt.Score;
 					
 					if (CurrentAttempt.Accuracy == 100)
 					{
@@ -1297,17 +1297,10 @@ public partial class LegacyRunner : Node3D
 		ShowReplayViewer(false);
 	}
 	
-	public static void UpdateVolume()
-	{
-		SoundManager.Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
-		SoundManager.HitSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
-		SoundManager.FailSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster / 100, 0.1);
-	}
-	
 	public static void UpdateCursor(Vector2 mouseDelta)
 	{
 		float sensitivity = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].Sensitivity : settings.Sensitivity);
-		sensitivity *= (float)settings.FoV / 70f;
+		sensitivity *= (float)settings.FoV.Value / 70f;
 		
 		if (!CurrentAttempt.Mods["Spin"])
 		{
