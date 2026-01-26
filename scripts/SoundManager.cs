@@ -118,6 +118,14 @@ public partial class SoundManager : Node, ISkinnable
         }
     }
 
+    public static void PlayJukebox(Map map, bool setRichPresence = true)
+    {
+        if (JukeboxQueueInverse.TryGetValue(map.FilePath.GetFile().GetBaseName(), out int index))
+        {
+            PlayJukebox(index, setRichPresence);
+        }
+    }
+
     public static void UpdateVolume()
     {
         var settings = SettingsManager.Instance.Settings;

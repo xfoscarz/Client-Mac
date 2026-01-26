@@ -23,14 +23,14 @@ config/icon="uid://bwygmhmegsm4f"
 [autoload]
 
 Constants="*res://scripts/Constants.cs"
-KeybindsManager="*res://scripts/KeybindsManager.cs"
 SettingsManager="*res://scripts/SettingsManager.cs"
 SkinManager="*res://scripts/skinning/SkinManager.cs"
+Rhythia="*res://scripts/Rhythia.cs"
+KeybindsManager="*res://scripts/KeybindsManager.cs"
 Lobby="*res://scripts/multiplayer/Lobby.cs"
 SoundManager="*res://scripts/SoundManager.cs"
-MapParser="*res://scripts/map/MapParser.cs"
 ToastNotification="*res://scripts/ui/ToastNotification.cs"
-Rhythia="*res://scripts/Rhythia.cs"
+MapParser="*res://scripts/map/MapParser.cs"
 
 [debug]
 

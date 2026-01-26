@@ -253,7 +253,7 @@ public partial class MapList : Panel, ISkinnable
 
         for (int i = 0; i < drawnContainers.Count; i++)
         {
-            var index = i + firstIndex;
+            int index = i + firstIndex;
             var container = drawnContainers[i];
             
             float sizeOffset = containerSizeOffsets[i];
@@ -317,12 +317,9 @@ public partial class MapList : Panel, ISkinnable
         // temporary until db is implemented
         foreach (string path in Directory.GetFiles($"{Constants.USER_FOLDER}/maps"))
 		{
-            try
-            {
-                Map map = MapParser.Decode(path);
+            Map map = MapParser.Decode(path);
 
-                (MapManager.IsFavorited(map) ? Maps : unfavorited).Add(map);
-            } catch {}
+            (MapManager.IsFavorited(map) ? Maps : unfavorited).Add(map);
         }
 
         foreach (Map map in unfavorited)

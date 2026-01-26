@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public partial class OptionPopup : Control
 {
@@ -28,6 +29,7 @@ public partial class OptionPopup : Control
 
         Header = header;
         Info = info;
+        Name = $"OptionPopup{new Regex("[^a-zA-Z0-9_-]").Replace(Header, "")}";
 
         SceneManager.Root.AddChild(this);
     }

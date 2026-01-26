@@ -26,7 +26,7 @@ public class SettingsProfileConverter
             if (property.GetValue(profile) is ISettingsItem item && item.SaveToDisk)
             {
                 var value = item.GetVariant();
-
+                
                 switch (value.VariantType)
                 {
                     case Variant.Type.Float:

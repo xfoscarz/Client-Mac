@@ -1,4 +1,4 @@
-[gd_scene load_steps=99 format=3 uid="uid://do18270a428ma"]
+[gd_scene load_steps=100 format=3 uid="uid://do18270a428ma"]
 
 [ext_resource type="Shader" uid="uid://c7ldko1kfg2ho" path="res://scripts/shaders/noise_waves.gdshader" id="1_3wgol"]
 [ext_resource type="Script" uid="uid://j2paynyu362u" path="res://scripts/scenes/MainMenu.cs" id="1_yxnar"]
@@ -10,28 +10,48 @@
 [ext_resource type="Script" uid="uid://bnead3awk7yr4" path="res://scripts/ui/menu/SettingsMenuButton.cs" id="8_yxnar"]
 [ext_resource type="Script" uid="uid://byighsqkmf2c4" path="res://scripts/ui/menu/QuitButton.cs" id="9_yxnar"]
 [ext_resource type="Script" uid="uid://cqprxe41p0qov" path="res://scripts/ui/menu/Background.cs" id="10_eku7s"]
+[ext_resource type="Texture2D" uid="uid://cbbafomdyoenp" path="res://user/skins/default/ui/background_tile.png" id="10_ybca7"]
+[ext_resource type="Texture2D" uid="uid://b8wjaogc8fvq4" path="res://user/skins/default/ui/play/scrollbar_background_middle.png" id="12_k5xsf"]
 [ext_resource type="Script" uid="uid://dsq135xacv1vh" path="res://scripts/ui/menu/play/MapList.cs" id="12_yxnar"]
+[ext_resource type="Texture2D" uid="uid://cr5wlhch2a3nc" path="res://user/skins/default/ui/play/scrollbar_background_top.png" id="13_71lbq"]
+[ext_resource type="Texture2D" uid="uid://bhcxdv0lm6nog" path="res://user/skins/default/ui/play/scrollbar_background_bottom.png" id="14_akqfu"]
+[ext_resource type="Texture2D" uid="uid://ddx87gpqy8hfo" path="res://user/skins/default/ui/play/scrollbar_middle.png" id="15_mb34c"]
 [ext_resource type="Texture2D" uid="uid://cltk7bcbr5o51" path="res://user/skins/default/ui/buttons/layout_list.png" id="16_6h3lr"]
+[ext_resource type="Texture2D" uid="uid://6qtsltuf8u8e" path="res://user/skins/default/ui/play/scrollbar_top.png" id="16_sgh51"]
 [ext_resource type="Script" uid="uid://bc0ftljto8dtx" path="res://scripts/ui/menu/LayoutButton.cs" id="17_dj67d"]
+[ext_resource type="Texture2D" uid="uid://8jqgxhe6o58v" path="res://user/skins/default/ui/play/scrollbar_bottom.png" id="17_hjv1c"]
+[ext_resource type="Texture2D" uid="uid://bku8toppyall7" path="res://user/skins/default/ui/play/maplist_mask.png" id="18_41a2d"]
 [ext_resource type="Texture2D" uid="uid://baivqqkfll133" path="res://textures/RhythiaSquircle.png" id="18_eku7s"]
 [ext_resource type="FontFile" uid="uid://4bnnn01f4dqr" path="res://fonts/Ubuntu-Medium.ttf" id="19_c6nra"]
+[ext_resource type="Texture2D" uid="uid://bw35mprqnilk7" path="res://user/skins/default/ui/play/maplist_selection_cursor.png" id="19_f5cck"]
 [ext_resource type="Texture2D" uid="uid://ct67kupv6bmny" path="res://textures/ui/discord.png" id="20_qw82i"]
 [ext_resource type="Texture2D" uid="uid://c0wbm1qc5npty" path="res://textures/ui/discord_pressed.png" id="21_1468l"]
+[ext_resource type="Texture2D" uid="uid://dqg2qk62dxcc6" path="res://user/skins/default/ui/buttons/settings.png" id="21_s4ogs"]
 [ext_resource type="Texture2D" uid="uid://d3buklvnhgqcy" path="res://textures/ui/discord_hovered.png" id="22_01xyg"]
+[ext_resource type="Texture2D" uid="uid://1fj6g1xt5b0" path="res://user/skins/default/ui/buttons/open_folder.png" id="22_ew011"]
 [ext_resource type="Script" uid="uid://bdxxohkj7wy22" path="res://scripts/ui/menu/play/MapInfo.cs" id="22_qw82i"]
+[ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="24_tcyl8"]
 [ext_resource type="Script" uid="uid://c31515lg0ihgs" path="res://scripts/ui/menu/UserFolderButton.cs" id="27_eku7s"]
 [ext_resource type="Shader" uid="uid://cxckrd6xtplnx" path="res://scripts/shaders/jukebox_progress.gdshader" id="27_engjn"]
 [ext_resource type="Script" uid="uid://dx2wecnf76cyo" path="res://scripts/ui/AudioSpectrum.cs" id="27_hl5e0"]
+[ext_resource type="Texture2D" uid="uid://b44v7e2jfwmkn" path="res://user/skins/default/ui/buttons/random.png" id="27_tgcit"]
 [ext_resource type="Script" uid="uid://d36x1ln46itd1" path="res://scripts/ui/menu/play/RandomPickButton.cs" id="27_u43bj"]
 [ext_resource type="Script" uid="uid://nob6vs2h1mwj" path="res://scripts/ui/menu/ImportButton.cs" id="28_eku7s"]
 [ext_resource type="Shader" uid="uid://rngh60dyh10b" path="res://scripts/shaders/outline.gdshader" id="30_q13xq"]
+[ext_resource type="Texture2D" uid="uid://bfy3x7rqnts4i" path="res://user/skins/default/ui/buttons/filter.png" id="31_5053t"]
+[ext_resource type="Texture2D" uid="uid://bl6ten82nkjmd" path="res://user/skins/default/ui/buttons/sort.png" id="32_2wgix"]
+[ext_resource type="Texture2D" uid="uid://c6k1k4817che2" path="res://user/skins/default/ui/buttons/author.png" id="33_b56yx"]
 [ext_resource type="Script" uid="uid://b47jydbbjdh3i" path="res://scripts/ui/menu/SoundSpaceButton.cs" id="33_yxnar"]
+[ext_resource type="Texture2D" uid="uid://bg3gjft0mamud" path="res://user/skins/default/ui/buttons/search.png" id="34_h5mb6"]
 [ext_resource type="Script" uid="uid://chb17y8gabhta" path="res://scripts/ui/menu/JukeboxPanel.cs" id="35_jvjdd"]
 [ext_resource type="Script" uid="uid://bqidqko521o1v" path="res://scripts/ui/menu/DiscordButton.cs" id="37_c6nra"]
 [ext_resource type="Script" uid="uid://783e032bf2o3" path="res://scripts/ui/menu/extras/StatsPanel.cs" id="37_wadof"]
 [ext_resource type="Script" uid="uid://bss5l0q8yh47u" path="res://scripts/ui/menu/extras/CreditsPanel.cs" id="39_b4jiv"]
 [ext_resource type="PackedScene" uid="uid://rl7w0xl4w77l" path="res://prefabs/fps_counter.tscn" id="39_u43bj"]
 [ext_resource type="Script" uid="uid://carutkgoqpr4e" path="res://scripts/ui/Cursor.cs" id="41_yxnar"]
+[ext_resource type="Texture2D" uid="uid://8du82a5dxjdk" path="res://user/skins/default/ui/jukebox_play.png" id="48_q1l3m"]
+[ext_resource type="Texture2D" uid="uid://bpsvcunhigs6c" path="res://user/skins/default/ui/jukebox_skip.png" id="49_7u5pb"]
+[ext_resource type="Texture2D" uid="uid://3e1tjlr4m0wt" path="res://user/skins/default/game/cursor.png" id="50_mxl5i"]
 
 [sub_resource type="SystemFont" id="SystemFont_lsskb"]
 font_names = PackedStringArray("Ubuntu")
@@ -158,54 +178,9 @@ void vertex() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_eku7s"]
 shader = SubResource("Shader_1a85y")
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hl5e0"]
-load_path = "res://.godot/imported/background_tile.png-4c6063608cf4e867f53ff9bb9cf422f3.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_engjn"]
-load_path = "res://.godot/imported/scrollbar_background_middle.png-ae71c68532c3d261336087a1a6e68984.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6h3lr"]
-load_path = "res://.godot/imported/scrollbar_background_top.png-fe90b755d884f8b10118e496f4ea3e11.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dj67d"]
-load_path = "res://.godot/imported/scrollbar_background_bottom.png-5e612a703982b9b7b07452558e28ea4b.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6vcge"]
-load_path = "res://.godot/imported/scrollbar_middle.png-0b20bc3bc7a38d981358f0dbdfeda0eb.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ip0br"]
-load_path = "res://.godot/imported/scrollbar_top.png-b91a7b4b1497685c5e1030c817d105b6.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xyero"]
-load_path = "res://.godot/imported/scrollbar_bottom.png-177fa435ed3ba350d78f542a7332bc8a.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tcusk"]
-load_path = "res://.godot/imported/maplist_mask.png-6dca6298d6a9bec1742523306a9adbed.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_4puye"]
-load_path = "res://.godot/imported/maplist_selection_cursor.png-3b6fc2cb560634c2a2c8bd1c31fc74fa.ctex"
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6nra"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_18lcc"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_eku7s"]
-load_path = "res://.godot/imported/settings.png-9a5f37194de093397fac943e2914ef25.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_c6nra"]
-load_path = "res://.godot/imported/open_folder.png-a1bb1f6ca750e1caf48fa7b2053a1942.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_qw82i"]
-load_path = "res://.godot/imported/import.png-dbdccf474ead57e5ba2691df47528f9d.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1468l"]
-load_path = "res://.godot/imported/random.png-55e062f9a2cfc2485d0d169684b57c17.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_q13xq"]
-load_path = "res://.godot/imported/filter.png-d7287682fb5dd364e0cc2cbdce5c915e.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_u43bj"]
-load_path = "res://.godot/imported/sort.png-ca2595616fa169518b92abac3cfeb104.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_68b7m"]
 bg_color = Color(0, 0, 0, 1)
@@ -236,13 +211,10 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_jvjdd"]
-load_path = "res://.godot/imported/author.png-25d68439975019af2922801f15cdc77b.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_yxnar"]
-load_path = "res://.godot/imported/search.png-df77888866ac62c7675b3f1d5839396f.ctex"
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ooiyf"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hl5e0"]
+load_path = "res://.godot/imported/background_tile.png-4c6063608cf4e867f53ff9bb9cf422f3.ctex"
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u43bj"]
 
@@ -331,16 +303,7 @@ font_size = 17
 outline_size = 6
 outline_color = Color(0, 0, 0, 0.501961)
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_01xyg"]
-load_path = "res://.godot/imported/jukebox_play.png-ddde97260ca214e1410927861f99769a.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_764ux"]
-load_path = "res://.godot/imported/jukebox_skip.png-6f2eb91ff6f4c2444a146ddf0a969cd1.ctex"
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t0m3h"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wadof"]
-load_path = "res://.godot/imported/cursor.png-ffcf7f952fe5701c626da4c93ae0df7c.s3tc.ctex"
 
 [node name="SceneMenu" type="Node"]
 script = ExtResource("1_yxnar")
@@ -629,7 +592,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("CompressedTexture2D_hl5e0")
+texture = ExtResource("10_ybca7")
 expand_mode = 1
 stretch_mode = 1
 
@@ -676,7 +639,7 @@ offset_top = 12.0
 offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("CompressedTexture2D_engjn")
+texture = ExtResource("12_k5xsf")
 
 [node name="Top" type="TextureRect" parent="Menus/Play/MapList/ScrollBar/Background"]
 layout_mode = 1
@@ -684,7 +647,7 @@ anchors_preset = -1
 anchor_right = 1.0
 offset_bottom = 12.0
 grow_horizontal = 2
-texture = SubResource("CompressedTexture2D_6h3lr")
+texture = ExtResource("13_71lbq")
 
 [node name="Bottom" type="TextureRect" parent="Menus/Play/MapList/ScrollBar/Background"]
 layout_mode = 1
@@ -694,7 +657,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
-texture = SubResource("CompressedTexture2D_dj67d")
+texture = ExtResource("14_akqfu")
 
 [node name="Main" type="Panel" parent="Menus/Play/MapList/ScrollBar"]
 clip_contents = true
@@ -714,7 +677,7 @@ offset_top = 12.0
 offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("CompressedTexture2D_6vcge")
+texture = ExtResource("15_mb34c")
 
 [node name="Top" type="TextureRect" parent="Menus/Play/MapList/ScrollBar/Main"]
 layout_mode = 1
@@ -722,7 +685,7 @@ anchors_preset = -1
 anchor_right = 1.0
 offset_bottom = 12.0
 grow_horizontal = 2
-texture = SubResource("CompressedTexture2D_ip0br")
+texture = ExtResource("16_sgh51")
 
 [node name="Bottom" type="TextureRect" parent="Menus/Play/MapList/ScrollBar/Main"]
 layout_mode = 1
@@ -732,7 +695,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
-texture = SubResource("CompressedTexture2D_xyero")
+texture = ExtResource("17_hjv1c")
 
 [node name="Mask" type="TextureRect" parent="Menus/Play/MapList"]
 clip_children = 1
@@ -744,7 +707,7 @@ anchor_bottom = 1.0
 offset_right = -12.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("CompressedTexture2D_tcusk")
+texture = ExtResource("18_41a2d")
 expand_mode = 1
 
 [node name="SelectionCursor" type="TextureRect" parent="Menus/Play/MapList"]
@@ -758,7 +721,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 mouse_filter = 2
-texture = SubResource("CompressedTexture2D_4puye")
+texture = ExtResource("19_f5cck")
 expand_mode = 1
 
 [node name="MapInfo" type="AspectRatioContainer" parent="Menus/Play"]
@@ -811,7 +774,7 @@ focus_mode = 0
 theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Settings"
-icon = SubResource("CompressedTexture2D_eku7s")
+icon = ExtResource("21_s4ogs")
 script = ExtResource("8_yxnar")
 
 [node name="UserFolder" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer"]
@@ -821,7 +784,7 @@ focus_mode = 0
 theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "User Folder"
-icon = SubResource("CompressedTexture2D_c6nra")
+icon = ExtResource("22_ew011")
 script = ExtResource("27_eku7s")
 
 [node name="Import" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer"]
@@ -831,7 +794,7 @@ focus_mode = 0
 theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Import"
-icon = SubResource("CompressedTexture2D_qw82i")
+icon = ExtResource("24_tcyl8")
 script = ExtResource("28_eku7s")
 
 [node name="ImportDialog" type="FileDialog" parent="Menus/Play/SubTopBar/HBoxContainer/Import"]
@@ -853,7 +816,7 @@ focus_mode = 0
 theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Random"
-icon = SubResource("CompressedTexture2D_1468l")
+icon = ExtResource("27_tgcit")
 script = ExtResource("27_u43bj")
 
 [node name="Separator" type="Control" parent="Menus/Play/SubTopBar/HBoxContainer"]
@@ -889,7 +852,7 @@ focus_mode = 0
 theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 disabled = true
-icon = SubResource("CompressedTexture2D_q13xq")
+icon = ExtResource("31_5053t")
 
 [node name="Sort" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer"]
 custom_minimum_size = Vector2(0, 36)
@@ -898,7 +861,7 @@ focus_mode = 0
 theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 disabled = true
-icon = SubResource("CompressedTexture2D_u43bj")
+icon = ExtResource("32_2wgix")
 
 [node name="SearchAuthor" type="Panel" parent="Menus/Play/SubTopBar/HBoxContainer"]
 custom_minimum_size = Vector2(150, 36)
@@ -937,7 +900,7 @@ offset_top = -10.0
 offset_bottom = 10.0
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("CompressedTexture2D_jvjdd")
+texture = ExtResource("33_b56yx")
 expand_mode = 2
 stretch_mode = 4
 
@@ -978,7 +941,7 @@ offset_top = -10.0
 offset_bottom = 10.0
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("CompressedTexture2D_yxnar")
+texture = ExtResource("34_h5mb6")
 expand_mode = 2
 stretch_mode = 4
 
@@ -1807,7 +1770,7 @@ offset_top = 13.0
 offset_right = 15.0
 offset_bottom = -13.0
 focus_mode = 1
-texture_normal = SubResource("CompressedTexture2D_01xyg")
+texture_normal = ExtResource("48_q1l3m")
 ignore_texture_size = true
 stretch_mode = 0
 
@@ -1823,7 +1786,7 @@ offset_top = 13.0
 offset_right = 50.0
 offset_bottom = -13.0
 focus_mode = 1
-texture_normal = SubResource("CompressedTexture2D_764ux")
+texture_normal = ExtResource("49_7u5pb")
 ignore_texture_size = true
 stretch_mode = 0
 
@@ -1839,7 +1802,7 @@ offset_top = 13.0
 offset_right = -20.0
 offset_bottom = -13.0
 focus_mode = 1
-texture_normal = SubResource("CompressedTexture2D_764ux")
+texture_normal = ExtResource("49_7u5pb")
 ignore_texture_size = true
 stretch_mode = 0
 flip_h = true
@@ -1937,7 +1900,7 @@ z_index = 2
 offset_right = 32.0
 offset_bottom = 32.0
 mouse_filter = 2
-texture = SubResource("CompressedTexture2D_wadof")
+texture = ExtResource("50_mxl5i")
 expand_mode = 1
 script = ExtResource("41_yxnar")
 

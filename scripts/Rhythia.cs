@@ -26,7 +26,7 @@ public partial class Rhythia : Node
 
         // Set up user folder
 
-        void deepCopy(string resDir = "")
+        static void deepCopy(string resDir = "")
         {
             string userDir = $"{Constants.USER_FOLDER}{resDir}";
 
@@ -40,7 +40,7 @@ public partial class Rhythia : Node
                 string userFile = $"{userDir}/{resFile}";
                 string ext = resFile.GetExtension();
 
-                if (ext == "import" || ext == "uid" || File.Exists(userFile))
+                if (File.Exists(userFile) || ext == "import" || ext == "uid")
                 {
                     continue;
                 }

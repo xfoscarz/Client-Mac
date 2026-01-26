@@ -175,7 +175,9 @@ public partial class SettingsMenu : ColorRect
 
     private void setupToggle(ISettingsItem setting, CheckButton button)
 	{
-        button.Toggled += value => { setting.SetVariant(value); };
+        button.Toggled += value => {
+            if ((bool)setting.GetVariant() != value) { setting.SetVariant(value); }
+        };
 
         updateToggle(button, (bool)setting.GetVariant());
     }
@@ -190,12 +192,15 @@ public partial class SettingsMenu : ColorRect
 		void applyLineEdit()
         {
             double value = (lineEdit.Text == "" ? lineEdit.PlaceholderText : lineEdit.Text).ToFloat();
-            setting.SetVariant(value);
+
+            if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
         }
 
         lineEdit.FocusExited += applyLineEdit;
         lineEdit.TextSubmitted += (_) => { applyLineEdit(); };
-        slider.ValueChanged += value => { setting.SetVariant(value); };
+        slider.ValueChanged += value => {
+            if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
+        };
 
         updateSlider(slider, lineEdit, (double)setting.GetVariant());
     }
@@ -217,12 +222,13 @@ public partial class SettingsMenu : ColorRect
         void applyLineEdit()
         {
             string value = (lineEdit.Text == "" ? lineEdit.PlaceholderText : lineEdit.Text);
-            setting.SetVariant(value);
+
+            if ((string)setting.GetVariant() != value) { setting.SetVariant(value); }
         }
 
         lineEdit.FocusExited += applyLineEdit;
         lineEdit.TextSubmitted += (_) => { applyLineEdit(); };
-
+        
         updateInput(lineEdit, (string)setting.GetVariant());
     }
 
@@ -243,7 +249,9 @@ public partial class SettingsMenu : ColorRect
             optionButton.AddItem((string)item);
         }
 
-        optionButton.ItemSelected += (long id) => { setting.SetVariant(id); };
+        optionButton.ItemSelected += (id) => {
+            if ((long)setting.GetVariant() != id) { setting.SetVariant(id); }
+        };
 
         updateList(optionButton, (int)setting.GetVariant());
     }

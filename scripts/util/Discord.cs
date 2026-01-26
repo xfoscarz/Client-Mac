@@ -2,7 +2,7 @@
 
 public class Discord
 {
-    private static string appId = "1272588732834254878";
+    private static string appId = "1231699688340590722";
     public static DiscordRpcClient Client { get; private set; }
 
     static Discord()

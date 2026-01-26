@@ -8,6 +8,7 @@ public partial class MapButtonSquare : MapButton
     private Color selectColor = Color.Color8(201, 0, 69);
 
     private Label difficulty;
+    private TextureRect coverBackground;
 
     public override void _Ready()
 	{
@@ -15,6 +16,7 @@ public partial class MapButtonSquare : MapButton
 
         difficulty = Holder.GetNode<Label>("Difficulty");
         difficulty.LabelSettings = difficulty.LabelSettings.Duplicate() as LabelSettings;
+        coverBackground = Holder.GetNode<TextureRect>("CoverBackground");
 
         UpdateSkin();
     }
@@ -51,8 +53,20 @@ public partial class MapButtonSquare : MapButton
     {
         base.UpdateInfo(map, selected);
 
+        var color = Constants.DIFFICULTY_COLORS[map.Difficulty];
+
         difficulty.Text = map.DifficultyName;
-        difficulty.LabelSettings.FontColor = Constants.DIFFICULTY_COLORS[map.Difficulty];
+        difficulty.LabelSettings.FontColor = color;
+        coverBackground.SelfModulate = color;
+    }
+
+    public override void UpdateSkin(SkinProfile skin = null)
+    {
+        skin ??= SkinManager.Instance.Skin;
+
+        base.UpdateSkin(skin);
+
+        coverBackground.Texture = skin.MapListGridCoverBackgroundImage;
     }
 
 	private void updateFocus()

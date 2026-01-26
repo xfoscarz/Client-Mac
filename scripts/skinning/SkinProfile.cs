@@ -4,9 +4,9 @@ using System;
 [GlobalClass]
 public partial class SkinProfile : GodotObject
 {
-    public Color[] Colors { get; set; } = [new(0x00ffedff), new(0xca0046ff)];
+    public Color[] Colors { get; set; } = [new(0xff0059), new(0xffd8e6)];
 
-    public string RawColors { get; set; } = "00ffed,ca0046";
+    public string RawColors { get; set; } = "ff0059,ffd8e6";
 
     public ImageTexture CursorImage { get; set; } = new();
 
@@ -50,9 +50,11 @@ public partial class SkinProfile : GodotObject
 
     public ImageTexture LayoutGridButtonImage { get; set; } = new();
 
+    public ImageTexture SpeedPresetMinusMinusButtonImage { get; set; } = new();
+
     public ImageTexture SpeedPresetMinusButtonImage { get; set; } = new();
 
-    public ImageTexture SpeedPresetMinusMinusButtonImage { get; set; } = new();
+    public ImageTexture SpeedPresetMiddleButtonImage { get; set; } = new();
 
     public ImageTexture SpeedPresetPlusButtonImage { get; set; } = new();
 
@@ -99,6 +101,8 @@ public partial class SkinProfile : GodotObject
     public ImageTexture MapListScrollBarBackgroundMiddleImage { get; set; } = new();
 
     public ImageTexture MapListScrollBarBackgroundBottomImage { get; set; } = new();
+
+    public ImageTexture MapListGridCoverBackgroundImage { get; set; } = new();
 
     public ImageTexture MapInfoCoverBackgroundImage { get; set; } = new();
 

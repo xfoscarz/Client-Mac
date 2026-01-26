@@ -12,7 +12,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
     private TextureButton pauseButton;
     private TextureButton skipButton;
     private TextureButton rewindButton;
-    private Button gotoButton;
+    private Button selectButton;
     private AudioSpectrum spectrum;
     private ShaderMaterial spectrumMaterial;
 
@@ -24,14 +24,14 @@ public partial class JukeboxPanel : Panel, ISkinnable
         pauseButton = GetNode<TextureButton>("Pause");
         skipButton = GetNode<TextureButton>("Skip");
         rewindButton = GetNode<TextureButton>("Rewind");
-        gotoButton = GetNode<Button>("GoTo");
+        selectButton = GetNode<Button>("GoTo");
         spectrum = GetNode<AudioSpectrum>("Spectrum");
         spectrumMaterial = spectrum.Material as ShaderMaterial;
 
         pauseButton.Pressed += pause;
         skipButton.Pressed += skip;
         rewindButton.Pressed += rewind;
-        gotoButton.Pressed += goToMap;
+        selectButton.Pressed += select;
 
         foreach (TextureButton button in new TextureButton[] {pauseButton, skipButton, rewindButton})
         {
@@ -39,15 +39,19 @@ public partial class JukeboxPanel : Panel, ISkinnable
             button.MouseExited += () => { button.SelfModulate = Color.Color8(255, 255, 255, 190); };
         }
 
-        gotoButton.MouseEntered += () => { title.SelfModulate = Color.Color8(255, 255, 255); };
-        gotoButton.MouseExited += () => { title.SelfModulate = Color.Color8(255, 255, 255, 190); };
+        selectButton.MouseEntered += () => { title.SelfModulate = Color.Color8(255, 255, 255); };
+        selectButton.MouseExited += () => { title.SelfModulate = Color.Color8(255, 255, 255, 190); };
         
         if (SettingsManager.Instance.Settings.AutoplayJukebox)
         {
             pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPauseImage;
         }
 
-        UpdateMap(SoundManager.Map);
+        if (SoundManager.Map != null)
+        {
+            UpdateMap(SoundManager.Map);
+        }
+
         UpdateSkin();
 
         SoundManager.Instance.JukeboxPlayed += UpdateMap;
@@ -65,6 +69,25 @@ public partial class JukeboxPanel : Panel, ISkinnable
         
         spectrumMaterial.SetShaderParameter("progress", progress);
         spectrumMaterial.SetShaderParameter("margin", 1 - spectrum.Size.X / GetViewport().GetVisibleRect().Size.X);
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventKey eventKey && eventKey.Pressed)
+        {
+            switch (eventKey.Keycode)
+            {
+                case Key.Mediaplay:
+                    pause();
+                    break;
+                case Key.Medianext:
+                    skip();
+                    break;
+                case Key.Mediaprevious:
+                    rewind();
+                    break;
+            }
+        }
     }
 
 	public void UpdateMap(Map map)
@@ -90,16 +113,25 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
     private void skip()
     {
-
+        SoundManager.JukeboxIndex++;
+        SoundManager.PlayJukebox(SoundManager.JukeboxIndex);
     }
 
     private void rewind()
     {
-
+        if (SoundManager.Song.GetPlaybackPosition() < 2)
+        {
+            SoundManager.JukeboxIndex--;
+            SoundManager.PlayJukebox(SoundManager.JukeboxIndex);
+        }
+        else
+        {
+            SoundManager.Song.Seek(0);
+        }
     }
 
-    private void goToMap()
+    private void select()
     {
-
+        
     }
 }

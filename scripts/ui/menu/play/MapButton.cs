@@ -77,8 +77,7 @@ public partial class MapButton : Control, ISkinnable
 
             if (SoundManager.Map == null || SoundManager.Map.ID != Map.ID)
             {
-                SoundManager.JukeboxQueueInverse.TryGetValue(Map.FilePath.GetFile().GetBaseName(), out int index);
-                SoundManager.PlayJukebox(index);
+                SoundManager.PlayJukebox(Map);
             }
         };
         

@@ -353,7 +353,7 @@ public partial class SettingsProfile
         {
             Id = "FoV",
             Title = "Field of View",
-            Description = "Adjusts the Field of View",
+            Description = "Adjusts the field of view",
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
@@ -376,12 +376,13 @@ public partial class SettingsProfile
             List = new("default")
         };
 
-        Colors = new("ffffff, ffffff")
+        Colors = new("ff0059,ffd8e6")
         {
             Id = "Colors",
             Title = "Colors",
             Description = "Overrides the skin colorset",
             Section = SettingsSection.Visual,
+            UpdateAction = value => { SkinManager.Instance.Skin.RawColors = value; SkinManager.Reload(); },
         };
 
         Space = new("skin")
@@ -422,7 +423,6 @@ public partial class SettingsProfile
                 Step = 0.025f,
                 MinValue = 0,
                 MaxValue = 4
-
             }
         };
 
@@ -430,7 +430,7 @@ public partial class SettingsProfile
         {
             Id = "CursorTrail",
             Title = "Cursor Trail",
-            Description = "Toggles a trial for your cursor",
+            Description = "Toggles a trail for your cursor",
             Section = SettingsSection.Visual,
         };
 
@@ -518,7 +518,7 @@ public partial class SettingsProfile
         {
             Id = "Fullscreen",
             Title = "Fullscreen",
-            Description = "Toggles the window to Fullscreen",
+            Description = "Toggles the window to fullscreen",
             Section = SettingsSection.Video,
             UpdateAction = value => DisplayServer.WindowSetMode(
                 value

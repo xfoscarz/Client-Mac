@@ -26,6 +26,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
     private Panel modesHolder;
     private Panel modifiersHolder;
     private Panel speedHolder;
+    private HBoxContainer speedPresets;
     private Panel playHolder;
     private Button startButton;
 
@@ -63,6 +64,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         modesHolder = actionsHolder.GetNode<Panel>("Modes");
         modifiersHolder = actionsHolder.GetNode<Panel>("Modifiers");
         speedHolder = actionsHolder.GetNode<Panel>("Speed");
+        speedPresets = speedHolder.GetNode("ScrollContainer").GetNode<HBoxContainer>("Presets");
         playHolder = actionsHolder.GetNode<Panel>("Play");
         startButton = playHolder.GetNode<Button>("Button");
 
@@ -74,6 +76,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         dim = GetNode<ColorRect>("Dim");
         outlineMaterial = info.GetNode<Panel>("Outline").Material as ShaderMaterial;
+
+        // Transition
 
         info.OffsetLeft -= 64;
 		info.OffsetRight -= 64;
@@ -94,9 +98,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         Position += Vector2.Left * 64;
         Modulate = Color.Color8(255, 255, 255, 0);
 
-        startButton.Pressed += () => {
-            LegacyRunner.Play(Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
-        };
+        // Speed setup
 
         HSlider speedSlider = speedHolder.GetNode<HSlider>("HSlider");
         LineEdit speedEdit = speedHolder.GetNode<LineEdit>("LineEdit");
@@ -129,6 +131,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
             value = Math.Clamp(value, 25, 1000) / 100;
 
             Lobby.SetSpeed(value);
+            SoundManager.PlayJukebox(Map);
         }
 
         speedEdit.FocusExited += applySpeed;
@@ -137,6 +140,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
             speedEdit.Text = value.ToString();
             applySpeed();
         };
+
+        // StartFrom setup
 
         HSlider startFromSlider = playHolder.GetNode<HSlider>("HSlider");
         LineEdit startFromEdit = playHolder.GetNode<LineEdit>("LineEdit");
@@ -183,6 +188,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
             value = Math.Clamp(value * 1000, 0, Map.Length);
 
             Lobby.SetStartFrom(value);
+            SoundManager.PlayJukebox(Map);
             
             if (seek)
             {
@@ -199,6 +205,14 @@ public partial class MapInfoContainer : Panel, ISkinnable
             if (changed) { applyStartFrom(); }
         };
 
+        //
+
+        startButton.Pressed += () => {
+            LegacyRunner.Play(Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
+        };
+
+        // Leaderboard
+
         Panel lbExpandHover = lbExpand.GetNode<Panel>("Hover");
 
         void tweenExpandHover(bool show)
@@ -210,6 +224,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
 		lbExpand.MouseExited += () => { tweenExpandHover(false); };
         lbExpand.Pressed += () => { toggleLeaderboard(true); };
         lbHide.Pressed += () => { toggleLeaderboard(false); };
+
+        //
 
         SkinManager.Instance.Loaded += UpdateSkin;
 
@@ -258,9 +274,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
         artistLink.Visible = map.ArtistLink != "";
         artistLink.Text = string.Format(artistLink.Text, map.ArtistPlatform);
 
+        artistLink.UpdateLink(map.ArtistLink);
+
         // Actions
 
-        artistLink.UpdateLink(map.ArtistLink);
 
         // Leaderboard
 
@@ -318,6 +335,11 @@ public partial class MapInfoContainer : Panel, ISkinnable
         skin ??= SkinManager.Instance.Skin;
 
         coverBackground.Texture = skin.MapInfoCoverBackgroundImage;
+        speedPresets.GetNode("MinusMinus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMinusMinusButtonImage;
+        speedPresets.GetNode("Minus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMinusButtonImage;
+        speedPresets.GetNode("Middle").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMiddleButtonImage;
+        speedPresets.GetNode("Plus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetPlusButtonImage;
+        speedPresets.GetNode("PlusPlus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetPlusPlusButtonImage;
     }
 
 	private void toggleLeaderboard(bool show)

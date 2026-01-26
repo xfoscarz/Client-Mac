@@ -82,9 +82,10 @@ public partial class SkinManager : Node
         skin.LayoutListButtonImage = loadTexture("ui/buttons/layout_list.png");
 		skin.LayoutGridButtonImage = loadTexture("ui/buttons/layout_grid.png");
 
-        skin.SpeedPresetMinusButtonImage = loadTexture("ui/buttons/speed_minus.png");
 		skin.SpeedPresetMinusMinusButtonImage = loadTexture("ui/buttons/speed_minus_minus.png");
-		skin.SpeedPresetPlusButtonImage = loadTexture("ui/buttons/speed_plus.png");
+        skin.SpeedPresetMinusButtonImage = loadTexture("ui/buttons/speed_minus.png");
+        skin.SpeedPresetMiddleButtonImage = loadTexture("ui/buttons/speed_middle.png");
+        skin.SpeedPresetPlusButtonImage = loadTexture("ui/buttons/speed_plus.png");
 		skin.SpeedPresetPlusPlusButtonImage = loadTexture("ui/buttons/speed_plus_plus.png");
 
         skin.PlayButtonImage = loadTexture("ui/buttons/play.png");
@@ -112,6 +113,7 @@ public partial class SkinManager : Node
 		skin.MapListScrollBarBackgroundTopImage = loadTexture("ui/play/scrollbar_background_top.png");
 		skin.MapListScrollBarBackgroundMiddleImage = loadTexture("ui/play/scrollbar_background_middle.png");
 		skin.MapListScrollBarBackgroundBottomImage = loadTexture("ui/play/scrollbar_background_bottom.png");
+        skin.MapListGridCoverBackgroundImage = loadTexture("ui/play/grid_cover_background.png");
 
         skin.MapInfoCoverBackgroundImage = loadTexture("ui/play/mapinfo_cover_background.png");
 
@@ -152,6 +154,12 @@ public partial class SkinManager : Node
 
 		Instance.EmitSignal(SignalName.Loaded, skin);
 	}
+
+	public static void Reload()
+	{
+        Save();
+        Load();
+    }
 
 	private static ImageTexture loadTexture(string skinPath)
 	{
