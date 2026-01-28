@@ -49,7 +49,6 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
 
     public void SetVariant(Variant value)
     {
-
         Value = value.As<T>();
     }
 

@@ -6,7 +6,6 @@ using System.Linq;
 
 public partial class SettingsProfile
 {
-
     #region Gameplay
 
     /// <summary>
@@ -92,13 +91,19 @@ public partial class SettingsProfile
     public SettingsItem<string> Skin { get; private set; }
 
     /// <summary>
-    /// World space for the game
+    /// Overrides the skin's background space for the game
     /// </summary>
     [Order]
-    public SettingsItem<string> Space { get; private set; }
+    public SettingsItem<string> GameSpace { get; private set; }
 
     /// <summary>
-    /// Overrides the skin colorset
+    /// Overrides the skin's background space for the menu
+    /// </summary>
+    [Order]
+    public SettingsItem<string> MenuSpace { get; private set; }
+
+    /// <summary>
+    /// Overrides the skin's colorset
     /// </summary>
     [Order]
     public SettingsItem<string> NoteColors { get; private set; }
@@ -108,6 +113,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<float> NoteOpacity { get; private set; }
+
+    /// <summary>
+    /// Overrides the skin's note mesh
+    /// </summary>
+    [Order]
+    public SettingsItem<string> NoteMesh { get; private set; }
 
     /// <summary>
     /// Sets the size of the notes
@@ -401,31 +412,48 @@ public partial class SettingsProfile
             Section = SettingsSection.Visual,
             Buttons =
             [
-                new() { Title = "Skin Folder", Description = "Open the skin folder", OnPressed = () => { } }
+                new() { Title = "Skin Folder", Description = "Open the skin folder", OnPressed = () => { OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}"); } }
             ],
             List = new("default")
+            {
+                Values = [ "default" ]
+            }
         };
 
-        Space = new("skin")
+        GameSpace = new("skin")
         {
-            Id = "Space",
-            Title = "Space",
-            Description = "World space for the game",
+            Id = "GameSpace",
+            Title = "Game Space",
+            Description = "Overrides the skin's background space for gameplay",
             Section = SettingsSection.Visual,
             List = new("skin")
             {
-                Values = [ "grid", "void" ]
-            },
-            Editable = false
+                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+            }
         };
 
-        NoteColors = new("ff0059,ffd8e6")
+        MenuSpace = new("skin")
+        {
+            Id = "MenuSpace",
+            Title = "Menu Space",
+            Description = "Overrides the skin's background space for the menu",
+            Section = SettingsSection.Visual,
+            List = new("skin")
+            {
+                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+            }
+        };
+
+        NoteColors = new("skin")
         {
             Id = "Colors",
             Title = "Colors",
-            Description = "Overrides the skin colorset",
+            Description = "Overrides the skin's colorset",
             Section = SettingsSection.Visual,
-            UpdateAction = value => { SkinManager.Instance.Skin.RawColors = value; SkinManager.Reload(); },
+            List = new("skin")
+            {
+                Values = [ "skin", "default" ]
+            }
         };
 
         NoteOpacity = new(1)
@@ -439,6 +467,18 @@ public partial class SettingsProfile
                 Step = 0.05f,
                 MinValue = 0,
                 MaxValue = 1
+            }
+        };
+
+        NoteMesh = new("skin")
+        {
+            Id = "NoteMesh",
+            Title = "Note Mesh",
+            Description = "Overrides the skin's note mesh",
+            Section = SettingsSection.Visual,
+            List = new("skin")
+            {
+                Values = [ "skin", "squircle", "square" ]
             }
         };
 

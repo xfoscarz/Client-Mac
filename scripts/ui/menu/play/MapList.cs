@@ -96,7 +96,7 @@ public partial class MapList : Panel, ISkinnable
     public override void _Ready()
     {
         Instance = this;
-
+    
         mask = GetNode<TextureRect>("Mask");
         selectionCursor = GetNode<TextureRect>("SelectionCursor");
         scrollBar = GetNode<Panel>("ScrollBar");
@@ -310,8 +310,8 @@ public partial class MapList : Panel, ISkinnable
 		{
 			switch (mouseButton.ButtonIndex)
 			{
-                case MouseButton.Left: DragScroll = mouseButton.Pressed; if (DragScroll) { dragDistance = 0; }; break;
-                case MouseButton.Right: MouseScroll = mouseButton.Pressed; break;
+                case MouseButton.Left: DragScroll = mouseButton.Pressed; if (DragScroll) { dragDistance = 0; } break;
+                case MouseButton.Right: MouseScroll = mouseButton.Pressed; if (MouseScroll) { dragDistance = 0; } break;
 				case MouseButton.WheelDown: ScrollMomentum += ScrollStep; break;
 				case MouseButton.WheelUp: ScrollMomentum -= ScrollStep; break;
             }

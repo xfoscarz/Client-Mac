@@ -14,7 +14,7 @@ public class SettingsList<[MustBeVariant] T> : ISettingsList
 
     public T DefaultValue { get; set; } = default;
 
-    public List<T> Values { get; set; } = new();
+    public List<T> Values { get; set; } = [];
 
     Variant ISettingsList.DefaultValue => Variant.From(DefaultValue);
 

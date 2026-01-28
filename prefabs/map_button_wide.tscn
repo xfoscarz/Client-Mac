@@ -64,6 +64,7 @@ script = ExtResource("1_4823j")
 [node name="Holder" type="Panel" parent="." unique_id=1367627462]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2

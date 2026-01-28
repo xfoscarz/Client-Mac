@@ -1,12 +1,9 @@
 ﻿using Godot;
-using System;
 
 [GlobalClass]
 public partial class SkinProfile : GodotObject
 {
-    public Color[] Colors { get; set; } = [new(0xff0059), new(0xffd8e6)];
-
-    public string RawColors { get; set; } = "ff0059,ffd8e6";
+    public SkinConfig Config { get; set; } = new();
 
     public ImageTexture CursorImage { get; set; } = new();
 
@@ -128,11 +125,9 @@ public partial class SkinProfile : GodotObject
 
     public byte[] FailSoundBuffer { get; set; } = [];
 
+    public Color[] NoteColors { get; set; } = [new(0xff0059), new(0xffd8e6)];
+
     public ArrayMesh NoteMesh { get; set; } = new();
-
-    public string MenuSpaceName = "waves";
-
-    public string GameSpaceName = "void";
 
     public BaseSpace MenuSpace { get; set; }
 

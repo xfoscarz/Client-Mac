@@ -105,7 +105,7 @@ public partial class LegacyRunner : BaseScene
 		public bool Qualifies = true;
 		public uint Hits = 0;
 		public float[] HitsInfo = [];
-		public Color LastHitColour = SkinManager.Instance.Skin.Colors[^1];
+		public Color LastHitColour = SkinManager.Instance.Skin.NoteColors[^1];
 		public uint Misses = 0;
 		public double DeathTime = -1;
 		public uint Sum = 0;
@@ -235,7 +235,7 @@ public partial class LegacyRunner : BaseScene
 			Combo++;
 			ComboMultiplierProgress++;
 
-			LastHitColour = SkinManager.Instance.Skin.Colors[index % SkinManager.Instance.Skin.Colors.Length];
+			LastHitColour = SkinManager.Instance.Skin.NoteColors[index % SkinManager.Instance.Skin.NoteColors.Length];
 
 			float lateness = IsReplay ? HitsInfo[index] : (float)(((int)Progress - Map.Notes[index].Millisecond) / Speed);
 			float factor = 1 - Math.Max(0, lateness - 25) / 150f;

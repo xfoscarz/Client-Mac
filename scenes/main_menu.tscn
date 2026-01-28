@@ -305,6 +305,37 @@ shadow_color = Color(0, 0, 0, 0.5019608)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t0m3h"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_akqfu"]
+bg_color = Color(0, 0, 0, 0.8784314)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mb34c"]
+shader = ExtResource("30_q13xq")
+shader_parameter/outline_color = Color(0.7882353, 0, 0.27058825, 1)
+shader_parameter/outline_opacity = 1.0
+shader_parameter/light_color = Color(0.79, 0, 0.27, 1)
+shader_parameter/cursor_light_color = Color(0.15, 0.15, 0.15, 1)
+shader_parameter/fill = 0.0
+shader_parameter/glow_radius = 350.0
+shader_parameter/glow_exponent = 2.0
+shader_parameter/light_position = Vector2(-10000, 0)
+shader_parameter/cursor_position = Vector2(0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgh51"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="SceneMenu" type="Node" unique_id=22657833]
 script = ExtResource("1_yxnar")
 UseMenuSpace = true
@@ -1946,7 +1977,7 @@ offset_right = 150.0
 offset_bottom = 120.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_t0m3h")
 
-[node name="Background" type="ColorRect" parent="ContextMenu" unique_id=364494355]
+[node name="Background" type="Panel" parent="ContextMenu" unique_id=1072032974]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1954,7 +1985,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.768627)
+theme_override_styles/panel = SubResource("StyleBoxFlat_akqfu")
 
 [node name="Container" type="VBoxContainer" parent="ContextMenu" unique_id=871773613]
 layout_mode = 1
@@ -1971,6 +2002,7 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_default_cursor_shape = 2
+theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 0.501961, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 0.768627, 1)
 theme_override_fonts/font = ExtResource("19_c6nra")
@@ -1984,6 +2016,7 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_default_cursor_shape = 2
+theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 0.501961, 0.501961, 1)
 theme_override_colors/font_hover_color = Color(1, 0.768627, 0.768627, 1)
 theme_override_fonts/font = ExtResource("19_c6nra")
@@ -1991,12 +2024,13 @@ text = "Delete"
 flat = true
 alignment = 0
 
-[node name="VideoAdd" type="Button" parent="ContextMenu/Container" unique_id=16155190]
+[node name="Video" type="Button" parent="ContextMenu/Container" unique_id=16155190]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_default_cursor_shape = 2
+theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(0.501961, 0.501961, 1, 1)
 theme_override_colors/font_hover_color = Color(0.768627, 0.768627, 1, 1)
 theme_override_fonts/font = ExtResource("19_c6nra")
@@ -2004,18 +2038,16 @@ text = "Add Video"
 flat = true
 alignment = 0
 
-[node name="VideoRemove" type="Button" parent="ContextMenu/Container" unique_id=1721484298]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.501961, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(0.768627, 1, 1, 1)
-theme_override_fonts/font = ExtResource("19_c6nra")
-text = "Remove Video"
-flat = true
-alignment = 0
+[node name="Outline" type="Panel" parent="ContextMenu" unique_id=1418417820]
+material = SubResource("ShaderMaterial_mb34c")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sgh51")
 
 [node name="Cursor" type="TextureRect" parent="." unique_id=1301201839]
 z_index = 2

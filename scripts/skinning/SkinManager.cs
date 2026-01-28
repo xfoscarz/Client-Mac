@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Godot;
-using System.Reflection;
-using Godot.NativeInterop;
+using Tomlyn;
+using Tomlyn.Model;
 
 [GlobalClass]
 public partial class SkinManager : Node
@@ -26,9 +27,12 @@ public partial class SkinManager : Node
 	{
 		var settings = SettingsManager.Instance.Settings;
         var skin = Instance.Skin;
+		
+		if (Toml.TryFromModel(skin.Config, out string toml, out _))
+		{
+			File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml", toml);
+		}
 
-		File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/colors.txt", skin.RawColors);
-		File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/space.txt", skin.GameSpaceName);
 		Logger.Log($"Saved skin {settings.Skin.Value}");
 
 		Instance.EmitSignal(SignalName.Saved);
@@ -39,23 +43,20 @@ public partial class SkinManager : Node
         var settings = SettingsManager.Instance.Settings;
         var skin = Instance.Skin;
 
-		// Colors
+		// Config
 
-		skin.RawColors = File.ReadAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/colors.txt").TrimSuffix(",");
+		skin.Config = new();
 
-		string[] split = skin.RawColors.Split(",");
-		Color[] colors = new Color[split.Length];
+		string configFile = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml";
 
-		for (int i = 0; i < split.Length; i++)
+		if (File.Exists(configFile) && Toml.TryToModel<SkinConfig>(File.ReadAllText(configFile), out SkinConfig config, out _))
 		{
-			split[i] = split[i].TrimPrefix("#").Substr(0, 6);
-			split[i] = new Regex("[^a-fA-F0-9$]").Replace(split[i], "f");
-			colors[i] = Color.FromHtml(split[i]);
+			skin.Config = config;
 		}
-
-		skin.Colors = colors;
-
-		/////
+		else if (Toml.TryFromModel(skin.Config, out string toml, out _))
+		{
+			File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml", toml);
+		}
         
         // Textures
 
@@ -123,6 +124,11 @@ public partial class SkinManager : Node
 		skin.ModChaosImage = loadTexture("modifiers/chaos.png");
 		skin.ModFlashlightImage = loadTexture("modifiers/flashlight.png");
 		skin.ModHardrockImage = loadTexture("modifiers/hardrock.png");
+
+		// Shaders
+
+		skin.BackgroundTileShader = loadShader("ui/background_tile.gdshader");
+        skin.MapButtonCoverShader = loadShader("ui/play/map_button_cover.gdshader");
 		
         // Sounds
 
@@ -130,22 +136,32 @@ public partial class SkinManager : Node
         skin.FailSoundBuffer = loadSound("fail.mp3");
 
         // Meshes
+		
+        skin.NoteMesh = loadMesh($"{Constants.USER_FOLDER}/meshes/{(settings.NoteMesh.Value == "skin" ? skin.Config.NoteMesh : settings.NoteMesh.Value)}.obj");
 
-        skin.NoteMesh = loadMesh("note.obj");
+		// Colors
+		
+        string colorsetPath = $"{Constants.USER_FOLDER}/colorsets/{(settings.NoteColors.Value == "skin" ? skin.Config.NoteColors : settings.NoteColors.Value)}.txt";
+
+        if (File.Exists(colorsetPath))
+		{
+			string[] split = File.ReadAllText(colorsetPath).Split(",");
+			Color[] colors = new Color[split.Length];
+
+			for (int i = 0; i < split.Length; i++)
+			{
+				split[i] = split[i].TrimPrefix("#").Substr(0, 6);
+				split[i] = new Regex("[^a-fA-F0-9$]").Replace(split[i], "f");
+				colors[i] = Color.FromHtml(split[i]);
+			}
+
+			skin.NoteColors = colors;
+		}
 
         // Spaces
-
-        // skin.GameSpaceName = File.ReadAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/space.txt");
-        skin.GameSpaceName = "grid";
-        skin.GameSpace = loadSpace($"res://prefabs/spaces/{skin.GameSpaceName}.tscn");
-
-        skin.MenuSpaceName = "waves";
-		skin.MenuSpace = loadSpace($"res://prefabs/spaces/{skin.MenuSpaceName}.tscn");
-
-		// Shaders
-
-		skin.BackgroundTileShader = loadShader("ui/background_tile.gdshader");
-        skin.MapButtonCoverShader = loadShader("ui/play/map_button_cover.gdshader");
+		
+        skin.GameSpace = loadSpace($"res://prefabs/spaces/{(settings.GameSpace.Value == "skin" ? skin.Config.GameSpace : settings.GameSpace.Value)}.tscn");
+		skin.MenuSpace = loadSpace($"res://prefabs/spaces/{(settings.MenuSpace.Value == "skin" ? skin.Config.MenuSpace : settings.MenuSpace.Value)}.tscn");
 
         /////
 
@@ -183,19 +199,6 @@ public partial class SkinManager : Node
 		return buffer;
 	}
 
-	private static ArrayMesh loadMesh(string skinPath)
-	{
-		var settings = SettingsManager.Instance.Settings;
-		if (File.Exists($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}"))
-		{
-			return (ArrayMesh)Util.Misc.OBJParser.Call("load_obj", $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}");
-		}
-		else
-		{
-			return GD.Load<ArrayMesh>($"res://skin/note.obj");
-		}
-	}
-
 	private static Shader loadShader(string skinPath)
 	{
 		var settings = SettingsManager.Instance.Settings;
@@ -204,9 +207,15 @@ public partial class SkinManager : Node
         return new() { Code = shader };
     }
 
+	private static ArrayMesh loadMesh(string path)
+	{
+        bool exists = File.Exists(path);
+
+		return exists ? (ArrayMesh)Util.Misc.OBJParser.Call("load_obj", path) : GD.Load<ArrayMesh>($"res://user/meshes/squircle.obj");
+	}
+
 	private static BaseSpace loadSpace(string path)
 	{
-		var settings = SettingsManager.Instance.Settings;
 		bool exists = Godot.FileAccess.FileExists(path);
 		
         return GD.Load<PackedScene>(exists ? path : "res://prefabs/spaces/void.tscn").Instantiate<Node3D>() as BaseSpace;

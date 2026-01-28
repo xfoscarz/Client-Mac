@@ -24,6 +24,10 @@ boot_splash/show_image=false
 boot_splash/image="uid://baivqqkfll133"
 config/icon="uid://bwygmhmegsm4f"
 
+[audio]
+
+buses/default_bus_layout="uid://byxtiup0hs2og"
+
 [autoload]
 
 Constants="*res://scripts/Constants.cs"

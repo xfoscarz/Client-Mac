@@ -71,10 +71,8 @@ public partial class MapButton : Control, ISkinnable
         
 		Button.MouseEntered += () => { Hover(true); };
 		Button.MouseExited += () => { Hover(false); };
-		Button.Pressed += () => {
-            EmitSignal(SignalName.Pressed);
-        };
-        
+		Button.Pressed += () => { EmitSignal(SignalName.Pressed); };
+
         SkinManager.Instance.Loaded += UpdateSkin;
     }
 

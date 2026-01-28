@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 public partial class SettingsMenu : ColorRect
@@ -259,10 +260,25 @@ public partial class SettingsMenu : ColorRect
         }
 
         optionButton.ItemSelected += (id) => {
-            if ((long)setting.GetVariant() != id) { setting.SetVariant(id); }
+            string oldVal = (string)setting.GetVariant();
+            string newVal = (string)setting.List.Values[(int)id];
+
+            if (oldVal != newVal) { setting.SetVariant(newVal); }
         };
 
-        updateList(optionButton, (int)setting.GetVariant());
+        int index = 0;
+
+        foreach (string value in setting.List.Values)
+        {
+            if (value == (string)setting.List.SelectedValue)
+            {
+                break;
+            }
+
+            index++;
+        }
+
+        updateList(optionButton, index);
     }
 
     private void updateList(OptionButton optionButton, int value)
