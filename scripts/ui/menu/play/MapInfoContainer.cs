@@ -132,7 +132,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             Lobby.SetSpeed(value);
             
-            if (SoundManager.Map.ID != Map.ID)
+            if (SoundManager.Map.Name != Map.Name)
             {
                 SoundManager.PlayJukebox(Map);
             }
@@ -193,7 +193,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             Lobby.SetStartFrom(value);
             
-            if (SoundManager.Map.ID != Map.ID)
+            if (SoundManager.Map.Name != Map.Name)
             {
                 SoundManager.PlayJukebox(Map);
             }
@@ -270,14 +270,14 @@ public partial class MapInfoContainer : Panel, ISkinnable
 	public void Setup(Map map)
 	{
         Map = map;
-        Name = map.ID;
+        Name = map.Name;
 
         SceneManager.Space.UpdateMap(map);
 
         // Info
 
         mainLabel.Text = string.Format(mainLabel.Text, map.PrettyTitle, Constants.DIFFICULTY_COLORS[map.Difficulty].ToHtml(), map.DifficultyName, map.PrettyMappers);
-        extraLabel.Text = string.Format(extraLabel.Text, Util.String.FormatTime(map.Length / 1000), map.Notes.Length, map.ID);
+        extraLabel.Text = string.Format(extraLabel.Text, Util.String.FormatTime(map.Length / 1000), map.Notes.Length, map.Name);
         coverBackground.SelfModulate = Constants.DIFFICULTY_COLORS[map.Difficulty];
         artistLink.Visible = map.ArtistLink != "";
         artistLink.Text = string.Format(artistLink.Text, map.ArtistPlatform);
@@ -289,9 +289,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Leaderboard
 
-        if (File.Exists($"{Constants.USER_FOLDER}/pbs/{map.ID}"))
+        if (File.Exists($"{Constants.USER_FOLDER}/pbs/{map.Name}"))
 		{
-			Leaderboard = new(map.ID, $"{Constants.USER_FOLDER}/pbs/{map.ID}");
+			Leaderboard = new(map.Name, $"{Constants.USER_FOLDER}/pbs/{map.Name}");
 		}
 
 		if (!Leaderboard.Valid || Leaderboard.ScoreCount == 0)

@@ -4,6 +4,8 @@ using Godot;
 
 public interface ISettingsItem
 {
+    event Action<Variant> Updated;
+
     Variant GetVariant();
 
     void SetVariant(Variant variant);

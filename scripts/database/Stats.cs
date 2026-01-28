@@ -7,24 +7,6 @@ using Godot.Collections;
 [GlobalClass]
 public partial class Stats : Node
 {
-    public static Stats Instance { get; private set; }
-
-    public override void _Ready()
-    {
-        
-        Instance = this;
-        var db = DatabaseService.Instance.DB;
-
-        var collection = db.GetCollection<Stats>();
-        var stats = collection.FindById("_STATS");
-
-        if (stats == null)
-        {
-            stats = new Stats();
-            collection.Insert("_STATS", stats);
-        }
-    }
-
     public static ulong GamePlaytime = 0;
     public static ulong TotalPlaytime = 0;
     public static ulong GamesOpened = 0;

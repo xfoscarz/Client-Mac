@@ -1,21 +1,23 @@
 ﻿using System;
 using System.IO;
 using Godot;
-using LiteDB;
+using SQLite;
+using SQLitePCL;
 
-public sealed class DatabaseService
+public partial class DatabaseService : Node
 {
-    public static DatabaseService Instance { get; } = new DatabaseService();
+    public static readonly string DATABASE_PATH = Constants.USER_FOLDER + "/data.db";
 
-    public LiteDatabase DB { get; private set; }
+    public static SQLiteConnection Connection { get; set; }
 
-    private DatabaseService()
+    public override void _Ready()
     {
-        DB = new LiteDatabase($"{Constants.USER_FOLDER}/data.db");
+        Batteries.Init();
+        Connection = new SQLiteConnection(DATABASE_PATH);
     }
 
-    public void Dispose()
+    public override void _ExitTree()
     {
-        DB.Dispose();
+        Connection.Dispose();
     }
 }

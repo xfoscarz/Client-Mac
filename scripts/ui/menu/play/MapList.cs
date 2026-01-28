@@ -181,7 +181,7 @@ public partial class MapList : Panel, ISkinnable
             float top = containerIndex * (buttonMinSize + Spacing) - (float)Scroll;
             float bottom = top + buttonMinSize;
             bool display = top < Size.Y && bottom > 0;
-            MapButton button = mapButtons.TryGetValue(map.ID, out MapButton value) ? value : null;
+            MapButton button = mapButtons.TryGetValue(map.Name, out MapButton value) ? value : null;
 
             // Cache/ignore if outside map list
 
@@ -200,7 +200,7 @@ public partial class MapList : Panel, ISkinnable
                             hoveredButton = null;
                         }
 
-                        mapButtons.Remove(buttonSibling.Map.ID);
+                        mapButtons.Remove(buttonSibling.Map.Name);
                         mapButtonCache.Push(buttonSibling);
                         parentContainer.RemoveChild(buttonSibling);
                         buttonSibling.Deselect();
@@ -232,9 +232,9 @@ public partial class MapList : Panel, ISkinnable
 
                 button.ListIndex = i;
                 button.Container = container;
-                mapButtons[map.ID] = button;
+                mapButtons[map.Name] = button;
                 container.AddChild(button);
-                button.UpdateInfo(map, map.ID == selectedMapID);
+                button.UpdateInfo(map, map.Name == selectedMapID);
             }
 
             if (container != lastContainer)
@@ -318,13 +318,13 @@ public partial class MapList : Panel, ISkinnable
 
     public void Select(Map map, bool playIfPreSelected = true)
     {
-        if (selectedMapID != null && selectedMapID != map.ID && mapButtons.TryGetValue(selectedMapID, out MapButton value))
+        if (selectedMapID != null && selectedMapID != map.Name && mapButtons.TryGetValue(selectedMapID, out MapButton value))
         {
             value.Deselect();
             value.UpdateOutline(0f);
         }
 
-        if (SoundManager.Map == null || SoundManager.Map.ID != map.ID)
+        if (SoundManager.Map == null || SoundManager.Map.Name != map.Name)
         {
             SoundManager.PlayJukebox(map);
         }
@@ -334,12 +334,12 @@ public partial class MapList : Panel, ISkinnable
             Lobby.SetMap(map);
         }
 
-        if (selectedMapID == map.ID && playIfPreSelected)
+        if (selectedMapID == map.Name && playIfPreSelected)
         {
             LegacyRunner.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
         }
 
-        selectedMapID = map.ID;
+        selectedMapID = map.Name;
 
         Focus(map);
 
@@ -348,7 +348,7 @@ public partial class MapList : Panel, ISkinnable
 
     public void Focus(Map map)
     {
-        TargetScroll = Maps.FindIndex(otherMap => otherMap.ID == map.ID) * (buttonMinSize + Spacing) / buttonsPerContainer + buttonMinSize - Size.Y / 2;
+        TargetScroll = Maps.FindIndex(otherMap => otherMap.Name == map.Name) * (buttonMinSize + Spacing) / buttonsPerContainer + buttonMinSize - Size.Y / 2;
     }
 
     public void UpdateMaps(string search = "", string author = "")
@@ -358,11 +358,11 @@ public partial class MapList : Panel, ISkinnable
         List<Map> unfavorited = [];
 
         // temporary until db is implemented
-        foreach (string path in Directory.GetFiles($"{Constants.USER_FOLDER}/maps"))
+        foreach (string path in Directory.GetFiles($"{Constants.USER_FOLDER}/maps", $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
 		{
             Map map = MapParser.Decode(path);
 
-            (MapManager.IsFavorited(map) ? Maps : unfavorited).Add(map);
+            (map.Favorite ? Maps : unfavorited).Add(map);
         }
 
         foreach (Map map in unfavorited)
@@ -426,7 +426,7 @@ public partial class MapList : Panel, ISkinnable
                 if (Layout == ListLayout.List) { toggleSelectionCursor(true); }
             }
 
-            if (button.Map.ID != selectedMapID)
+            if (button.Map.Name != selectedMapID)
             {
                 button.UpdateOutline(hovered ? 0.5f : 0);
             }

@@ -117,10 +117,10 @@ public partial class MapButton : Control, ISkinnable
 	public virtual void UpdateInfo(Map map, bool selected = false)
 	{
         Map = map;
-        Name = map.ID;
+        Name = map.Name;
 
         Title.Text = map.PrettyTitle;
-        Favorited.Visible = MapManager.IsFavorited(map);
+        Favorited.Visible = map.Favorite;
         Favorited.SelfModulate = Constants.DIFFICULTY_COLORS[map.Difficulty];
 
         if (selected)

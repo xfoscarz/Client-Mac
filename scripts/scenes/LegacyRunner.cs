@@ -127,7 +127,7 @@ public partial class LegacyRunner : BaseScene
 		{
 			settings = SettingsManager.Instance.Settings;
 
-			ID = $"{map.ID}_{OS.GetUniqueId()}_{Time.GetDatetimeStringFromUnixTime((long)Time.GetUnixTimeFromSystem())}".Replace(":", "_");
+			ID = $"{map.Name}_{OS.GetUniqueId()}_{Time.GetDatetimeStringFromUnixTime((long)Time.GetUnixTimeFromSystem())}".Replace(":", "_");
 			Replays = replays;
 			IsReplay = Replays != null;
 			Map = map;
@@ -159,7 +159,7 @@ public partial class LegacyRunner : BaseScene
 
 			if (!IsReplay && settings.RecordReplays && !Map.Ephemeral)
 			{
-				ReplayFile = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/replays/{ID}.phxr", Godot.FileAccess.ModeFlags.Write);
+                ReplayFile = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/replays/{ID}.phxr", Godot.FileAccess.ModeFlags.Write);
 				ReplayFile.StoreString("phxr");	// sig
 				ReplayFile.Store8(1);	// replay file version
 
@@ -1157,13 +1157,13 @@ public partial class LegacyRunner : BaseScene
 		{
 			Stats.Attempts++;
 			
-			if (!Stats.FavoriteMaps.ContainsKey(map.ID))
+			if (!Stats.FavoriteMaps.ContainsKey(map.Name))
 			{
-				Stats.FavoriteMaps[map.ID] = 1;
+				Stats.FavoriteMaps[map.Name] = 1;
 			}
 			else
 			{
-				Stats.FavoriteMaps[map.ID]++;
+				Stats.FavoriteMaps[map.Name]++;
 			}
 		}
 
@@ -1237,14 +1237,14 @@ public partial class LegacyRunner : BaseScene
 				
 			if (CurrentAttempt.StartFrom == 0)
 			{
-				if (!File.Exists($"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.ID}"))
+				if (!File.Exists($"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.Name}"))
 				{
 					List<byte> bytes = [0, 0, 0, 0];
 					bytes.AddRange(SHA256.HashData([0, 0, 0, 0]));
-					File.WriteAllBytes($"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.ID}", [.. bytes]);
+					File.WriteAllBytes($"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.Name}", [.. bytes]);
 				}
 				
-				Leaderboard leaderboard = new(CurrentAttempt.Map.ID, $"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.ID}");
+				Leaderboard leaderboard = new(CurrentAttempt.Map.Name, $"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.Name}");
 				
 				leaderboard.Add(new(CurrentAttempt.ID, "You", CurrentAttempt.Qualifies, CurrentAttempt.Score, CurrentAttempt.Accuracy, Time.GetUnixTimeFromSystem(), CurrentAttempt.Progress, CurrentAttempt.Map.Length, CurrentAttempt.Speed, CurrentAttempt.Mods));
 				leaderboard.Save();

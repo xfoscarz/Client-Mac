@@ -59,8 +59,16 @@ public partial class MapParser : Node
     public static void Encode(Map map, bool logBenchmark = true)
     {
         double start = Time.GetTicksUsec();
-        string mapPath = $"{Constants.USER_FOLDER}/maps/{map.ID}.{Constants.DEFAULT_MAP_EXT}";
+
+        map.Collection = $"default";
+
+        string mapFilePath = $"{Constants.USER_FOLDER}/maps/{map.Collection}/{map.Name}.{Constants.DEFAULT_MAP_EXT}";
         string encodePath = $"{Constants.USER_FOLDER}/cache/{Constants.DEFAULT_MAP_EXT}encode";
+
+        if (!Directory.Exists($"{Constants.USER_FOLDER}/maps/{map.Collection}"))
+        {
+            Directory.CreateDirectory($"{Constants.USER_FOLDER}/maps/{map.Collection}");
+        }
 
         if (!Directory.Exists(encodePath))
         {
@@ -140,12 +148,16 @@ public partial class MapParser : Node
             video.Close();
         }
 
-        if (File.Exists(mapPath))
+        if (File.Exists(mapFilePath))
         {
-            File.Delete(mapPath);
+            File.Delete(mapFilePath);
         }
-        
-        ZipFile.CreateFromDirectory(encodePath, mapPath, CompressionLevel.Fastest, false);
+
+        ZipFile.CreateFromDirectory(encodePath, mapFilePath, CompressionLevel.Fastest, false);
+        map.Hash = MapCache.GetMd5Checksum(mapFilePath);
+        map.FilePath = mapFilePath;
+        MapCache.InsertMap(map);
+        MapCache.Load(false);
 
         foreach (string filePath in Directory.GetFiles(encodePath))
         {

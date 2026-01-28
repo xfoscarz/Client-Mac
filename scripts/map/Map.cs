@@ -2,13 +2,28 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using Godot;
+using SQLite;
 
 public partial class Map : RefCounted
 {
-    public string ID { get; set; } = string.Empty;
+    [PrimaryKey]
+    [AutoIncrement]
+    public int Id { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public string Hash { get; set; }
+
+    public string Collection { get; set; } = string.Empty;
+
+    [Ignore]
+    public MapSet MapSet { get; set; }
 
     public string FilePath { get; set; } = string.Empty;
 
+    public bool Favorite { get; set; }
+
+    [Ignore]
     public bool Ephemeral { get; set; } = false;
 
     public string Artist { get; set; } = string.Empty;
@@ -23,6 +38,7 @@ public partial class Map : RefCounted
 
     public float Rating { get; set; } = 0;
 
+    [Ignore]
     public string[] Mappers { get; set; } = [];
 
     public string PrettyMappers { get; set; } = string.Empty;
@@ -33,14 +49,18 @@ public partial class Map : RefCounted
 
     public int Length { get; set; } = 0;
 
+    [Ignore]
     public byte[] AudioBuffer { get; set; } = [];
 
     public string AudioExt { get; set; } = string.Empty;
 
+    [Ignore]
     public byte[] CoverBuffer { get; set; } = [];
 
+    [Ignore]
     public byte[] VideoBuffer { get; set; } = [];
 
+    [Ignore]
     public Note[] Notes { get; set; } = [];
 
     public Map() { }
@@ -64,7 +84,7 @@ public partial class Map : RefCounted
         VideoBuffer = videoBuffer;
         Notes = data ?? Array.Empty<Note>();
         Length = length ?? Notes[^1].Millisecond;
-        ID = (id ?? new Regex("[^a-zA-Z0-9_-]").Replace($"{Mappers.Stringify()}_{PrettyTitle}".Replace(" ", "_"), ""));
+        Name = (id ?? new Regex("[^a-zA-Z0-9_-]").Replace($"{Mappers.Stringify()}_{PrettyTitle}".Replace(" ", "_"), ""));
         AudioExt = (AudioBuffer != null && Encoding.UTF8.GetString(AudioBuffer[0..4]) == "OggS") ? "ogg" : "mp3";
         
         foreach (string mapper in Mappers)
@@ -79,7 +99,7 @@ public partial class Map : RefCounted
     {
         return Json.Stringify(new Godot.Collections.Dictionary()
         {
-            ["ID"] = ID,
+            ["ID"] = Name,
             ["Artist"] = Artist,
             ["ArtistLink"] = ArtistLink,
             ["ArtistPlatform"] = ArtistPlatform,

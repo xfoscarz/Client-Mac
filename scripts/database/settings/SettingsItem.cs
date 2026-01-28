@@ -10,6 +10,8 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
         DefaultValue = value;
     }
 
+    public event Action<Variant> Updated;
+
     public Type Type { get; } = typeof(T);
 
     public string Id { get; set; } = "";
@@ -42,6 +44,7 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
             field = value;
             UpdateAction?.Invoke(value);
             List?.SelectedValue = value;
+            Updated?.Invoke(Variant.From(Value));
         }
     }
 

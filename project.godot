@@ -24,13 +24,19 @@ boot_splash/show_image=false
 boot_splash/image="uid://baivqqkfll133"
 config/icon="uid://bwygmhmegsm4f"
 
+[audio]
+
+buses/default_bus_layout="uid://byxtiup0hs2og"
+
 [autoload]
 
 Constants="*res://scripts/Constants.cs"
+DatabaseService="*uid://c4t8bmpg1wmnv"
+MapManager="*uid://4by8r55q4bwn"
 SettingsManager="*res://scripts/SettingsManager.cs"
 SkinManager="*res://scripts/skinning/SkinManager.cs"
-Rhythia="*res://scripts/Rhythia.cs"
 KeybindsManager="*res://scripts/KeybindsManager.cs"
+Rhythia="*res://scripts/Rhythia.cs"
 Lobby="*res://scripts/multiplayer/Lobby.cs"
 SoundManager="*res://scripts/SoundManager.cs"
 ToastNotification="*res://scripts/ui/ToastNotification.cs"

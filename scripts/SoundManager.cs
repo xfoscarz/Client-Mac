@@ -186,7 +186,7 @@ public partial class SoundManager : Node, ISkinnable
 
     public static void UpdateJukeboxQueue()
     {
-        JukeboxQueue = [.. Directory.GetFiles($"{Constants.USER_FOLDER}/maps").Shuffle()];
+        JukeboxQueue = [.. Directory.GetFiles($"{Constants.USER_FOLDER}/maps", $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories).Shuffle()];
 
         for (int i = 0; i < JukeboxQueue.Length; i++)
         {

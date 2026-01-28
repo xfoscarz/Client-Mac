@@ -30,7 +30,7 @@ public partial class MapInfo : AspectRatioContainer
 
 	public void Select(Map map)
 	{
-        if (Map != null && map.ID == Map.ID) { return; }
+        if (Map != null && map.Name == Map.Name) { return; }
 
         Map = map;
 		
