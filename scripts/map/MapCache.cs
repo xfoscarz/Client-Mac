@@ -85,7 +85,7 @@ public static class MapCache
         var maps = FetchAll();
 
         HashSet<string> hashSet = new();
-        maps.ForEach(map => hashSet.Add($"{MapsFolder}/{map.Collection}/{map.Name}.{Constants.DEFAULT_MAP_EXT}"));
+        maps.ForEach(map => hashSet.Add(map.FilePath));
 
         foreach (string file in files)
         {
@@ -97,9 +97,9 @@ public static class MapCache
             try
             {
                 var map = MapParser.Decode(file);
+                map.Collection = file.GetBaseDir().Split("/")[^1];
                 map.FilePath = $"{Constants.USER_FOLDER}/maps/{map.Collection}/{map.Name}.{Constants.DEFAULT_MAP_EXT}";
                 map.Hash = GetMd5Checksum(file);
-                map.Collection = file.GetBaseDir().Split("/")[^1];
                 File.Move(file, map.FilePath);
                 InsertMap(map);
             }
