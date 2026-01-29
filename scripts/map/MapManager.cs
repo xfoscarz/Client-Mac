@@ -22,26 +22,6 @@ public partial class MapManager : Node
         MapCache.Load(true);
     }
 
-    public static string GetCoverPath(Map map)
-    {
-        if (map == null)
-        {
-            return "";
-        }
-
-        return $"{MapsFolder}/{map.Collection}/{map.Name}/cover.png";
-    }
-
-    public static string GetAudioPath(Map map)
-    {
-        if (map == null)
-        {
-            return "";
-        }
-
-        return $"${MapsFolder}/{map.Collection}/{map.Name}/audio.{map.AudioExt}";
-    }
-
     public static void Update(Map map)
     {
         throw new NotImplementedException();

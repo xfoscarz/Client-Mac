@@ -53,7 +53,7 @@ public partial class FlatPreview : Panel
 
         if (UseSoundManagerStreamPlayer)
         {
-            if (SoundManager.Map.ID != Map.ID)
+            if (SoundManager.Map.Name != Map.Name)
             {
                 return;
             }
@@ -101,7 +101,7 @@ public partial class FlatPreview : Panel
 
 	public void Setup(Map map, bool useSoundManagerStreamPlayer = false)
 	{
-        if (Map != null && Map.ID == map.ID) { return; }
+        if (Map != null && Map.Name == map.Name) { return; }
 
         Map = map;
         UseSoundManagerStreamPlayer = useSoundManagerStreamPlayer;

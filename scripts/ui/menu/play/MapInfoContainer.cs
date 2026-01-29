@@ -300,31 +300,27 @@ public partial class MapInfoContainer : Panel, ISkinnable
         // Leaderboard
 
         if (File.Exists($"{Constants.USER_FOLDER}/pbs/{map.Name}"))
-		{
-			Leaderboard = new(map.Name, $"{Constants.USER_FOLDER}/pbs/{map.Name}");
-		}
-
-		if (!Leaderboard.Valid || Leaderboard.ScoreCount == 0)
-		{
-            leaderboard.Visible = false;
+        {
+            Leaderboard = new(map.Name, $"{Constants.USER_FOLDER}/pbs/{map.Name}");
         }
-		else
-		{
-            foreach (Node child in lbContainer.GetChildren())
-            {
-                lbContainer.RemoveChild(child);
-            }
 
-            for (int i = 0; i < Math.Min(8, Leaderboard.ScoreCount); i++)
-            {
-                ScorePanel panel = leaderboardScoreTemplate.Instantiate<ScorePanel>();
+        leaderboard.Visible = Leaderboard.Valid && Leaderboard.ScoreCount > 0;
 
-                lbContainer.AddChild(panel);
-                panel.Setup(Leaderboard.Scores[i]);
-                panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 == 0 ? 0 : 8));
+        foreach (Node child in lbContainer.GetChildren())
+        {
+            lbContainer.RemoveChild(child);
+            child.QueueFree();
+        }
 
-                panel.Button.Pressed += () => { toggleLeaderboard(false); };
-            }
+        for (int i = 0; i < Math.Min(8, Leaderboard.ScoreCount); i++)
+        {
+            ScorePanel panel = leaderboardScoreTemplate.Instantiate<ScorePanel>();
+
+            lbContainer.AddChild(panel);
+            panel.Setup(Leaderboard.Scores[i]);
+            panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 == 0 ? 0 : 8));
+
+            panel.Button.Pressed += () => { toggleLeaderboard(false); };
         }
     }
 
