@@ -323,7 +323,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             lbContainer.AddChild(panel);
             panel.Setup(Leaderboard.Scores[i]);
-            panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 == 0 ? 0 : 8));
+            panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 * 8));
 
             panel.Button.Pressed += () => { toggleLeaderboard(false); };
         }

@@ -11,7 +11,6 @@
 [ext_resource type="Shader" uid="uid://cqqs8uux7hqyb" path="res://scripts/shaders/ui_blur.gdshader" id="5_eo0oh"]
 [ext_resource type="Shader" uid="uid://5sq1jdmlom6w" path="res://scripts/shaders/dotted.gdshader" id="8_ldb53"]
 [ext_resource type="Texture2D" uid="uid://baivqqkfll133" path="res://textures/RhythiaSquircle.png" id="10_00qb5"]
-[ext_resource type="Script" uid="uid://carutkgoqpr4e" path="res://scripts/ui/Cursor.cs" id="12_00fns"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6rn6l"]
 shader = ExtResource("2_oatel")
@@ -441,15 +440,6 @@ mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 22
 text = "Watch Replay"
 flat = true
-
-[node name="Cursor" type="TextureRect" parent="." unique_id=1024175156]
-z_index = 2
-offset_right = 32.0
-offset_bottom = 32.0
-mouse_filter = 2
-texture = ExtResource("2_ow183")
-expand_mode = 1
-script = ExtResource("12_00fns")
 
 [node name="Transition" type="ColorRect" parent="." unique_id=529428316]
 self_modulate = Color(1, 1, 1, 0)

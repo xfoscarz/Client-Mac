@@ -7,7 +7,6 @@ public partial class Results : BaseScene
 {
 	private SettingsProfile settings;
 
-	private static TextureRect cursor;
 	private static Panel footer;
 	private static Panel holder;
 	private static TextureRect cover;
@@ -21,13 +20,12 @@ public partial class Results : BaseScene
 		
 		settings = SettingsManager.Instance.Settings;
 
-		cursor = GetNode<TextureRect>("Cursor");
 		footer = GetNode<Panel>("Footer");
 		holder = GetNode<Panel>("Holder");
 		cover = GetNode<TextureRect>("Cover");
 
 		Input.MouseMode = settings.UseCursorInMenus ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
-        cursor.Visible = settings.UseCursorInMenus;
+        MenuCursor.Instance.Visible = settings.UseCursorInMenus;
 
         holder.GetNode<Label>("Title").Text = (LegacyRunner.CurrentAttempt.IsReplay ? "[REPLAY] " : "") + LegacyRunner.CurrentAttempt.Map.PrettyTitle;
 		holder.GetNode<Label>("Difficulty").Text = LegacyRunner.CurrentAttempt.Map.DifficultyName;

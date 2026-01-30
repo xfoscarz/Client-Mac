@@ -12,7 +12,6 @@ public partial class MainMenu : BaseScene
     public Panel PlayMenu;
     public Panel TopBar;
     public JukeboxPanel Jukebox;
-    public Cursor Cursor;
     public MapList MapList;
     public MapInfo MapInfo;
 
@@ -32,7 +31,6 @@ public partial class MainMenu : BaseScene
         TopBar = GetNode<Panel>("TopBar");
         topBarButtonsContainer = TopBar.GetNode("MenuButtons");
         Jukebox = GetNode<JukeboxPanel>("JukeboxPanel");
-        Cursor = GetNode<Cursor>("Cursor");
         MapList = PlayMenu.GetNode<MapList>("MapList");
         MapInfo = PlayMenu.GetNode<MapInfo>("MapInfo");
 		
@@ -92,9 +90,6 @@ public partial class MainMenu : BaseScene
 	public override void Load()
 	{
         base.Load();
-		
-        Cursor.Position = GetViewport().GetMousePosition();
-        Cursor.Visible = SettingsManager.Instance.Settings.UseCursorInMenus;
 
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Adaptive);
 

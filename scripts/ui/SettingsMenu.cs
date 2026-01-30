@@ -116,12 +116,13 @@ public partial class SettingsMenu : ColorRect
                     setupList(setting, optionButton);
                     panel.AddChild(optionButton);
                 }
-                else if (setting.Type == typeof(Variant))
+                
+                if (setting.Type == typeof(Variant))
                 {
-                    Button button = buttonTemplate.Duplicate() as Button;
+                //     Button button = buttonTemplate.Duplicate() as Button;
 
-                    setupButton(setting, button);
-                    panel.AddChild(button);
+                //     setupButton(setting, button);
+                //     panel.AddChild(button);
                 }
 
                 container.AddChild(panel);
@@ -181,13 +182,13 @@ public partial class SettingsMenu : ColorRect
 		sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(255, 255, 255, 8);
     }
 
-    // IMPLEMENT SETTINGSITEM UPDATE SIGNAL IN THESE //
-
     private void setupToggle(ISettingsItem setting, CheckButton button)
 	{
         button.Toggled += value => {
             if ((bool)setting.GetVariant() != value) { setting.SetVariant(value); }
         };
+
+        setting.Updated += (value) => { updateToggle(button, (bool)value); };
 
         updateToggle(button, (bool)setting.GetVariant());
     }
@@ -206,11 +207,17 @@ public partial class SettingsMenu : ColorRect
             if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
         }
 
+        slider.Step = setting.Slider.Step;
+        slider.MinValue = setting.Slider.MinValue;
+        slider.MaxValue = setting.Slider.MaxValue;
+
         lineEdit.FocusExited += applyLineEdit;
         lineEdit.TextSubmitted += (_) => { applyLineEdit(); };
         slider.ValueChanged += value => {
             if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
         };
+
+        setting.Updated += (value) => { updateSlider(slider, lineEdit, (double)value); };
 
         updateSlider(slider, lineEdit, (double)setting.GetVariant());
     }
@@ -238,6 +245,8 @@ public partial class SettingsMenu : ColorRect
 
         lineEdit.FocusExited += applyLineEdit;
         lineEdit.TextSubmitted += (_) => { applyLineEdit(); };
+
+        setting.Updated += (value) => { updateInput(lineEdit, (string)value); };
         
         updateInput(lineEdit, (string)setting.GetVariant());
     }
@@ -266,28 +275,35 @@ public partial class SettingsMenu : ColorRect
             if (oldVal != newVal) { setting.SetVariant(newVal); }
         };
 
-        int index = 0;
-
-        foreach (string value in setting.List.Values)
+        int getIndex()
         {
-            if (value == (string)setting.List.SelectedValue)
+            int index = 0;
+
+            foreach (string value in setting.List.Values)
             {
-                break;
+                if (value == (string)setting.List.SelectedValue)
+                {
+                    break;
+                }
+
+                index++;
             }
 
-            index++;
+            return index;
         }
 
-        updateList(optionButton, index);
+        setting.Updated += (_) => { updateList(optionButton, getIndex()); };
+
+        updateList(optionButton, getIndex());
     }
 
-    private void updateList(OptionButton optionButton, int value)
+    private void updateList(OptionButton optionButton, int index)
     {
-        optionButton.Selected = value;
+        optionButton.Selected = index;
     }
 
-    private void setupButton(ISettingsItem setting, Button button)
-    {
+    // private void setupButton(ISettingsItem setting, Button button)
+    // {
         
-    }
+    // }
 }

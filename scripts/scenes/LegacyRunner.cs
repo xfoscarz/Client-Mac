@@ -1140,6 +1140,7 @@ public partial class LegacyRunner : BaseScene
 
 		DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
 
+		MenuCursor.Instance.UpdateVisible(false, false);
         SceneManager.Space.UpdateState(true);
     }
 	
@@ -1287,12 +1288,17 @@ public partial class LegacyRunner : BaseScene
 		MenuShown = show;
 		Playing = !MenuShown;
 		SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;	// not again
-		Input.MouseMode = MenuShown ? Input.MouseModeEnum.Visible : (settings.AbsoluteInput || CurrentAttempt.IsReplay ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured);
 		
+		MenuCursor.Instance.UpdateVisible(MenuShown && SettingsManager.Instance.Settings.UseCursorInMenus.Value);
+
 		if (MenuShown)
 		{
 			menu.Visible = true;
 			Input.WarpMouse(node.GetViewport().GetWindow().Size / 2);
+		}
+		else
+		{
+			Input.MouseMode = settings.AbsoluteInput || CurrentAttempt.IsReplay ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured;
 		}
 		
 		Tween tween = menu.CreateTween();

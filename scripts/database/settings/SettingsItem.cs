@@ -4,6 +4,8 @@ using Godot;
 
 public class SettingsItem<[MustBeVariant] T> : ISettingsItem
 {
+    private bool _init = false;
+    
     public SettingsItem(T value)
     {
         Value = value;
@@ -42,9 +44,19 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
         set
         {
             field = value;
-            UpdateAction?.Invoke(value);
+
             List?.SelectedValue = value;
-            Updated?.Invoke(Variant.From(Value));
+
+            if (_init)
+            {
+                UpdateAction?.Invoke(value);
+                Updated?.Invoke(Variant.From(Value));
+            }
+
+            if (!_init && Id != "")
+            {
+                _init = true;
+            }
         }
     }
 
