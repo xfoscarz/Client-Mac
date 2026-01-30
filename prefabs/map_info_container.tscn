@@ -13,8 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://cgxbwx4f28lt2" path="res://user/skins/default/ui/buttons/copy.png" id="7_oibm8"]
 [ext_resource type="PackedScene" uid="uid://kwoco4d2gdqc" path="res://prefabs/speed_preset_button.tscn" id="8_i21mh"]
 [ext_resource type="Texture2D" uid="uid://xd005fiv7qgg" path="res://user/skins/default/ui/buttons/delete.png" id="8_ssthb"]
-[ext_resource type="Texture2D" uid="uid://nvy5xmi7bbw4" path="res://user/skins/default/modifiers/nofail.png" id="8_wk5qh"]
-[ext_resource type="Texture2D" uid="uid://bmkw04d0fyhv" path="res://user/skins/default/modifiers/ghost.png" id="9_abwk8"]
+[ext_resource type="Texture2D" uid="uid://6ptjvvnn8jhm" path="res://user/skins/default/modifiers/nofail.png" id="8_wk5qh"]
+[ext_resource type="Texture2D" uid="uid://b48yn1sht6uo0" path="res://user/skins/default/modifiers/ghost.png" id="9_abwk8"]
 [ext_resource type="Texture2D" uid="uid://40acunj8wr8e" path="res://user/skins/default/ui/buttons/speed_minus_minus.png" id="11_1jb84"]
 [ext_resource type="Texture2D" uid="uid://dte55kqyqtf12" path="res://user/skins/default/ui/buttons/speed_minus.png" id="12_cqtnb"]
 [ext_resource type="Texture2D" uid="uid://r6nsvqtknp20" path="res://user/skins/default/ui/buttons/speed_plus.png" id="13_3adhn"]
@@ -933,6 +933,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
+mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_4d08m")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_j6nyj")
 theme_override_styles/hover = SubResource("StyleBoxFlat_svokg")

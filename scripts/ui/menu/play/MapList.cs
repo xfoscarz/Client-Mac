@@ -326,26 +326,17 @@ public partial class MapList : Panel, ISkinnable
             value.UpdateOutline(0f);
         }
 
-        if (SoundManager.Map == null || SoundManager.Map.Name != map.Name)
-        {
-            SoundManager.PlayJukebox(map);
-        }
-
-        if (Lobby.Map != map)
-        {
-            Lobby.SetMap(map);
-        }
+        MapManager.Selected.Value = MapParser.Decode(map.FilePath);
 
         if (selectedMapID == map.Name && playIfPreSelected)
         {
             LegacyRunner.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
         }
-
+        
         selectedMapID = map.Name;
 
         Focus(map);
 
-        MapInfo.Instance.Select(map);
         SceneManager.Space.UpdateMap(map);
     }
 
@@ -365,11 +356,8 @@ public partial class MapList : Panel, ISkinnable
 
         List<Map> unfavorited = [];
 
-        // temporary until db is implemented
-        foreach (string path in Directory.GetFiles($"{Constants.USER_FOLDER}/maps", $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
+        foreach (Map map in MapManager.Maps)
 		{
-            Map map = MapParser.Decode(path);
-
             (map.Favorite ? Maps : unfavorited).Add(map);
         }
 
@@ -484,9 +472,7 @@ public partial class MapList : Panel, ISkinnable
 
     private void shuffle()
     {
-        List<Map> shuffled = [];
-        shuffled.AddRange(Maps.Shuffle());
-        Maps = shuffled;
+        Maps = [.. Maps.Shuffle()];
 
         clear();
     }

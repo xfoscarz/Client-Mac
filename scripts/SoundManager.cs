@@ -66,6 +66,14 @@ public partial class SoundManager : Node, ISkinnable
 
         SettingsManager.Instance.Loaded += UpdateVolume;
         Lobby.Instance.SpeedChanged += (speed) => { SoundManager.Song.PitchScale = (float)speed; };
+        MapManager.Selected.ValueChanged += (_, _) => {
+            var map = MapManager.Selected.Value;
+            
+            if (Map == null || Map.Name != map.Name)
+            {
+                PlayJukebox(map);
+            }
+        };
 
         UpdateVolume();
         UpdateJukeboxQueue();

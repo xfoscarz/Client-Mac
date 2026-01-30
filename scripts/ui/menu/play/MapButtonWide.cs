@@ -17,6 +17,8 @@ public partial class MapButtonWide : MapButton
 
         extra = Holder.GetNode<RichTextLabel>("Extra");
         coverMaterial = Cover.Material as ShaderMaterial;
+
+        CustomMinimumSize = new(CustomMinimumSize.X, MinimumSize);
         
         UpdateSkin();
     }

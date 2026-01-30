@@ -16,27 +16,18 @@ public class Misc
 
     public static ImageTexture GetModIcon(string mod)
     {
-        ImageTexture tex = new();
+        ImageTexture tex;
 
         switch (mod)
         {
             case "NoFail":
-                tex = SkinManager.Instance.Skin.ModNofailImage;
-                break;
-            case "Spin":
-                tex = SkinManager.Instance.Skin.ModSpinImage;
+                tex = SkinManager.Instance.Skin.ModNoFailImage;
                 break;
             case "Ghost":
                 tex = SkinManager.Instance.Skin.ModGhostImage;
                 break;
-            case "Chaos":
-                tex = SkinManager.Instance.Skin.ModChaosImage;
-                break;
-            case "Flashlight":
-                tex = SkinManager.Instance.Skin.ModFlashlightImage;
-                break;
-            case "HardRock":
-                tex = SkinManager.Instance.Skin.ModHardrockImage;
+            default:
+                tex = new();
                 break;
         }
 

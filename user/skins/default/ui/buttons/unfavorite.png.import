@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bugx1qn5t88e3"
-path="res://.godot/imported/hardrock.png-7b8c5a9bdf533f38e7d5adbc54317f1e.ctex"
+uid="uid://dqr2k5o23hg5o"
+path="res://.godot/imported/unfavorite.png-a76720c5a7c1e0def9579a85ce31df7c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://user/skins/default/modifiers/hardrock.png"
-dest_files=["res://.godot/imported/hardrock.png-7b8c5a9bdf533f38e7d5adbc54317f1e.ctex"]
+source_file="res://user/skins/default/ui/buttons/unfavorite.png"
+dest_files=["res://.godot/imported/unfavorite.png-a76720c5a7c1e0def9579a85ce31df7c.ctex"]
 
 [params]
 

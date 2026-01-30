@@ -113,7 +113,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
     private void pause()
     {
         var skin = SkinManager.Instance.Skin;
-        SoundManager.Song.Playing = !SoundManager.Song.Playing;
+        SoundManager.Song.StreamPaused = !SoundManager.Song.StreamPaused;
         pauseButton.TextureNormal = SoundManager.Song.Playing ? skin.JukeboxPauseImage : skin.JukeboxPlayImage;
     }
 

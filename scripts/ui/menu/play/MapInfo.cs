@@ -21,6 +21,8 @@ public partial class MapInfo : AspectRatioContainer
 
         mapList = GetParent().GetNode<MapList>("MapList");
         holder = GetNode<Panel>("Holder");
+
+        MapManager.Selected.ValueChanged += (_, _) => { Select(MapManager.Selected.Value); };
     }
 
     public override void _Draw()

@@ -61,6 +61,8 @@ public partial class SkinProfile : GodotObject
 
     public ImageTexture FavoriteButtonImage { get; set; } = new();
 
+    public ImageTexture UnfavoriteButtonImage { get; set; } = new();
+
     public ImageTexture CopyButtonImage { get; set; } = new();
 
     public ImageTexture DeleteButtonImage { get; set; } = new();
@@ -103,17 +105,9 @@ public partial class SkinProfile : GodotObject
 
     public ImageTexture MapInfoCoverBackgroundImage { get; set; } = new();
 
-    public ImageTexture ModNofailImage { get; set; } = new();
-
-    public ImageTexture ModSpinImage { get; set; } = new();
+    public ImageTexture ModNoFailImage { get; set; } = new();
 
     public ImageTexture ModGhostImage { get; set; } = new();
-
-    public ImageTexture ModChaosImage { get; set; } = new();
-
-    public ImageTexture ModFlashlightImage { get; set; } = new();
-
-    public ImageTexture ModHardrockImage { get; set; } = new();
 
     public ImageTexture BackgroundTileImage { get; set; } = new();
 

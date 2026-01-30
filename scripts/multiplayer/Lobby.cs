@@ -49,6 +49,15 @@ public partial class Lobby : Node
     public override void _Ready()
     {
         Instance = this;
+
+        MapManager.Selected.ValueChanged += (_, _) => {
+            var map = MapManager.Selected.Value;
+            
+            if (Map == null || Map.Name != map.Name)
+            {
+                SetMap(map);
+            }
+        };
     }
 
     public static void Enter()

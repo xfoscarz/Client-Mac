@@ -58,7 +58,7 @@ public partial class FlatPreview : Panel
                 return;
             }
 
-            Playing = SoundManager.Song.Playing;
+            Playing = !SoundManager.Song.StreamPaused;
             Time = SoundManager.Song.GetPlaybackPosition() * 1000;
         }
         else if (Playing)

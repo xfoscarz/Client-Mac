@@ -255,6 +255,11 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
 	public void Setup(Map map)
 	{
+        if (Name == map.Name)
+        {
+            return;
+        }
+
         Map = map;
         Name = map.Name;
 

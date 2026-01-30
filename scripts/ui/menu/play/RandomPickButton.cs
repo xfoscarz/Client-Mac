@@ -1,9 +1,10 @@
-using Godot;
 using System;
-using System.IO;
+using Godot;
 
 public partial class RandomPickButton : Button
 {
+	private Random random = new();
+
     public override void _Pressed() { Pick(); }
 
     public override void _Input(InputEvent @event)
@@ -21,9 +22,9 @@ public partial class RandomPickButton : Button
 
 	public void Pick()
 	{
-		string[] mapPool = Directory.GetFiles($"{Constants.USER_FOLDER}/maps");
-        string map = mapPool[new Random().Next(mapPool.Length)];
-		
-		LegacyRunner.Play(MapParser.Decode(map), Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
+		var mapList = MapList.Instance;
+		int index = random.Next(mapList.Maps.Count);
+
+		mapList.Select(mapList.Maps[index], false);
 	}
 }

@@ -91,6 +91,7 @@ public partial class SkinManager : Node
 
         skin.PlayButtonImage = loadTexture("ui/buttons/play.png");
 		skin.FavoriteButtonImage = loadTexture("ui/buttons/favorite.png");
+		skin.UnfavoriteButtonImage = loadTexture("ui/buttons/unfavorite.png");
 		skin.CopyButtonImage = loadTexture("ui/buttons/copy.png");
 		skin.DeleteButtonImage = loadTexture("ui/buttons/delete.png");
 		skin.AddVideoButtonImage = loadTexture("ui/buttons/add_video.png");
@@ -118,12 +119,8 @@ public partial class SkinManager : Node
 
         skin.MapInfoCoverBackgroundImage = loadTexture("ui/play/mapinfo_cover_background.png");
 
-        skin.ModNofailImage = loadTexture("modifiers/nofail.png");
-		skin.ModSpinImage = loadTexture("modifiers/spin.png");
+        skin.ModNoFailImage = loadTexture("modifiers/nofail.png");
 		skin.ModGhostImage = loadTexture("modifiers/ghost.png");
-		skin.ModChaosImage = loadTexture("modifiers/chaos.png");
-		skin.ModFlashlightImage = loadTexture("modifiers/flashlight.png");
-		skin.ModHardrockImage = loadTexture("modifiers/hardrock.png");
 
 		// Shaders
 
