@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Godot;
 
 public static class MapCache
@@ -15,15 +16,22 @@ public static class MapCache
 
     public static void Load(bool fullSync)
     {
-        string[] files = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories);
-
-        if (fullSync)
+        try
         {
-            syncFiles(files);
-            addNonCachedFiles(files);
-        }
+            string[] files = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories);
 
-        OrderAndSetMaps();
+            if (fullSync)
+            {
+                syncFiles(files);
+                addNonCachedFiles(files);
+            }
+
+            OrderAndSetMaps();
+        }
+        catch
+        {
+            OrderAndSetMaps();
+        }
     }
 
     private static void syncFiles(string[] files)
@@ -87,7 +95,7 @@ public static class MapCache
     public static void InsertIntoMapCacheFolder(Map map)
     {
         string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
-        using var stream =  File.OpenRead(map.FilePath);
+        using var stream = File.OpenRead(map.FilePath);
         var archive = new ZipArchive(stream);
 
         if (Directory.Exists(path))
@@ -197,23 +205,50 @@ public static class MapCache
         }
     }
 
+
+
     public static void OrderAndSetMaps()
     {
         var maps = FetchAll();
 
-        foreach (var map in maps)
+        //TODO: not make this terrible
+        Task.Run(() =>
         {
-            string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
+            byte[] pngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
 
-            if (map.Cover == Map.DefaultCover && File.Exists($"{path}/cover.png"))
+            foreach (var map in maps)
             {
-                map.Cover = ImageTexture.CreateFromImage(Image.LoadFromFile($"{path}/cover.png"));
+                string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
+
+                if (map.Cover == Map.DefaultCover && File.Exists($"{path}/cover.png"))
+                {
+                    byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
+
+                    Image image = new Image();
+
+                    if (coverBuffer.Take(8).SequenceEqual(pngSignature))
+                    {
+                        image.LoadPngFromBuffer(coverBuffer);
+                    }
+                    else
+                    {
+                        image.LoadJpgFromBuffer(coverBuffer);
+                    }
+
+                    map.Cover = ImageTexture.CreateFromImage(image);
+                }
             }
+        });
+
+        if (maps.Count < 1)
+        {
+            MapManager.Maps = new();
+            return;
         }
 
         var sortedMaps = maps.Where(x => x.Favorite).OrderBy(x => x.PrettyTitle).ToList();
 
-        sortedMaps.AddRange(maps.Where(x => !x.Favorite).OrderBy (x => x.PrettyTitle));
+        sortedMaps.AddRange(maps.Where(x => !x.Favorite).OrderBy(x => x.PrettyTitle));
 
         MapManager.Maps = sortedMaps;
     }

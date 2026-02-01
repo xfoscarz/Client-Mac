@@ -50,7 +50,7 @@ shader = ExtResource("6_frxlp")
 [node name="MapButtonWide" type="Control" unique_id=807495564]
 self_modulate = Color(0, 0, 0, 0.8784314)
 clip_contents = true
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 3
 anchors_preset = 10
 anchor_right = 1.0

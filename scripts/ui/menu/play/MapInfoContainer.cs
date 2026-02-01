@@ -364,6 +364,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Leaderboard
 
+        Leaderboard = new();
+
         if (File.Exists($"{Constants.USER_FOLDER}/pbs/{map.Name}"))
         {
             Leaderboard = new(map.Name, $"{Constants.USER_FOLDER}/pbs/{map.Name}");

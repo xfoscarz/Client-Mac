@@ -25,30 +25,30 @@ public partial class MapList : Panel, ISkinnable
     [Export]
     public float WideButtonMinimumSize = 90;
 
-	[Export]
+    [Export]
     public float WideButtonHoveredSize = 10;
 
-	[Export]
+    [Export]
     public float WideButtonSelectedSize = 20;
 
     [Export]
     public float SquareButtonMinimumSize = 140;
 
-	[Export]
+    [Export]
     public float SquareButtonHoveredSize = 5;
 
-	[Export]
+    [Export]
     public float SquareButtonSelectedSize = 10;
 
     [ExportGroup("Scrolling")]
 
-	[Export]
+    [Export]
     public float ScrollStep = 1500;
 
-	[Export]
+    [Export]
     public float ScrollFriction = 20;
 
-	[Export]
+    [Export]
     public float ScrollElasticity = 0.02f;
 
     public double ScrollLength = 0;
@@ -121,7 +121,6 @@ public partial class MapList : Panel, ISkinnable
         };
         MapManager.MapsInitialized += _ => UpdateMaps();
         MapManager.MapUpdated += map => {
-            clear();
             UpdateMaps();
         };
 
@@ -137,8 +136,8 @@ public partial class MapList : Panel, ISkinnable
 
         float scrollElasticOffset = 0;
 
-		if ((TargetScroll <= 0 && ScrollMomentum < 0) || (TargetScroll >= ScrollLength && ScrollMomentum > 0))
-		{
+        if ((TargetScroll <= 0 && ScrollMomentum < 0) || (TargetScroll >= ScrollLength && ScrollMomentum > 0))
+        {
             scrollElasticOffset = (float)(ScrollMomentum * ScrollElasticity);
         }
 
@@ -163,12 +162,12 @@ public partial class MapList : Panel, ISkinnable
         lastMousePos = mousePos;
 
         if (MouseScroll)
-		{
+        {
             float t = Mathf.InverseLerp(Position.Y + scrollBarMain.Size.Y / 2, Position.Y + Size.Y - scrollBarMain.Size.Y / 2, GetViewport().GetMousePosition().Y);
             TargetScroll = Mathf.Lerp(TargetScroll, ScrollLength * Math.Clamp(t, 0, 1), Math.Min(1, 24 * delta));
         }
-		else
-		{
+        else
+        {
             TargetScroll = Math.Clamp(TargetScroll + ScrollMomentum * delta, 0, ScrollLength) + scrollElasticOffset;
         }
 
@@ -265,10 +264,15 @@ public partial class MapList : Panel, ISkinnable
             }
         }
 
-        Vector2 selectionCursorPos = new(
-            hoveredButton != null && hoveredButton.IsInsideTree() && DisplaySelectionCursor ? hoveredButton.Holder.Position.X - 60 : -80,
-            Math.Clamp(hoveredButton != null && hoveredButton.IsInsideTree() ? hoveredButton.Container.Position.Y + hoveredButton.Size.Y / 2 - selectionCursor.Size.Y / 2 : selectionCursor.Position.Y, 0, Size.Y)
-        );
+        Vector2 selectionCursorPos = new(-80, selectionCursor.Position.Y);
+
+        if (IsInstanceValid(hoveredButton) && hoveredButton != null && hoveredButton.IsInsideTree())
+        {
+            selectionCursorPos = new(
+                DisplaySelectionCursor ? hoveredButton.Holder.Position.X - 60 : -80,
+                Math.Clamp(hoveredButton.Container.Position.Y + hoveredButton.Size.Y / 2 - selectionCursor.Size.Y / 2, 0, Size.Y)
+            );
+        }
 
         selectionCursor.Position = selectionCursor.Position.Lerp(selectionCursorPos, (float)Math.Min(1, 8 * delta));
         selectionCursor.Rotation = -selectionCursor.Position.Y / 60;
@@ -315,15 +319,15 @@ public partial class MapList : Panel, ISkinnable
     public override void _UnhandledInput(InputEvent @event)
     {
         if (@event is InputEventMouseButton mouseButton && !mouseButton.CtrlPressed && !mouseButton.AltPressed)
-		{
-			switch (mouseButton.ButtonIndex)
-			{
+        {
+            switch (mouseButton.ButtonIndex)
+            {
                 case MouseButton.Left: DragScroll = mouseButton.Pressed; if (DragScroll) { dragDistance = 0; } break;
                 case MouseButton.Right: MouseScroll = mouseButton.Pressed; if (MouseScroll) { dragDistance = 0; } break;
-				case MouseButton.WheelDown: ScrollMomentum += ScrollStep; break;
-				case MouseButton.WheelUp: ScrollMomentum -= ScrollStep; break;
+                case MouseButton.WheelDown: ScrollMomentum += ScrollStep; break;
+                case MouseButton.WheelUp: ScrollMomentum -= ScrollStep; break;
             }
-		}
+        }
     }
 
     public void Select(Map map, bool playIfPreSelected = true)
@@ -334,7 +338,7 @@ public partial class MapList : Panel, ISkinnable
             value.UpdateOutline(0f);
         }
 
-        MapManager.Selected.Value = MapManager.GetMapById(map.Id);
+        MapManager.Select(map);
 
         if (selectedMapID == map.Name && playIfPreSelected)
         {
@@ -364,7 +368,6 @@ public partial class MapList : Panel, ISkinnable
         AuthorQuery = author ?? AuthorQuery;
 
         UpdateMaps();
-        clear();
     }
 
     public void UpdateMaps()
@@ -375,7 +378,7 @@ public partial class MapList : Panel, ISkinnable
         List<Map> unfavorited = [];
 
         foreach (Map map in queried)
-		{
+        {
             (map.Favorite ? Maps : unfavorited).Add(map);
         }
 
@@ -383,6 +386,8 @@ public partial class MapList : Panel, ISkinnable
         {
             Maps.Add(map);
         }
+
+        clear();
     }
 
     public void UpdateLayout(ListLayout layout)
@@ -415,8 +420,8 @@ public partial class MapList : Panel, ISkinnable
         scrollBarBackgroundBottom.Texture = skin.MapListScrollBarBackgroundBottomImage;
     }
 
-	private MapButton setupButton(MapButton button)
-	{
+    private MapButton setupButton(MapButton button)
+    {
         button.MinimumSize = buttonMinSize;
         button.HoveredSizeOffset = buttonHoverSize;
         button.SelectedSizeOffset = buttonSelectSize;
@@ -446,14 +451,14 @@ public partial class MapList : Panel, ISkinnable
         return button;
     }
 
-	private void toggleSelectionCursor(bool display)
-	{
+    private void toggleSelectionCursor(bool display)
+    {
         if (DisplaySelectionCursor == display) { return; }
 
         DisplaySelectionCursor = display;
 
-		if (display && hoveredButton != null)
-		{
+        if (display && hoveredButton != null)
+        {
             selectionCursor.Position = new(selectionCursor.Position.X, hoveredButton.Position.Y);
         }
 

@@ -37,6 +37,11 @@ public partial class MapManager : Node
         });
     }
 
+    public static void Select(Map map)
+    {
+        Selected.Value = GetMapById(map.Id);
+    }
+
     public static Map GetMapById(int id)
     {
         return Maps.Where(x => x.Id == id).First();

@@ -156,8 +156,6 @@ texture_repeat = false
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4qlgx"]
 shader = ExtResource("8_ocxsu")
 
-[sub_resource type="FFmpegVideoStream" id="FFmpegVideoStream_e1j6l"]
-
 [sub_resource type="LabelSettings" id="LabelSettings_usmyc"]
 font = ExtResource("12_axsek")
 font_size = 50
@@ -367,7 +365,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-stream = SubResource("FFmpegVideoStream_e1j6l")
 volume_db = -80.0
 expand = true
 
