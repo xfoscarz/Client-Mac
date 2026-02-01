@@ -312,6 +312,12 @@ public partial class MapList : Panel, ISkinnable
                 case Key.F2:
                     shuffle();
                     break;
+                case Key.Space:
+					if (Lobby.Map != null && IsVisibleInTree() && GetViewport().GuiGetFocusOwner() == null)
+					{
+                        LegacyRunner.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
+                    }
+                    break;
             }
         }
     }

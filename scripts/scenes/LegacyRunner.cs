@@ -239,7 +239,7 @@ public partial class LegacyRunner : BaseScene
 
 			float lateness = IsReplay ? HitsInfo[index] : (float)(((int)Progress - Map.Notes[index].Millisecond) / Speed);
 			float factor = 1 - Math.Max(0, lateness - 25) / 150f;
-			
+
 			if (!IsReplay)
 			{
 				Stats.NotesHit++;
@@ -443,7 +443,7 @@ public partial class LegacyRunner : BaseScene
 
 				ReplayFile.StoreBuffer(hash);
 				ReplayFile.Close();
-				
+
 				CurrentAttempt.HitsInfo = CurrentAttempt.HitsInfo[0 .. (int)PassedNotes];
 			}
 			else if (IsReplay)
@@ -452,7 +452,7 @@ public partial class LegacyRunner : BaseScene
 			}
 		}
 	}
-	
+
 	public override void _Ready()
 	{
         base._Ready();
@@ -460,7 +460,7 @@ public partial class LegacyRunner : BaseScene
         settings = SettingsManager.Instance.Settings;
 
 		node = this;
-	
+
         menu = GetNode<Panel>("Menu");
         //fpsCounter = GetNode<Label>("FPSCounter");
 
@@ -535,7 +535,7 @@ public partial class LegacyRunner : BaseScene
 
 			CurrentAttempt.Alive = false;
 			CurrentAttempt.Qualifies = false;
-			
+
 			if (CurrentAttempt.DeathTime == -1)
 			{
 				CurrentAttempt.DeathTime = Math.Max(0, CurrentAttempt.Progress);
@@ -735,7 +735,7 @@ public partial class LegacyRunner : BaseScene
 				node.AddChild(_cursor);
 				Cursors[i] = _cursor;
 			}
-			
+
 			cursor.Visible = false;
 			ShowReplayViewer();
 		}
@@ -748,7 +748,7 @@ public partial class LegacyRunner : BaseScene
 		multiplierProgress = Mathf.Lerp(multiplierProgress, (float)CurrentAttempt.ComboMultiplierProgress / CurrentAttempt.ComboMultiplierIncrement, Math.Min(1, (float)delta * 16));
 		multiplierColour = multiplierColour.Lerp(Color.Color8(255, 255, 255), (float)delta * 2);
 		multiplierProgressMaterial.SetShaderParameter("progress", multiplierProgress);
-	
+
 		if (multiplierColour.B < 255)	// fuck
 		{
 			multiplierProgressMaterial.SetShaderParameter("colour", multiplierColour);	// this loves causing lag spikes, keep track
@@ -809,7 +809,7 @@ public partial class LegacyRunner : BaseScene
 
 				double inverse = Mathf.InverseLerp(CurrentAttempt.Replays[i].Frames[CurrentAttempt.Replays[i].FrameIndex].Progress, CurrentAttempt.Replays[i].Frames[next].Progress, CurrentAttempt.Progress);
 				Vector2 cursorPos = CurrentAttempt.Replays[i].Frames[CurrentAttempt.Replays[i].FrameIndex].CursorPosition.Lerp(CurrentAttempt.Replays[i].Frames[next].CursorPosition, (float)Math.Clamp(inverse, 0, 1));
-				
+
 				try
 				{
 					Cursors[i].Position = new(cursorPos.X, cursorPos.Y, 0);
@@ -865,7 +865,7 @@ public partial class LegacyRunner : BaseScene
 				]);
 			}
 		}
-		
+
 		CurrentAttempt.Progress += delta * 1000 * CurrentAttempt.Speed;
 		CurrentAttempt.Skippable = false;
 
@@ -890,20 +890,20 @@ public partial class LegacyRunner : BaseScene
 			if (settings.VideoDim < 100 && !video.IsPlaying() && CurrentAttempt.Progress >= 0)
 			{
 				video.Play();
-				
+
 				Tween videoInTween = videoQuad.CreateTween();
 				videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
 				videoInTween.Play();
 			}
 		}
-		
+
 		int nextNoteMillisecond = CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length ? (int)MapLength + Constants.BREAK_TIME : CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond;
-		
+
 		if (nextNoteMillisecond - CurrentAttempt.Progress >= Constants.BREAK_TIME * CurrentAttempt.Speed)
 		{
 			int lastNoteMillisecond = CurrentAttempt.PassedNotes > 0 ? CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes - 1].Millisecond : 0;
 			int skipWindow = nextNoteMillisecond - Constants.BREAK_TIME - lastNoteMillisecond;
-			
+
 			if (skipWindow >= 1000 * CurrentAttempt.Speed) // only allow skipping if i'm gonna allow it for at least 1 second
 			{
 				CurrentAttempt.Skippable = true;
@@ -954,10 +954,10 @@ public partial class LegacyRunner : BaseScene
 			if (settings.AlwaysPlayHitSound && !CurrentAttempt.Map.Notes[i].Hittable && note.Millisecond < CurrentAttempt.Progress)
 			{
 				CurrentAttempt.Map.Notes[i].Hittable = true;
-				
+
 				SoundManager.HitSound.Play();
 			}
-			
+
 			ToProcess++;
 			ProcessNotes.Add(note);
 		}
@@ -994,7 +994,7 @@ public partial class LegacyRunner : BaseScene
 			Stop();
 			return;
 		}
-		
+
 		if (CurrentAttempt.Skippable)
 		{
 			targetSkipLabelAlpha = 100f / 255f;
@@ -1034,29 +1034,29 @@ public partial class LegacyRunner : BaseScene
 				{
 					continue;
 				}
-				
+
 				if (CurrentAttempt.CursorPosition.DistanceTo((Vector2)entry["Position"]) == 0)
 				{
 					continue;
 				}
-				
+
 				culledList.Add(entry);
 			}
-			
+
 			int count = culledList.Count;
 			float size = ((Vector2)cursor.Mesh.Get("size")).X;
 			Transform3D transform = new Transform3D(new Vector3(size, 0, 0), new Vector3(0, size, 0), new Vector3(0, 0, size), Vector3.Zero);
 			int j = 0;
-			
+
 			cursorTrailMultimesh.Multimesh.InstanceCount = count;
-			
+
 			foreach (Dictionary<string, object> entry in culledList)
 			{
 				ulong difference = now - (ulong)entry["Time"];
 				uint alpha = (uint)(difference / (settings.TrailTime * 1000000) * 255);
-				
+
 				transform.Origin = new Vector3(((Vector2)entry["Position"]).X, ((Vector2)entry["Position"]).Y, 0);
-				
+
 				cursorTrailMultimesh.Multimesh.SetInstanceTransform(j, transform);
 				cursorTrailMultimesh.Multimesh.SetInstanceColor(j, Color.FromHtml($"ffffff{255 - alpha:X2}"));
 				j++;
@@ -1067,13 +1067,13 @@ public partial class LegacyRunner : BaseScene
 			cursorTrailMultimesh.Multimesh.InstanceCount = 0;
 		}
 	}
-	
+
 	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseMotion eventMouseMotion && Playing && !CurrentAttempt.IsReplay)
 		{
 			UpdateCursor(eventMouseMotion.Relative);
-			
+
 			CurrentAttempt.DistanceMM += eventMouseMotion.Relative.Length() / settings.Sensitivity / 57.5;
 		}
 		else if (@event is InputEventKey eventKey && eventKey.Pressed)
@@ -1082,12 +1082,12 @@ public partial class LegacyRunner : BaseScene
 			{
 				case Key.Escape:
 					CurrentAttempt.Qualifies = false;
-					
+
 					if (SettingsManager.Shown)
 					{
 						SettingsManager.HideMenu();
 					}
-					
+
 					ShowMenu(!MenuShown);
 
 					break;
@@ -1113,7 +1113,7 @@ public partial class LegacyRunner : BaseScene
 						{
 							break;
 						}
-						
+
 						Skip();
 					}
 					break;
@@ -1145,10 +1145,14 @@ public partial class LegacyRunner : BaseScene
 		MenuCursor.Instance.UpdateVisible(false, false);
         SceneManager.Space.UpdateState(true);
     }
-	
+
 	public static void Play(Map map, double speed = 1, double startFrom = 0, Dictionary<string, bool> mods = null, string[] players = null, Replay[] replays = null)
 	{
         map = MapParser.Decode(map.FilePath);
+
+        Control focused = SceneManager.Root.GetViewport().GuiGetFocusOwner();
+
+        focused?.ReleaseFocus();
 
 		if (Playing)
 		{
@@ -1160,11 +1164,11 @@ public partial class LegacyRunner : BaseScene
 		stopQueued = false;
 		Started = Time.GetTicksUsec();
 		ProcessNotes = [];
-		
+
 		if (!CurrentAttempt.IsReplay)
 		{
 			Stats.Attempts++;
-			
+
 			if (!Stats.FavoriteMaps.ContainsKey(map.Name))
 			{
 				Stats.FavoriteMaps[map.Name] = 1;
@@ -1177,7 +1181,7 @@ public partial class LegacyRunner : BaseScene
 
 		SceneManager.Load("res://scenes/game.tscn");
 	}
-	
+
 	public static void Restart()
 	{
 		CurrentAttempt.Alive = false;
@@ -1187,13 +1191,13 @@ public partial class LegacyRunner : BaseScene
 		SceneManager.ReloadCurrentScene();
 		Play(MapParser.Decode(CurrentAttempt.Map.FilePath), CurrentAttempt.Speed, CurrentAttempt.StartFrom, CurrentAttempt.Mods, CurrentAttempt.Players, CurrentAttempt.Replays);
 	}
-	
+
 	public static void Skip()
 	{
 		if (CurrentAttempt.Skippable)
 		{
 			CurrentAttempt.ReplaySkips.Add((float)CurrentAttempt.Progress);
-			
+
 			if (CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length)
 			{
 				CurrentAttempt.Progress = SoundManager.Song.Stream.GetLength() * 1000;
@@ -1201,48 +1205,48 @@ public partial class LegacyRunner : BaseScene
 			else
 			{
 				CurrentAttempt.Progress = CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond - settings.ApproachTime * 1500 * CurrentAttempt.Speed; // turn AT to ms and multiply by 1.5x
-				
+
 				// Discord.Client.UpdateEndTime(DateTime.UtcNow.AddSeconds((Time.GetUnixTimeFromSystem() + (CurrentAttempt.Map.Length - CurrentAttempt.Progress) / 1000 / CurrentAttempt.Speed)));
-				
+
 				if (CurrentAttempt.Map.AudioBuffer != null)
 				{
 					if (!SoundManager.Song.Playing)
 					{
 						SoundManager.Song.Play();
 					}
-					
+
 					SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
 					video.StreamPosition = (float)CurrentAttempt.Progress / 1000;
 				}
 			}
 		}
 	}
-	
+
 	public static void QueueStop()
 	{
 		if (!Playing)
 		{
 			return;
 		}
-		
+
 		Playing = false;
 		stopQueued = true;
 	}
-	
+
 	public static void Stop(bool results = true)
 	{
 		if (CurrentAttempt.Stopped)
 		{
 			return;
 		}
-		
+
 		CurrentAttempt.Stop();
-		
+
 		if (!CurrentAttempt.IsReplay)
 		{
 			Stats.GamePlaytime += (Time.GetTicksUsec() - Started) / 1000000;
 			Stats.TotalDistance += (ulong)CurrentAttempt.DistanceMM;
-				
+
 			if (CurrentAttempt.StartFrom == 0)
 			{
 				if (!File.Exists($"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.Name}"))
@@ -1251,46 +1255,46 @@ public partial class LegacyRunner : BaseScene
 					bytes.AddRange(SHA256.HashData([0, 0, 0, 0]));
 					File.WriteAllBytes($"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.Name}", [.. bytes]);
 				}
-				
+
 				Leaderboard leaderboard = new(CurrentAttempt.Map.Name, $"{Constants.USER_FOLDER}/pbs/{CurrentAttempt.Map.Name}");
-				
+
 				leaderboard.Add(new(CurrentAttempt.ID, "You", CurrentAttempt.Qualifies, CurrentAttempt.Score, CurrentAttempt.Accuracy, Time.GetUnixTimeFromSystem(), CurrentAttempt.Progress, CurrentAttempt.Map.Length, CurrentAttempt.Speed, CurrentAttempt.Mods));
 				leaderboard.Save();
-				
+
 				if (CurrentAttempt.Qualifies)
 				{
 					Stats.Passes++;
 					Stats.TotalScore += CurrentAttempt.Score;
-					
+
 					if (CurrentAttempt.Accuracy == 100)
 					{
 						Stats.FullCombos++;
 					}
-					
+
 					if (CurrentAttempt.Score > Stats.HighestScore)
 					{
 						Stats.HighestScore = CurrentAttempt.Score;
 					}
-					
+
 					Stats.PassAccuracies.Add(CurrentAttempt.Accuracy);
 				}
 			}
 		}
 
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Adaptive);
-		
+
 		if (results)
 		{
 			SceneManager.Load("res://scenes/results.tscn");
 		}
 	}
-	
+
 	public static void ShowMenu(bool show = true)
 	{
 		MenuShown = show;
 		Playing = !MenuShown;
 		SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;	// not again
-		
+
 		MenuCursor.Instance.UpdateVisible(MenuShown && SettingsManager.Instance.Settings.UseCursorInMenus.Value);
 
 		if (MenuShown)
@@ -1302,7 +1306,7 @@ public partial class LegacyRunner : BaseScene
 		{
 			Input.MouseMode = settings.AbsoluteInput || CurrentAttempt.IsReplay ? Input.MouseModeEnum.ConfinedHidden : Input.MouseModeEnum.Captured;
 		}
-		
+
 		Tween tween = menu.CreateTween();
 		tween.TweenProperty(menu, "modulate", Color.Color8(255, 255, 255, (byte)(MenuShown ? 255 : 0)), 0.25).SetTrans(Tween.TransitionType.Quad);
 		tween.TweenCallback(Callable.From(() => {
@@ -1310,30 +1314,30 @@ public partial class LegacyRunner : BaseScene
 		}));
 		tween.Play();
 	}
-	
+
 	public static void HideMenu()
 	{
 		ShowMenu(false);
 	}
-	
+
 	public static void ShowReplayViewer(bool show = true)
 	{
 		ReplayViewerShown = CurrentAttempt.IsReplay && show;
 		replayViewer.Visible = ReplayViewerShown;
-		
+
 		Input.MouseMode = ReplayViewerShown ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Hidden;
 	}
-	
+
 	public static void HideReplayViewer()
 	{
 		ShowReplayViewer(false);
 	}
-	
+
 	public static void UpdateCursor(Vector2 mouseDelta)
 	{
 		float sensitivity = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].Sensitivity : settings.Sensitivity);
 		sensitivity *= (float)settings.FoV.Value / 70f;
-		
+
 		if (!CurrentAttempt.Mods["Spin"])
 		{
 			if (settings.CursorDrift)
@@ -1345,11 +1349,11 @@ public partial class LegacyRunner : BaseScene
 				CurrentAttempt.RawCursorPosition += new Vector2(1, -1) * mouseDelta / 120 * sensitivity;
 				CurrentAttempt.CursorPosition = CurrentAttempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
 			}
-			
+
 			cursor.Position = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
 			Camera.Position = new Vector3(0, 0, 3.75f) + new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0) * (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].Parallax : settings.CameraParallax);
 			Camera.Rotation = Vector3.Zero;
-			
+
 			videoQuad.Position = new Vector3(Camera.Position.X, Camera.Position.Y, -100);
 		}
 		else
@@ -1357,20 +1361,20 @@ public partial class LegacyRunner : BaseScene
 			Camera.Rotation += new Vector3(-mouseDelta.Y / 120 * sensitivity / (float)Math.PI, -mouseDelta.X / 120 * sensitivity / (float)Math.PI, 0);
 			Camera.Rotation = new Vector3((float)Math.Clamp(Camera.Rotation.X, Mathf.DegToRad(-90), Mathf.DegToRad(90)), Camera.Rotation.Y, Camera.Rotation.Z);
 			Camera.Position = new Vector3(CurrentAttempt.CursorPosition.X * 0.25f, CurrentAttempt.CursorPosition.Y * 0.25f, 3.5f) + Camera.Basis.Z / 4;
-			
+
 			float wtf = 0.95f;
 			float hypotenuse = (wtf + Camera.Position.Z) / Camera.Basis.Z.Z;
 			float distance = (float)Math.Sqrt(Math.Pow(hypotenuse, 2) - Math.Pow(wtf + Camera.Position.Z, 2));
-			
+
 			CurrentAttempt.RawCursorPosition = new Vector2(Camera.Basis.Z.X, Camera.Basis.Z.Y).Normalized() * -distance;
 			CurrentAttempt.CursorPosition = CurrentAttempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
 			cursor.Position = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
-			
+
 			videoQuad.Position = Camera.Position - Camera.Basis.Z * 103.75f;
 			videoQuad.Rotation = Camera.Rotation;
 		}
     }
-	
+
 	public static void UpdateScore(string player, int score)
 	{
 		//ColorRect playerScore = Leaderboard.GetNode("SubViewport").GetNode("Players").GetNode<ColorRect>(player);
