@@ -41,6 +41,13 @@ content_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dccrs"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1m5pv"]
+bg_color = Color(0, 0, 0, 0.3764706)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4d08m"]
 shader = ExtResource("2_nrche")
 shader_parameter/outline_color = Color(0.05, 0.05, 0.05, 1)
@@ -267,6 +274,16 @@ text = "Available on {0}"
 flat = true
 alignment = 0
 script = ExtResource("4_dccrs")
+
+[node name="Panel" type="Panel" parent="Info/ScrollContainer/Holder/CoverContainer/Background/ArtistLink" unique_id=194309589]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1m5pv")
 
 [node name="Subholder" type="Panel" parent="Info/ScrollContainer/Holder" unique_id=80746001]
 layout_mode = 1

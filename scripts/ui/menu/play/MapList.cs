@@ -216,7 +216,11 @@ public partial class MapList : Panel, ISkinnable
                         buttonSibling.UpdateOutline(0f, 0f);
                     }
 
-                    mask.RemoveChild(parentContainer);
+                    if (parentContainer.GetParent() == mask)
+                    {
+                        mask.RemoveChild(parentContainer);
+                    }
+
                     containers.Remove(containerIndex);
                     containerCache.Push(parentContainer);
                 }

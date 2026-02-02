@@ -668,7 +668,7 @@ public partial class MapParser : Node
 
             // temp
             metadata.TryGetValue("ArtistLink", out Variant artistLink);
-            metadata.TryGetValue("ArtistLink", out Variant artistPlatform);
+            metadata.TryGetValue("ArtistPlatform", out Variant artistPlatform);
 
             map = new(
                 path,
