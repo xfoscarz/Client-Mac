@@ -44,6 +44,7 @@ public static class MapCache
         }
 
         var filesHashSet = files.ToHashSet();
+
         foreach (var map in maps)
         {
             string filePath = BackSlashToForwardSlash(map.FilePath);
@@ -76,6 +77,7 @@ public static class MapCache
                 }
 
                 newMap.Id = map.Id;
+                newMap.Hash = checksum;
 
                 DatabaseService.Connection.Update(newMap);
                 InsertIntoMapCacheFolder(map);
@@ -151,8 +153,17 @@ public static class MapCache
 
     public static int InsertMap(Map map)
     {
+        var existing = DatabaseService.Connection.Find<Map>(x => x.Hash == x.Hash);
+        var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
         try
         {
+            if (updated != null && existing != null)
+            {
+                map.Id = updated.Id;
+                UpdateMap(map);
+                return map.Id;
+            }
+
             DatabaseService.Connection.Insert(map);
             InsertIntoMapCacheFolder(map);
 
@@ -160,15 +171,14 @@ public static class MapCache
         }
         catch (Exception e)
         {
-            var existing = DatabaseService.Connection.Find<Map>(x => x.Hash == x.Hash);
-            if (existing == null)
+            if (existing == null || updated == null)
             {
                 Logger.Error(e.Message);
                 return -1;
             }
 
             string newPath = Path.Combine(MapUtil.MapsFolder, map.Collection, map.Name);
-            string existingPath = Path.Combine(MapUtil.MapsFolder, map.Collection, map.Name);
+            string existingPath = Path.Combine(MapUtil.MapsFolder, map.Collection, existing?.FilePath ?? updated.FilePath);
 
             if (existingPath != newPath)
             {

@@ -21,44 +21,6 @@ public partial class Rhythia : Node
 
         GetTree().AutoAcceptQuit = false;
 
-        // Set up user folder
-
-        static void deepCopy(string resDir = "")
-        {
-            string userDir = $"{Constants.USER_FOLDER}{resDir}";
-
-            if (!Directory.Exists(userDir))
-            {
-                Directory.CreateDirectory(userDir);
-            }
-
-            foreach (string resFile in Godot.DirAccess.GetFilesAt($"res://user{resDir}"))
-            {
-                string userFile = $"{userDir}/{resFile}";
-                string ext = resFile.GetExtension();
-
-                if (File.Exists(userFile) || ext == "import" || ext == "uid" || ext == "gitkeep")
-                {
-                    continue;
-                }
-
-                Godot.FileAccess source = Godot.FileAccess.Open($"res://user{resDir}/{resFile}", Godot.FileAccess.ModeFlags.Read);
-                byte[] buffer = source.GetBuffer((long)source.GetLength());
-                source.Close();
-
-                Godot.FileAccess copy = Godot.FileAccess.Open(userFile, Godot.FileAccess.ModeFlags.Write);
-                copy.StoreBuffer(buffer);
-                copy.Close();
-            }
-
-            foreach (string dir in Godot.DirAccess.GetDirectoriesAt($"res://user{resDir}"))
-            {
-                deepCopy($"{resDir}/{dir}");
-            }
-        }
-
-        deepCopy();
-
         // Settings
 
         if (!File.Exists($"{Constants.USER_FOLDER}/profiles/default.json"))
