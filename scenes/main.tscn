@@ -192,6 +192,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
 theme_override_styles/panel = SubResource("StyleBoxEmpty_epys8")
 
 [node name="Container" type="VBoxContainer" parent="Settings/Holder/Categories/CategoryTemplate" unique_id=543180305]

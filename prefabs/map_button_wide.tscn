@@ -84,6 +84,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_b5pxb")
 
 [node name="Cover" type="TextureRect" parent="Holder" unique_id=925412650]
+texture_filter = 6
 material = SubResource("ShaderMaterial_gpm1h")
 layout_mode = 1
 anchors_preset = -1
@@ -100,6 +101,7 @@ stretch_mode = 6
 
 [node name="Favorited" type="TextureRect" parent="Holder" unique_id=922682128]
 visible = false
+texture_filter = 6
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 1
 anchors_preset = -1

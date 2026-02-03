@@ -86,6 +86,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_oqmn1")
 
 [node name="CoverBackground" type="TextureRect" parent="Holder" unique_id=2122755475]
 modulate = Color(1, 1, 1, 0.5019608)
+texture_filter = 6
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -101,6 +102,7 @@ expand_mode = 1
 
 [node name="Cover" type="TextureRect" parent="Holder" unique_id=102016594]
 modulate = Color(1, 1, 1, 0.5019608)
+texture_filter = 6
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -115,6 +117,7 @@ expand_mode = 1
 
 [node name="Favorited" type="TextureRect" parent="Holder" unique_id=2076074980]
 visible = false
+texture_filter = 6
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 1
 anchors_preset = -1
