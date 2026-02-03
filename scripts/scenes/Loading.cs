@@ -9,7 +9,9 @@ public partial class Loading : BaseScene
     private ColorRect background;
     private TextureRect splash;
     private TextureRect splashShift;
-    private Label label;
+    private Label progressLabel;
+    private Panel progressBar;
+    private Panel progressBarFill;
 
     public override void _Ready()
     {
@@ -18,15 +20,40 @@ public partial class Loading : BaseScene
         background = GetNode<ColorRect>("Background");
         splash = GetNode<TextureRect>("Splash");
         splashShift = GetNode<TextureRect>("SplashShift");
-        label = GetNode<Label>("Label");
+        progressLabel = GetNode<Label>("ProgressLabel");
+        progressBar = GetNode<Panel>("ProgressBar");
+        progressBarFill = progressBar.GetNode<Panel>("Fill");
 
-        label.Modulate = transparent;
+        progressLabel.Modulate = transparent;
+        progressBar.Modulate = transparent;
+
+        int toSync = MapCache.FilesToSync.Value;
+        bool allSynced = false;
+
+        MapCache.FilesSynced.ValueChanged += (_, _) => {
+            if (allSynced)
+            {
+                return;
+            }
+
+            int synced = MapCache.FilesSynced.Value;
+            float progress = synced / (float)toSync;
+
+            progressLabel.Text = $"Initializing maps ({synced}/{toSync})";
+            progressBarFill.AnchorRight = progress;
+
+            if (progress >= 1)
+            {
+                allSynced = true;
+            }
+        };
 
         Tween inTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
         inTween.TweenProperty(background, "color", Color.FromHtml("#060509"), 1);
         inTween.TweenProperty(splash, "modulate", opaque, 0.5);
         inTween.TweenProperty(splashShift, "modulate", opaque, 0.25);
-        inTween.TweenProperty(label, "modulate", opaque, 0.5);
+        inTween.TweenProperty(progressLabel, "modulate", opaque, 0.5);
+        inTween.TweenProperty(progressBar, "modulate", opaque, 0.5);
 
         inTween.SetParallel(false);
 
@@ -47,7 +74,7 @@ public partial class Loading : BaseScene
 
     private void exit()
     {
-        label.Text = "Done!";
+        progressLabel.Text = "Done!";
 
         Tween outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
         outTween.TweenProperty(background, "color", Color.Color8(0, 0, 0), 0.5);
