@@ -317,7 +317,9 @@ public partial class MapList : Panel, ISkinnable
                     shuffle();
                     break;
                 case Key.Space:
-					if (Lobby.Map != null && IsVisibleInTree() && GetViewport().GuiGetFocusOwner() == null)
+                    Control focused = GetViewport().GuiGetFocusOwner();
+
+					if (Lobby.Map != null && IsVisibleInTree() && focused is not LineEdit)
 					{
                         LegacyRunner.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
                     }
