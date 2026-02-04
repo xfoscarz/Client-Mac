@@ -176,9 +176,18 @@ public partial class SettingsMenu : ColorRect
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.O && eventKey.CtrlPressed)
+        if (@event is InputEventKey eventKey && eventKey.Pressed)
         {
-            ShowMenu(!Shown);
+            switch (eventKey.Keycode)
+            {
+                case Key.O:
+                    if (eventKey.CtrlPressed) { ShowMenu(!Shown); }
+                    break;
+                case Key.Escape:
+                    if (Shown) { ShowMenu(false); }
+                    break;
+            }
+
         }
     }
 
