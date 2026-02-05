@@ -72,6 +72,8 @@ public partial class SettingsMenu : ColorRect
         OptionButton optionButtonTemplate = settingTemplate.GetNode<OptionButton>("OptionButton");
         Button buttonTemplate = settingTemplate.GetNode<Button>("Button");
 
+        settingTemplate.Visible = false;
+
         foreach (Node child in settingTemplate.GetChildren())
         {
             if (child.Name == "Title") { continue; };
@@ -113,6 +115,7 @@ public partial class SettingsMenu : ColorRect
             {
                 Panel panel = settingTemplate.Duplicate() as Panel;
                 panel.Name = setting.Id;
+                panel.Visible = true;
 
                 Label title = panel.GetNode<Label>("Title");
                 title.Text = setting.Title;
@@ -173,9 +176,18 @@ public partial class SettingsMenu : ColorRect
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.O && eventKey.CtrlPressed)
+        if (@event is InputEventKey eventKey && eventKey.Pressed)
         {
-            ShowMenu(!Shown);
+            switch (eventKey.Keycode)
+            {
+                case Key.O:
+                    if (eventKey.CtrlPressed) { ShowMenu(!Shown); }
+                    break;
+                case Key.Escape:
+                    if (Shown) { ShowMenu(false); }
+                    break;
+            }
+
         }
     }
 

@@ -82,26 +82,35 @@ public partial class Loading : BaseScene
     private void mapInitializeStep()
     {
         int toSync = MapCache.FilesToSync.Value;
-        bool allSynced = false;
+        bool allSynced = MapCache.FilesSynced.Value == toSync;
 
-        MapCache.FilesSynced.ValueChanged += (_, _) =>
+        if (allSynced)
         {
-            if (allSynced)
+            progressLabel.Text = "Done!";
+            progressBarFill.AnchorRight = 1;
+        }
+        else
+        {
+            MapCache.FilesSynced.ValueChanged += (_, _) =>
             {
-                return;
-            }
+                if (allSynced)
+                {
+                    return;
+                }
 
-            int synced = MapCache.FilesSynced.Value;
-            float progress = synced / (float)toSync;
+                int synced = MapCache.FilesSynced.Value;
+                float progress = synced / (float)toSync;
 
-            progressLabel.Text = $"Initializing maps ({synced}/{toSync})";
-            progressBarFill.AnchorRight = progress;
+                progressLabel.Text = $"Initializing maps ({synced}/{toSync})";
+                progressBarFill.AnchorRight = progress;
 
-            if (progress >= 1)
-            {
-                allSynced = true;
-            }
-        };
+                if (progress >= 1)
+                {
+                    allSynced = true;
+                    progressLabel.Text = "Done!";
+                }
+            };
+        }
 
         Tween inTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
         inTween.TweenProperty(background, "color", Color.FromHtml("#060509"), 1);
@@ -150,8 +159,6 @@ public partial class Loading : BaseScene
 
     private void exit()
     {
-        progressLabel.Text = "Done!";
-
         Tween outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
         outTween.TweenProperty(background, "color", Color.Color8(0, 0, 0), 0.5);
         outTween.TweenProperty(splash, "modulate", Color.Color8(0, 0, 0), 0.5);

@@ -225,6 +225,7 @@ anchors_preset = -1
 anchor_left = 0.3
 anchor_right = 0.9
 anchor_bottom = 1.0
+focus_mode = 1
 mouse_default_cursor_shape = 2
 theme = ExtResource("3_tipki")
 allow_greater = true
