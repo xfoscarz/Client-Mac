@@ -28,3 +28,6 @@ mono_crash.*.json
 # Other
 nuget.config
 addons/ffmpeg/win64/~libgdffmpeg.windows.template_debug.x86_64.dll
+
+# macOS bullshit
+.DS_Store
